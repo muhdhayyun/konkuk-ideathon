@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { writeFileSync } from 'fs'
 import { AnthropicVertex } from '@anthropic-ai/vertex-sdk'
+import { GoogleAuth } from 'google-auth-library'
 import type Anthropic from '@anthropic-ai/sdk'
 import type { ClientBrief, Product, Recommendation } from '../src/pages/client-form/types'
 import { products } from '../src/pages/client-form/data/products'
@@ -46,16 +46,19 @@ let vertexClient: AnthropicVertex | null = null
 function getVertexClient(): AnthropicVertex {
   if (vertexClient) return vertexClient
 
-  const keyJson = process.env.GCP_SERVICE_ACCOUNT_KEY
-  if (keyJson && !process.env.GOOGLE_APPLICATION_CREDENTIALS) {
-    const path = '/tmp/gcp-credentials.json'
-    writeFileSync(path, keyJson)
-    process.env.GOOGLE_APPLICATION_CREDENTIALS = path
-  }
+  const googleAuth = new GoogleAuth({
+    credentials: {
+      client_email: process.env.GOOGLE_CLIENT_EMAIL,
+      // Vercel's env var UI can flatten real newlines to literal "\n" — restore them.
+      private_key: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+    },
+    scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+  })
 
   vertexClient = new AnthropicVertex({
-    projectId: process.env.GCP_PROJECT_ID,
-    region: process.env.GCP_REGION || 'global',
+    projectId: process.env.GOOGLE_VERTEX_PROJECT,
+    region: process.env.GOOGLE_VERTEX_LOCATION || 'global',
+    googleAuth,
   })
   return vertexClient
 }
