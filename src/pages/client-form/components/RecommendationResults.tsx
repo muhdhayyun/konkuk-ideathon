@@ -1,0 +1,86 @@
+import type { Recommendation } from '../types'
+
+interface RecommendationResultsProps {
+  recommendations: Recommendation[]
+  requestedIds: string[]
+  onRequestSample: (rec: Recommendation) => void
+  onNotQuite: (rec: Recommendation) => void
+  onReject: (rec: Recommendation) => void
+  onStartOver: () => void
+}
+
+export default function RecommendationResults({
+  recommendations,
+  requestedIds,
+  onRequestSample,
+  onNotQuite,
+  onReject,
+  onStartOver,
+}: RecommendationResultsProps) {
+  return (
+    <div className="max-w-4xl mx-auto py-10 px-4">
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-lg font-semibold text-slate-900">Recommended products</h2>
+        <button type="button" onClick={onStartOver} className="text-sm text-slate-500 hover:text-blue-600">
+          Start over
+        </button>
+      </div>
+
+      {recommendations.length === 0 && (
+        <p className="text-sm text-slate-500">
+          No eligible products left for this brief — try adjusting the budget or quantity.
+        </p>
+      )}
+
+      <div className="grid gap-4 sm:grid-cols-2">
+        {recommendations.map((rec) => (
+          <div key={rec.product.id} className="rounded-lg border border-slate-200 p-4 flex flex-col gap-3">
+            <div className="w-full h-28 rounded-md bg-slate-100 flex items-center justify-center text-slate-300 text-xs">
+              image placeholder
+            </div>
+
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="font-medium text-slate-900">{rec.product.name}</p>
+                <p className="text-sm text-slate-500">${rec.product.basePrice} / unit</p>
+              </div>
+              {rec.product.trendScore >= 75 && (
+                <span className="text-xs font-medium text-emerald-700 bg-emerald-50 px-2 py-1 rounded-full whitespace-nowrap">
+                  Trending ↑
+                </span>
+              )}
+            </div>
+
+            <p className="text-sm text-slate-600">{rec.reasonWhy}</p>
+            <p className="text-xs text-slate-400">Match score: {rec.matchScore}</p>
+
+            <div className="flex flex-wrap gap-2 mt-auto pt-2">
+              <button
+                type="button"
+                onClick={() => onRequestSample(rec)}
+                disabled={requestedIds.includes(rec.product.id)}
+                className="px-3 py-1.5 rounded-md bg-blue-600 text-white text-xs font-medium disabled:opacity-40"
+              >
+                {requestedIds.includes(rec.product.id) ? 'Sample requested' : 'Request sample'}
+              </button>
+              <button
+                type="button"
+                onClick={() => onNotQuite(rec)}
+                className="px-3 py-1.5 rounded-md border border-slate-300 text-slate-600 text-xs font-medium hover:bg-slate-50"
+              >
+                Not quite — show me more like this
+              </button>
+              <button
+                type="button"
+                onClick={() => onReject(rec)}
+                className="px-3 py-1.5 rounded-md border border-red-200 text-red-500 text-xs font-medium hover:bg-red-50"
+              >
+                Reject
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
