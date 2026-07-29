@@ -1,4 +1,6 @@
 import type { ClientBrief } from '../types'
+import { useLanguage } from '../../../i18n/LanguageContext'
+import type { TranslationKey } from '../../../i18n/translations'
 
 interface SummaryReviewProps {
   brief: ClientBrief
@@ -6,33 +8,42 @@ interface SummaryReviewProps {
   onFindProducts: () => void
 }
 
-const FIELDS: { label: string; step: number; render: (brief: ClientBrief) => string }[] = [
-  {
-    label: 'Client profile',
-    step: 1,
-    render: (b) => `${b.industry} · ${b.brandTone} · ${b.companySize}`,
-  },
-  { label: 'Occasion', step: 2, render: (b) => b.occasion },
-  { label: 'Recipient', step: 3, render: (b) => b.recipient },
-  { label: 'Budget', step: 4, render: (b) => `${b.budgetTier} per unit · Qty ${b.quantity}` },
-  {
-    label: 'Emotional outcome',
-    step: 5,
-    render: (b) => b.emotionalOutcomes.join(', ') + (b.notes ? ` (Notes: ${b.notes})` : ''),
-  },
-]
-
 export default function SummaryReview({ brief, onEditStep, onFindProducts }: SummaryReviewProps) {
+  const { t } = useLanguage()
+  const optionLabel = (value: string) => t(`option.${value}` as TranslationKey)
+
+  const fields: { label: string; step: number; render: () => string }[] = [
+    {
+      label: t('summary.clientProfile'),
+      step: 1,
+      render: () => `${optionLabel(brief.industry)} · ${optionLabel(brief.brandTone)} · ${optionLabel(brief.companySize)}`,
+    },
+    { label: t('summary.occasion'), step: 2, render: () => optionLabel(brief.occasion) },
+    { label: t('summary.recipient'), step: 3, render: () => optionLabel(brief.recipient) },
+    {
+      label: t('summary.budget'),
+      step: 4,
+      render: () => `${optionLabel(brief.budgetTier)} ${t('summary.perUnit')} · ${t('summary.qty')} ${brief.quantity}`,
+    },
+    {
+      label: t('summary.emotionalOutcome'),
+      step: 5,
+      render: () =>
+        brief.emotionalOutcomes.map(optionLabel).join(', ') +
+        (brief.notes ? ` (${t('summary.notes')}: ${brief.notes})` : ''),
+    },
+  ]
+
   return (
     <div className="max-w-2xl mx-auto py-10 px-4">
-      <h2 className="text-lg font-semibold text-slate-900 mb-4">Review your answers</h2>
+      <h2 className="text-lg font-semibold text-slate-900 mb-4">{t('summary.title')}</h2>
 
       <div className="rounded-lg border border-slate-200 divide-y divide-slate-200">
-        {FIELDS.map((field) => (
+        {fields.map((field) => (
           <div key={field.step} className="flex items-center justify-between px-4 py-3">
             <div>
               <p className="text-xs font-medium text-slate-400">{field.label}</p>
-              <p className="text-sm text-slate-800">{field.render(brief)}</p>
+              <p className="text-sm text-slate-800">{field.render()}</p>
             </div>
             <button
               type="button"
@@ -51,7 +62,7 @@ export default function SummaryReview({ brief, onEditStep, onFindProducts }: Sum
         onClick={onFindProducts}
         className="mt-6 w-full px-5 py-3 rounded-md bg-blue-600 text-white text-sm font-medium"
       >
-        Find my products
+        {t('summary.findProducts')}
       </button>
     </div>
   )

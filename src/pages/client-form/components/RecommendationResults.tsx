@@ -1,4 +1,5 @@
 import type { Recommendation } from '../types'
+import { useLanguage } from '../../../i18n/LanguageContext'
 
 function hostnameOf(url: string): string {
   try {
@@ -25,20 +26,18 @@ export default function RecommendationResults({
   onReject,
   onStartOver,
 }: RecommendationResultsProps) {
+  const { t } = useLanguage()
+
   return (
     <div className="max-w-4xl mx-auto py-10 px-4">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-lg font-semibold text-slate-900">Recommended products</h2>
+        <h2 className="text-lg font-semibold text-slate-900">{t('results.title')}</h2>
         <button type="button" onClick={onStartOver} className="text-sm text-slate-500 hover:text-blue-600">
-          Start over
+          {t('results.startOver')}
         </button>
       </div>
 
-      {recommendations.length === 0 && (
-        <p className="text-sm text-slate-500">
-          No eligible products left for this brief — try adjusting the budget or quantity.
-        </p>
-      )}
+      {recommendations.length === 0 && <p className="text-sm text-slate-500">{t('results.empty')}</p>}
 
       <div className="grid gap-4 sm:grid-cols-2">
         {recommendations.map((rec) => (
@@ -54,17 +53,19 @@ export default function RecommendationResults({
               </div>
               {rec.product.trendScore >= 75 && (
                 <span className="text-xs font-medium text-emerald-700 bg-emerald-50 px-2 py-1 rounded-full whitespace-nowrap">
-                  Trending ↑
+                  {t('results.trending')} ↑
                 </span>
               )}
             </div>
 
             <p className="text-sm text-slate-600">{rec.reasonWhy}</p>
-            <p className="text-xs text-slate-400">Match score: {rec.matchScore}</p>
+            <p className="text-xs text-slate-400">
+              {t('results.matchScore')}: {rec.matchScore}
+            </p>
 
             {rec.sourceUrls && rec.sourceUrls.length > 0 && (
               <div className="flex flex-wrap items-center gap-1.5 -mt-1">
-                <span className="text-xs text-slate-400">Sourced from:</span>
+                <span className="text-xs text-slate-400">{t('results.sourcedFrom')}</span>
                 {rec.sourceUrls.map((url) => (
                   <a
                     key={url}
@@ -87,21 +88,21 @@ export default function RecommendationResults({
                 disabled={requestedIds.includes(rec.product.id)}
                 className="px-3 py-1.5 rounded-md bg-blue-600 text-white text-xs font-medium disabled:opacity-40"
               >
-                {requestedIds.includes(rec.product.id) ? 'Sample requested' : 'Request sample'}
+                {requestedIds.includes(rec.product.id) ? t('results.sampleRequested') : t('results.requestSample')}
               </button>
               <button
                 type="button"
                 onClick={() => onNotQuite(rec)}
                 className="px-3 py-1.5 rounded-md border border-slate-300 text-slate-600 text-xs font-medium hover:bg-slate-50"
               >
-                Not quite — show me more like this
+                {t('results.notQuite')}
               </button>
               <button
                 type="button"
                 onClick={() => onReject(rec)}
                 className="px-3 py-1.5 rounded-md border border-red-200 text-red-500 text-xs font-medium hover:bg-red-50"
               >
-                Reject
+                {t('results.reject')}
               </button>
             </div>
           </div>

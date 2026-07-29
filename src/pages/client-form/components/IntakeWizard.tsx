@@ -8,6 +8,8 @@ import {
   BUDGET_TIER_LABELS,
   EMOTIONAL_OUTCOMES,
 } from '../constants'
+import { useLanguage } from '../../../i18n/LanguageContext'
+import type { TranslationKey } from '../../../i18n/translations'
 import StepCard from './StepCard'
 
 interface IntakeWizardProps {
@@ -39,6 +41,9 @@ function canProceed(step: number, brief: ClientBrief): boolean {
 }
 
 export default function IntakeWizard({ step, brief, setBrief, onNext, onBack, onInstantFill }: IntakeWizardProps) {
+  const { t } = useLanguage()
+  const optionLabel = (value: string) => t(`option.${value}` as TranslationKey)
+
   const toggleEmotionalOutcome = (outcome: string) => {
     setBrief((prev) => ({
       ...prev,
@@ -52,7 +57,7 @@ export default function IntakeWizard({ step, brief, setBrief, onNext, onBack, on
     <div className="max-w-2xl mx-auto py-10 px-4">
       <div className="flex items-center justify-between mb-2">
         <p className="text-xs font-medium text-slate-400">
-          Step {step} of {TOTAL_STEPS}
+          {t('wizard.stepOf', { current: step, total: TOTAL_STEPS })}
         </p>
         {onInstantFill && (
           <button
@@ -60,22 +65,22 @@ export default function IntakeWizard({ step, brief, setBrief, onNext, onBack, on
             onClick={onInstantFill}
             className="text-xs text-slate-400 hover:text-blue-600 underline"
           >
-            Instant fill (testing)
+            {t('wizard.instantFill')}
           </button>
         )}
       </div>
 
       {step === 1 && (
         <div className="space-y-6">
-          <h2 className="text-lg font-semibold text-slate-900">Client profile</h2>
+          <h2 className="text-lg font-semibold text-slate-900">{t('wizard.step1.title')}</h2>
 
           <div>
-            <p className="text-sm font-medium text-slate-600 mb-2">Industry</p>
+            <p className="text-sm font-medium text-slate-600 mb-2">{t('wizard.step1.industry')}</p>
             <div className="flex flex-wrap gap-2">
               {INDUSTRIES.map((industry) => (
                 <StepCard
                   key={industry}
-                  label={industry}
+                  label={optionLabel(industry)}
                   selected={brief.industry === industry}
                   onClick={() => setBrief((prev) => ({ ...prev, industry }))}
                 />
@@ -84,12 +89,12 @@ export default function IntakeWizard({ step, brief, setBrief, onNext, onBack, on
           </div>
 
           <div>
-            <p className="text-sm font-medium text-slate-600 mb-2">Brand tone</p>
+            <p className="text-sm font-medium text-slate-600 mb-2">{t('wizard.step1.brandTone')}</p>
             <div className="flex flex-wrap gap-2">
               {BRAND_TONES.map((tone) => (
                 <StepCard
                   key={tone}
-                  label={tone}
+                  label={optionLabel(tone)}
                   selected={brief.brandTone === tone}
                   onClick={() => setBrief((prev) => ({ ...prev, brandTone: tone }))}
                 />
@@ -98,12 +103,12 @@ export default function IntakeWizard({ step, brief, setBrief, onNext, onBack, on
           </div>
 
           <div>
-            <p className="text-sm font-medium text-slate-600 mb-2">Company size</p>
+            <p className="text-sm font-medium text-slate-600 mb-2">{t('wizard.step1.companySize')}</p>
             <div className="flex flex-wrap gap-2">
               {COMPANY_SIZES.map((size) => (
                 <StepCard
                   key={size}
-                  label={size}
+                  label={optionLabel(size)}
                   selected={brief.companySize === size}
                   onClick={() => setBrief((prev) => ({ ...prev, companySize: size }))}
                 />
@@ -115,12 +120,12 @@ export default function IntakeWizard({ step, brief, setBrief, onNext, onBack, on
 
       {step === 2 && (
         <div className="space-y-3">
-          <h2 className="text-lg font-semibold text-slate-900">Occasion</h2>
+          <h2 className="text-lg font-semibold text-slate-900">{t('wizard.step2.title')}</h2>
           <div className="grid grid-cols-2 gap-2">
             {OCCASIONS.map((occasion) => (
               <StepCard
                 key={occasion.label}
-                label={occasion.label}
+                label={optionLabel(occasion.label)}
                 icon={occasion.icon}
                 selected={brief.occasion === occasion.label}
                 onClick={() => setBrief((prev) => ({ ...prev, occasion: occasion.label }))}
@@ -132,12 +137,12 @@ export default function IntakeWizard({ step, brief, setBrief, onNext, onBack, on
 
       {step === 3 && (
         <div className="space-y-3">
-          <h2 className="text-lg font-semibold text-slate-900">Recipient</h2>
+          <h2 className="text-lg font-semibold text-slate-900">{t('wizard.step3.title')}</h2>
           <div className="flex flex-wrap gap-2">
             {RECIPIENTS.map((recipient) => (
               <StepCard
                 key={recipient}
-                label={recipient}
+                label={optionLabel(recipient)}
                 selected={brief.recipient === recipient}
                 onClick={() => setBrief((prev) => ({ ...prev, recipient }))}
               />
@@ -148,15 +153,15 @@ export default function IntakeWizard({ step, brief, setBrief, onNext, onBack, on
 
       {step === 4 && (
         <div className="space-y-6">
-          <h2 className="text-lg font-semibold text-slate-900">Budget</h2>
+          <h2 className="text-lg font-semibold text-slate-900">{t('wizard.step4.title')}</h2>
 
           <div>
-            <p className="text-sm font-medium text-slate-600 mb-2">Per-unit budget</p>
+            <p className="text-sm font-medium text-slate-600 mb-2">{t('wizard.step4.perUnit')}</p>
             <div className="flex flex-wrap gap-2">
               {BUDGET_TIER_LABELS.map((tier) => (
                 <StepCard
                   key={tier}
-                  label={tier}
+                  label={optionLabel(tier)}
                   selected={brief.budgetTier === tier}
                   onClick={() => setBrief((prev) => ({ ...prev, budgetTier: tier }))}
                 />
@@ -165,7 +170,7 @@ export default function IntakeWizard({ step, brief, setBrief, onNext, onBack, on
           </div>
 
           <div>
-            <p className="text-sm font-medium text-slate-600 mb-2">Quantity</p>
+            <p className="text-sm font-medium text-slate-600 mb-2">{t('wizard.step4.quantity')}</p>
             <div className="flex items-center gap-3">
               <button
                 type="button"
@@ -192,15 +197,15 @@ export default function IntakeWizard({ step, brief, setBrief, onNext, onBack, on
       {step === 5 && (
         <div className="space-y-6">
           <div>
-            <h2 className="text-lg font-semibold text-slate-900">Desired emotional outcome</h2>
-            <p className="text-sm text-slate-500">Select all that apply — this drives the recommendation logic.</p>
+            <h2 className="text-lg font-semibold text-slate-900">{t('wizard.step5.title')}</h2>
+            <p className="text-sm text-slate-500">{t('wizard.step5.subtitle')}</p>
           </div>
 
           <div className="flex flex-wrap gap-2">
             {EMOTIONAL_OUTCOMES.map((outcome) => (
               <StepCard
                 key={outcome}
-                label={outcome}
+                label={optionLabel(outcome)}
                 selected={brief.emotionalOutcomes.includes(outcome)}
                 onClick={() => toggleEmotionalOutcome(outcome)}
               />
@@ -208,9 +213,7 @@ export default function IntakeWizard({ step, brief, setBrief, onNext, onBack, on
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-600 mb-1">
-              Anything else? (optional)
-            </label>
+            <label className="block text-sm font-medium text-slate-600 mb-1">{t('wizard.step5.notes')}</label>
             <textarea
               className="w-full rounded-md border border-slate-300 p-2 text-sm"
               rows={2}
@@ -228,7 +231,7 @@ export default function IntakeWizard({ step, brief, setBrief, onNext, onBack, on
           disabled={step === 1}
           className="px-4 py-2 text-sm font-medium text-slate-500 disabled:opacity-0"
         >
-          Back
+          {t('wizard.back')}
         </button>
         <button
           type="button"
@@ -236,7 +239,7 @@ export default function IntakeWizard({ step, brief, setBrief, onNext, onBack, on
           disabled={!canProceed(step, brief)}
           className="px-5 py-2 rounded-md bg-blue-600 text-white text-sm font-medium disabled:opacity-40"
         >
-          {step === TOTAL_STEPS ? 'Review' : 'Next'}
+          {step === TOTAL_STEPS ? t('wizard.review') : t('wizard.next')}
         </button>
       </div>
     </div>

@@ -8,6 +8,8 @@ import IntakeWizard from '../client-form/components/IntakeWizard'
 import SummaryReview from '../client-form/components/SummaryReview'
 import RecommendationResults from '../client-form/components/RecommendationResults'
 import AgentInsights from './components/AgentInsights'
+import LanguageToggle from '../../components/LanguageToggle'
+import { useLanguage } from '../../i18n/LanguageContext'
 
 const EMPTY_BRIEF: ClientBrief = {
   industry: '',
@@ -31,9 +33,9 @@ interface AgentRecommendResponse {
 
 type View = 'wizard' | 'summary' | 'loading' | 'results' | 'error'
 
-const LOADING_STAGES = ['Searching for current trends...', 'Matching against catalog...']
-
 export default function AgentFormPage() {
+  const { t } = useLanguage()
+  const loadingStages = [t('agent.loading1'), t('agent.loading2')]
   const [view, setView] = useState<View>('wizard')
   const [step, setStep] = useState(1)
   const [brief, setBrief] = useState<ClientBrief>(EMPTY_BRIEF)
@@ -81,7 +83,7 @@ export default function AgentFormPage() {
     } catch {
       setAgentResult({
         recommendations: [],
-        trendSummary: 'Something went wrong reaching the agent.',
+        trendSummary: t('agent.somethingWentWrong'),
         searchQueriesUsed: [],
         sourcesUsed: [],
         usedFallback: true,
@@ -123,10 +125,13 @@ export default function AgentFormPage() {
   return (
     <div className="min-h-screen bg-white">
       <header className="border-b border-slate-100 px-4 py-3 flex items-center justify-between">
-        <p className="text-sm font-semibold text-slate-900">BrandBoost Product Matcher — Live Agent</p>
-        <Link to="/client-form" className="text-xs text-slate-500 hover:text-blue-600">
-          Switch to fast local version
-        </Link>
+        <p className="text-sm font-semibold text-slate-900">{t('header.live')}</p>
+        <div className="flex items-center gap-3">
+          <Link to="/client-form" className="text-xs text-slate-500 hover:text-blue-600">
+            {t('nav.switchToLocal')}
+          </Link>
+          <LanguageToggle />
+        </div>
       </header>
 
       {view === 'wizard' && (
@@ -146,7 +151,7 @@ export default function AgentFormPage() {
 
       {view === 'loading' && (
         <div className="max-w-2xl mx-auto py-24 px-4 text-center">
-          <div className="animate-pulse text-slate-500">{LOADING_STAGES[loadingStage]}</div>
+          <div className="animate-pulse text-slate-500">{loadingStages[loadingStage]}</div>
         </div>
       )}
 

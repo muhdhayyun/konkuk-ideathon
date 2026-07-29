@@ -8,6 +8,8 @@ import IntakeWizard from './components/IntakeWizard'
 import SummaryReview from './components/SummaryReview'
 import RecommendationResults from './components/RecommendationResults'
 import InsightsPanel from './components/InsightsPanel'
+import LanguageToggle from '../../components/LanguageToggle'
+import { useLanguage } from '../../i18n/LanguageContext'
 
 const EMPTY_BRIEF: ClientBrief = {
   industry: '',
@@ -24,6 +26,7 @@ const EMPTY_BRIEF: ClientBrief = {
 type View = 'wizard' | 'summary' | 'results'
 
 export default function ClientFormPage() {
+  const { t } = useLanguage()
   const [view, setView] = useState<View>('wizard')
   const [step, setStep] = useState(1)
   const [brief, setBrief] = useState<ClientBrief>(EMPTY_BRIEF)
@@ -91,10 +94,13 @@ export default function ClientFormPage() {
   return (
     <div className="min-h-screen bg-white">
       <header className="border-b border-slate-100 px-4 py-3 flex items-center justify-between">
-        <p className="text-sm font-semibold text-slate-900">BrandBoost Product Matcher</p>
-        <Link to="/ai-agent" className="text-xs text-slate-500 hover:text-blue-600">
-          Try the live AI agent version
-        </Link>
+        <p className="text-sm font-semibold text-slate-900">{t('header.local')}</p>
+        <div className="flex items-center gap-3">
+          <Link to="/ai-agent" className="text-xs text-slate-500 hover:text-blue-600">
+            {t('nav.switchToLive')}
+          </Link>
+          <LanguageToggle />
+        </div>
       </header>
 
       {view === 'wizard' && (

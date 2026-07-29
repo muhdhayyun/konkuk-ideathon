@@ -1,17 +1,23 @@
 import { Route, Routes, Link } from 'react-router-dom'
 import ClientFormPage from './pages/client-form/ClientFormPage'
 import AgentFormPage from './pages/ai-agent/AgentFormPage'
+import LanguageToggle from './components/LanguageToggle'
+import { useLanguage } from './i18n/LanguageContext'
 
 function Home() {
+  const { t } = useLanguage()
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center gap-4 text-slate-900">
+    <main className="relative min-h-screen flex flex-col items-center justify-center gap-4 text-slate-900">
+      <div className="absolute top-4 right-4">
+        <LanguageToggle />
+      </div>
       <h1 className="text-2xl font-semibold">Kokuk</h1>
-      <p className="text-slate-500">Prototype pages</p>
+      <p className="text-slate-500">{t('home.subtitle')}</p>
       <Link to="/client-form" className="text-blue-600 underline">
-        BrandBoost Product Matcher — fast local version (/client-form)
+        {t('home.local')}
       </Link>
       <Link to="/ai-agent" className="text-blue-600 underline">
-        BrandBoost Product Matcher — live AI agent version (/ai-agent)
+        {t('home.live')}
       </Link>
     </main>
   )

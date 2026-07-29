@@ -1,4 +1,5 @@
 import type { FeedbackEvent, Product } from '../types'
+import { useLanguage } from '../../../i18n/LanguageContext'
 
 interface InsightsPanelProps {
   feedbackLog: FeedbackEvent[]
@@ -6,6 +7,7 @@ interface InsightsPanelProps {
 }
 
 export default function InsightsPanel({ feedbackLog, catalog }: InsightsPanelProps) {
+  const { t } = useLanguage()
   if (feedbackLog.length === 0) return null
 
   const productsById = new Map(catalog.map((p) => [p.id, p]))
@@ -32,15 +34,19 @@ export default function InsightsPanel({ feedbackLog, catalog }: InsightsPanelPro
   return (
     <div className="max-w-4xl mx-auto px-4 pb-10">
       <div className="rounded-lg border border-slate-200 p-4">
-        <p className="text-sm font-semibold text-slate-900 mb-3">Insights (accepted vs. rejected by tag)</p>
+        <p className="text-sm font-semibold text-slate-900 mb-3">{t('insights.title')}</p>
         <div className="space-y-1.5">
           {rows.map(([tag, counts]) => (
             <div key={tag} className="flex items-center justify-between text-sm">
               <span className="text-slate-600">{tag}</span>
               <span className="text-xs text-slate-500">
-                <span className="text-emerald-600 font-medium">{counts.accepted} accepted</span>
+                <span className="text-emerald-600 font-medium">
+                  {counts.accepted} {t('insights.accepted')}
+                </span>
                 {' · '}
-                <span className="text-red-500 font-medium">{counts.rejected} rejected</span>
+                <span className="text-red-500 font-medium">
+                  {counts.rejected} {t('insights.rejected')}
+                </span>
               </span>
             </div>
           ))}
