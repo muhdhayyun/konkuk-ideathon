@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { USER_NAME } from './data/portfolio'
+import PeerPicksSection from './components/PeerPicksSection'
 
 const STATS = [
   { label: '도착한 견적서', count: 0 },
@@ -32,6 +33,8 @@ export default function HomePage() {
           </button>
         ))}
       </div>
+
+      <PeerPicksSection />
 
       {/* 티셔츠 간편주문 배너 */}
       <div className="mt-10 flex items-center justify-between overflow-hidden rounded-2xl border border-neutral-100 bg-gradient-to-r from-white via-slate-50 to-indigo-50 p-8">
