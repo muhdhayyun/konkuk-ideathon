@@ -56,6 +56,21 @@ export const translations = {
     'results.trending': 'Trending',
     'results.sourcedFrom': 'Sourced from:',
 
+    // Panel A (internal historical matcher) / Panel B (external trend) / agreement badge
+    'panelA.title': 'Based on similar past orders',
+    'panelA.metaLine': '{timesOrdered} orders · {acceptanceRatePct}% acceptance',
+    'panelA.empty': 'No historical matches for this brief.',
+    'panelB.title': "What's trending right now",
+    'panelB.checking': 'Checking live trends...',
+    'agreement.badge': '✓ Confirmed by history and current trend',
+
+    // AI-assisted brief clarification (Feature 2, /ai-agent only)
+    'clarify.title': "Let's sharpen this a bit",
+    'clarify.checking': 'Checking for ways to make this more specific...',
+    'clarify.nudge': 'A few ways similar clients have described this — tap to add:',
+    'clarify.notesLabel': 'Notes',
+    'clarify.continue': 'Continue to recommendations',
+
     // Insights
     'insights.title': 'Insights (accepted vs. rejected by tag)',
     'insights.accepted': 'accepted',
@@ -391,6 +406,21 @@ export const translations = {
     'results.reject': '거절',
     'results.trending': '인기 상승 중',
     'results.sourcedFrom': '출처:',
+
+    // Panel A (internal historical matcher) / Panel B (external trend) / agreement badge
+    'panelA.title': '비슷한 과거 주문 기반',
+    'panelA.metaLine': '{timesOrdered}건 주문 · 수락률 {acceptanceRatePct}%',
+    'panelA.empty': '이 조건에 맞는 과거 주문 이력이 없습니다.',
+    'panelB.title': '현재 트렌드',
+    'panelB.checking': '실시간 트렌드 확인 중...',
+    'agreement.badge': '✓ 과거 이력과 현재 트렌드 모두 확인됨',
+
+    // AI-assisted brief clarification (Feature 2, /ai-agent only)
+    'clarify.title': '조금 더 구체화해볼까요',
+    'clarify.checking': '더 구체화할 방법을 확인하는 중...',
+    'clarify.nudge': '비슷한 고객들이 이렇게 표현했어요 — 탭하여 추가하세요:',
+    'clarify.notesLabel': '메모',
+    'clarify.continue': '추천 결과 보기',
 
     // Insights
     'insights.title': '인사이트 (태그별 수락 대 거절)',

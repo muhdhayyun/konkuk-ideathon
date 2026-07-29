@@ -3,6 +3,9 @@
   "functions": {
     "api/agent-recommend.ts": {
       "maxDuration": 60
+    },
+    "api/clarify-brief.ts": {
+      "maxDuration": 30
     }
   }
 }

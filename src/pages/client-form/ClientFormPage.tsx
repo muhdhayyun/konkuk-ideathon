@@ -7,9 +7,12 @@ import { getRecommendations, getNotQuiteRecommendations } from './lib/matcher'
 import IntakeWizard from './components/IntakeWizard'
 import SummaryReview from './components/SummaryReview'
 import RecommendationResults from './components/RecommendationResults'
+import InternalMatchesPanel from './components/InternalMatchesPanel'
 import InsightsPanel from './components/InsightsPanel'
 import LanguageToggle from '../../components/LanguageToggle'
 import { useLanguage } from '../../i18n/LanguageContext'
+import { getInternalMatches, type InternalMatch } from '../../lib/internal-matcher'
+import { computeAgreement } from '../../lib/agreementMatch'
 
 const EMPTY_BRIEF: ClientBrief = {
   industry: '',
@@ -31,6 +34,7 @@ export default function ClientFormPage() {
   const [step, setStep] = useState(1)
   const [brief, setBrief] = useState<ClientBrief>(EMPTY_BRIEF)
   const [recommendations, setRecommendations] = useState<Recommendation[]>([])
+  const [internalMatches, setInternalMatches] = useState<InternalMatch[]>([])
   const [excludedIds, setExcludedIds] = useState<string[]>([])
   const [requestedIds, setRequestedIds] = useState<string[]>([])
   const [feedbackLog, setFeedbackLog] = useState<FeedbackEvent[]>([])
@@ -56,6 +60,7 @@ export default function ClientFormPage() {
   const handleFindProducts = () => {
     setExcludedIds([])
     setRequestedIds([])
+    setInternalMatches(getInternalMatches(brief))
     setRecommendations(getRecommendations(brief, products, { language }))
     setView('results')
   }
@@ -120,6 +125,10 @@ export default function ClientFormPage() {
 
       {view === 'results' && (
         <>
+          <InternalMatchesPanel
+            matches={internalMatches}
+            agreement={computeAgreement(internalMatches, recommendations)}
+          />
           <RecommendationResults
             recommendations={recommendations}
             requestedIds={requestedIds}
@@ -127,6 +136,7 @@ export default function ClientFormPage() {
             onNotQuite={handleNotQuite}
             onReject={handleReject}
             onStartOver={handleStartOver}
+            agreement={computeAgreement(internalMatches, recommendations)}
           />
           <InsightsPanel feedbackLog={feedbackLog} catalog={products} />
         </>

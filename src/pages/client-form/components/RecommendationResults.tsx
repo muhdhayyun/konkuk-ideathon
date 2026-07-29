@@ -1,5 +1,6 @@
 import type { Recommendation } from '../types'
 import { useLanguage } from '../../../i18n/LanguageContext'
+import { isExternalAgreed } from '../../../lib/agreementMatch'
 
 function hostnameOf(url: string): string {
   try {
@@ -16,6 +17,13 @@ interface RecommendationResultsProps {
   onNotQuite: (rec: Recommendation) => void
   onReject: (rec: Recommendation) => void
   onStartOver: () => void
+  // Only passed by AgentFormPage — labels this panel as "Panel B" alongside the
+  // internal-matcher's "Panel A". client-form's own usage leaves this unset since its
+  // single panel isn't trend-based content.
+  panelLabel?: string
+  // Cross-reference against Panel A, computed by computeAgreement() — optional so this
+  // component works unchanged wherever Feature 1 hasn't been wired in.
+  agreement?: Set<string>
 }
 
 export default function RecommendationResults({
@@ -25,11 +33,14 @@ export default function RecommendationResults({
   onNotQuite,
   onReject,
   onStartOver,
+  panelLabel,
+  agreement,
 }: RecommendationResultsProps) {
   const { t } = useLanguage()
 
   return (
     <div className="max-w-4xl mx-auto py-10 px-4">
+      {panelLabel && <p className="text-xs font-semibold tracking-wide text-slate-400 uppercase mb-2">{panelLabel}</p>}
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-lg font-semibold text-slate-900">{t('results.title')}</h2>
         <button type="button" onClick={onStartOver} className="text-sm text-slate-500 hover:text-blue-600">
@@ -41,7 +52,12 @@ export default function RecommendationResults({
 
       <div className="grid gap-4 sm:grid-cols-2">
         {recommendations.map((rec) => (
-          <div key={rec.product.id} className="rounded-lg border border-slate-200 p-4 flex flex-col gap-3">
+          <div key={rec.product.id} className="relative rounded-lg border border-slate-200 p-4 flex flex-col gap-3">
+            {agreement && isExternalAgreed(rec, agreement) && (
+              <span className="absolute top-2 right-2 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-medium text-emerald-700">
+                {t('agreement.badge')}
+              </span>
+            )}
             <div className="w-full h-28 rounded-md bg-slate-100 flex items-center justify-center text-slate-300 text-xs">
               image placeholder
             </div>
