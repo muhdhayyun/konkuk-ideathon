@@ -43,7 +43,14 @@ const RESPONSE_SCHEMA = {
 
 let vertexClient: AnthropicVertex | null = null
 
-function getVertexClient(): AnthropicVertex {
+// AnthropicVertex's constructor kicks off Google auth resolution as an
+// internal, unawaited promise (`this._authClientPromise = auth.getClient()`).
+// If that promise rejects before anything attaches a handler to it, Node
+// treats it as an unhandled rejection and kills the whole process — which
+// bypasses any try/catch around code that merely constructs the client.
+// Resolving the auth client ourselves, awaited inside our own try block,
+// keeps a credential failure inside our normal error handling instead.
+async function getVertexClient(): Promise<AnthropicVertex> {
   if (vertexClient) return vertexClient
 
   const googleAuth = new GoogleAuth({
@@ -54,11 +61,12 @@ function getVertexClient(): AnthropicVertex {
     },
     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
   })
+  const authClient = await googleAuth.getClient()
 
   vertexClient = new AnthropicVertex({
     projectId: process.env.GOOGLE_VERTEX_PROJECT,
     region: process.env.GOOGLE_VERTEX_LOCATION || 'global',
-    googleAuth,
+    authClient,
   })
   return vertexClient
 }
@@ -97,7 +105,7 @@ function findTextBlock(content: Anthropic.ContentBlock[]): string {
 }
 
 async function callAgent(brief: ClientBrief): Promise<AgentRecommendResponse> {
-  const client = getVertexClient()
+  const client = await getVertexClient()
 
   let messages: Anthropic.MessageParam[] = [{ role: 'user', content: buildPrompt(brief) }]
 
