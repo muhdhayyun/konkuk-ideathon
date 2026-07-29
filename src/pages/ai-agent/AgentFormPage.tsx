@@ -24,6 +24,7 @@ const EMPTY_BRIEF: ClientBrief = {
 interface AgentRecommendResponse {
   recommendations: Recommendation[]
   trendSummary: string
+  searchQueriesUsed: string[]
   sourcesUsed: string[]
   usedFallback: boolean
 }
@@ -81,6 +82,7 @@ export default function AgentFormPage() {
       setAgentResult({
         recommendations: [],
         trendSummary: 'Something went wrong reaching the agent.',
+        searchQueriesUsed: [],
         sourcesUsed: [],
         usedFallback: true,
       })
@@ -152,6 +154,7 @@ export default function AgentFormPage() {
         <>
           <AgentInsights
             trendSummary={agentResult.trendSummary}
+            searchQueriesUsed={agentResult.searchQueriesUsed}
             sourcesUsed={agentResult.sourcesUsed}
             usedFallback={agentResult.usedFallback}
           />

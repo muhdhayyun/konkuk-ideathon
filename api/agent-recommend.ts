@@ -7,6 +7,7 @@ import { getRecommendations } from '../src/pages/client-form/lib/matcher.js'
 interface AgentRecommendResponse {
   recommendations: Recommendation[]
   trendSummary: string
+  searchQueriesUsed: string[]
   sourcesUsed: string[]
   usedFallback: boolean
 }
@@ -88,14 +89,17 @@ async function callAgent(brief: ClientBrief): Promise<AgentRecommendResponse> {
     })
     .filter((r): r is Recommendation => r !== null)
 
-  const groundingChunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks ?? []
+  const groundingMetadata = response.candidates?.[0]?.groundingMetadata
+  const groundingChunks = groundingMetadata?.groundingChunks ?? []
   const sourcesUsed = [
     ...new Set(groundingChunks.map((chunk) => chunk.web?.uri).filter((uri): uri is string => Boolean(uri))),
   ]
+  const searchQueriesUsed = groundingMetadata?.webSearchQueries ?? []
 
   return {
     recommendations,
     trendSummary: parsed.trendSummary,
+    searchQueriesUsed,
     sourcesUsed,
     usedFallback: false,
   }
@@ -105,6 +109,7 @@ function fallbackResponse(brief: ClientBrief): AgentRecommendResponse {
   return {
     recommendations: getRecommendations(brief, products),
     trendSummary: 'Live trend search is unavailable right now — showing locally matched picks instead.',
+    searchQueriesUsed: [],
     sourcesUsed: [],
     usedFallback: true,
   }
