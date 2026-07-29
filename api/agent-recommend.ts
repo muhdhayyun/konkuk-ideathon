@@ -26,10 +26,14 @@ interface AgentRecommendResponse {
   usedFallback: boolean
 }
 
-// Each collector gets this long to answer before it's treated as empty — one slow
-// source (Google Trends' unofficial endpoint, most often) can never block the others
-// or blow the whole request past Vercel's function time limit.
-const COLLECTOR_TIMEOUT_MS = 15000
+// Collectors that call Gemini *with* the googleSearch grounding tool are genuinely
+// slower than plain generation (grounded calls have been observed taking well over
+// 15s in this same project) — give them more room. Collectors that only do raw HTTP
+// + plain (non-grounded) Gemini calls finish fast, so a tight cap doesn't cost
+// anything there. Either way, a timed-out collector is just treated as empty — never
+// blocks the others or blows the whole request past Vercel's function time limit.
+const SEARCH_COLLECTOR_TIMEOUT_MS = 25000
+const FAST_COLLECTOR_TIMEOUT_MS = 12000
 
 // Turns the client's emotional-outcome chips into the tag vocabulary the collectors
 // probe for — the same mapping the local matcher already uses to score products, so
@@ -45,10 +49,10 @@ function deriveCollectorInput(brief: ClientBrief): CollectorInput {
 
 async function collectAllTrends(input: CollectorInput): Promise<NormalizedTrend[]> {
   const results = await Promise.allSettled([
-    withTimeout(googleSearchCollector(input), COLLECTOR_TIMEOUT_MS, [] as NormalizedTrend[]),
-    withTimeout(youtubeCollector(input), COLLECTOR_TIMEOUT_MS, [] as NormalizedTrend[]),
-    withTimeout(naverCollector(input), COLLECTOR_TIMEOUT_MS, [] as NormalizedTrend[]),
-    withTimeout(ruliwebCollector(input), COLLECTOR_TIMEOUT_MS, [] as NormalizedTrend[]),
+    withTimeout(googleSearchCollector(input), SEARCH_COLLECTOR_TIMEOUT_MS, [] as NormalizedTrend[]),
+    withTimeout(youtubeCollector(input), FAST_COLLECTOR_TIMEOUT_MS, [] as NormalizedTrend[]),
+    withTimeout(naverCollector(input), FAST_COLLECTOR_TIMEOUT_MS, [] as NormalizedTrend[]),
+    withTimeout(ruliwebCollector(input), SEARCH_COLLECTOR_TIMEOUT_MS, [] as NormalizedTrend[]),
   ])
 
   return results.flatMap((r) => (r.status === 'fulfilled' ? r.value : []))
@@ -115,8 +119,11 @@ Respond with ONLY a single JSON object matching this exact shape, no markdown fe
 
 // This step alone used to have no timeout — a slow (but successful) collector phase
 // plus a slow grouping call plus a slow final call could stack well past Vercel's
-// function timeout with nothing to show for it. Bound it explicitly.
-const RECOMMEND_TIMEOUT_MS = 20000
+// function timeout with nothing to show for it. Bound it explicitly. This call has no
+// search tool attached, so it's plain generation — 15s is generous, not tight.
+// Worst-case total budget: 25s (collectors, parallel) + 10s (grouping) + 15s (this) =
+// 50s, leaving ~10s headroom under vercel.json's 60s maxDuration.
+const RECOMMEND_TIMEOUT_MS = 15000
 
 interface GeneratedRecommendations {
   recommendations: Recommendation[]
