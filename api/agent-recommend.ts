@@ -6,7 +6,7 @@ import { getGeminiClient, GEMINI_MODEL, extractJson } from '../src/lib/geminiCli
 import { withTimeout } from '../src/lib/withTimeout.js'
 import type { CollectorInput } from '../src/lib/collectors/types.js'
 import type { NormalizedTrend } from '../src/types/trend.js'
-import { googleTrendsCollector } from '../src/lib/collectors/googleTrendsCollector.js'
+import { googleSearchCollector } from '../src/lib/collectors/googleSearchCollector.js'
 import { youtubeCollector } from '../src/lib/collectors/youtubeCollector.js'
 import { naverCollector } from '../src/lib/collectors/naverCollector.js'
 import { ruliwebCollector } from '../src/lib/collectors/ruliwebCollector.js'
@@ -45,7 +45,7 @@ function deriveCollectorInput(brief: ClientBrief): CollectorInput {
 
 async function collectAllTrends(input: CollectorInput): Promise<NormalizedTrend[]> {
   const results = await Promise.allSettled([
-    withTimeout(googleTrendsCollector(input), COLLECTOR_TIMEOUT_MS, [] as NormalizedTrend[]),
+    withTimeout(googleSearchCollector(input), COLLECTOR_TIMEOUT_MS, [] as NormalizedTrend[]),
     withTimeout(youtubeCollector(input), COLLECTOR_TIMEOUT_MS, [] as NormalizedTrend[]),
     withTimeout(naverCollector(input), COLLECTOR_TIMEOUT_MS, [] as NormalizedTrend[]),
     withTimeout(ruliwebCollector(input), COLLECTOR_TIMEOUT_MS, [] as NormalizedTrend[]),
@@ -69,7 +69,7 @@ function contributingTrendsFor(product: Product, matchedTrends: MatchedTrend[]):
 function buildPrompt(brief: ClientBrief, matchedTrends: MatchedTrend[], language: Language): string {
   const trendContext =
     matchedTrends.length > 0
-      ? `Here is a pre-verified list of what's currently trending, aggregated and scored from real data sources (Google Trends, YouTube, Naver, Ruliweb) — sourceCount is how many independent sources confirmed it, compositeScore is its overall strength (0-100+):\n${JSON.stringify(
+      ? `Here is a pre-verified list of what's currently trending, aggregated and scored from real data sources (Google Search, YouTube, Naver, Ruliweb) — sourceCount is how many independent sources confirmed it, compositeScore is its overall strength (0-100+):\n${JSON.stringify(
           matchedTrends.map((m) => ({
             topic: m.canonicalTopic,
             sourceCount: m.sourceCount,

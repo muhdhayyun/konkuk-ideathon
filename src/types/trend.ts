@@ -1,4 +1,4 @@
-export type TrendSource = 'google_trends' | 'youtube' | 'naver' | 'ruliweb'
+export type TrendSource = 'google_search' | 'youtube' | 'naver' | 'ruliweb'
 
 export interface NormalizedTrend {
   source: TrendSource

@@ -10,14 +10,14 @@ interface MultiSourceTrendPanelProps {
 }
 
 const SOURCE_LABEL: Record<TrendSource, string> = {
-  google_trends: 'Google Trends',
+  google_search: 'Google Search',
   youtube: 'YouTube',
   naver: 'Naver',
   ruliweb: 'Ruliweb',
 }
 
 const SOURCE_ICON: Record<TrendSource, string> = {
-  google_trends: '📈',
+  google_search: '🔍',
   youtube: '▶️',
   naver: 'N',
   ruliweb: 'R',
