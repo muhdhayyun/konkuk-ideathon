@@ -1,3 +1,5 @@
+import type { ClientBrief } from './types'
+
 export const INDUSTRIES = [
   'Finance/Asset Management',
   'Tech',
@@ -37,3 +39,15 @@ export const EMOTIONAL_OUTCOMES = [
   'Feels sustainable/thoughtful',
   'Feels professional/polished',
 ]
+
+export const SAMPLE_BRIEF: ClientBrief = {
+  industry: 'Tech',
+  brandTone: 'Modern/Minimal',
+  companySize: 'Mid-size (50-500)',
+  occasion: 'Conference/Event swag',
+  recipient: 'General public/attendees',
+  budgetTier: '$50-100',
+  quantity: 100,
+  emotionalOutcomes: ['Feels fun/energetic', 'Feels sustainable/thoughtful'],
+  notes: '',
+}

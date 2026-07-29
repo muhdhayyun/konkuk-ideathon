@@ -16,6 +16,7 @@ interface IntakeWizardProps {
   setBrief: (updater: (prev: ClientBrief) => ClientBrief) => void
   onNext: () => void
   onBack: () => void
+  onInstantFill?: () => void
 }
 
 const TOTAL_STEPS = 5
@@ -37,7 +38,7 @@ function canProceed(step: number, brief: ClientBrief): boolean {
   }
 }
 
-export default function IntakeWizard({ step, brief, setBrief, onNext, onBack }: IntakeWizardProps) {
+export default function IntakeWizard({ step, brief, setBrief, onNext, onBack, onInstantFill }: IntakeWizardProps) {
   const toggleEmotionalOutcome = (outcome: string) => {
     setBrief((prev) => ({
       ...prev,
@@ -49,9 +50,20 @@ export default function IntakeWizard({ step, brief, setBrief, onNext, onBack }: 
 
   return (
     <div className="max-w-2xl mx-auto py-10 px-4">
-      <p className="text-xs font-medium text-slate-400 mb-2">
-        Step {step} of {TOTAL_STEPS}
-      </p>
+      <div className="flex items-center justify-between mb-2">
+        <p className="text-xs font-medium text-slate-400">
+          Step {step} of {TOTAL_STEPS}
+        </p>
+        {onInstantFill && (
+          <button
+            type="button"
+            onClick={onInstantFill}
+            className="text-xs text-slate-400 hover:text-blue-600 underline"
+          >
+            Instant fill (testing)
+          </button>
+        )}
+      </div>
 
       {step === 1 && (
         <div className="space-y-6">

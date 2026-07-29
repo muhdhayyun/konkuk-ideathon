@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import type { ClientBrief, Recommendation } from '../client-form/types'
+import { SAMPLE_BRIEF } from '../client-form/constants'
 import { products } from '../client-form/data/products'
 import { getNotQuiteRecommendations } from '../client-form/lib/matcher'
 import IntakeWizard from '../client-form/components/IntakeWizard'
@@ -103,6 +104,11 @@ export default function AgentFormPage() {
     setRecommendations(next)
   }
 
+  const handleInstantFill = () => {
+    setBrief(SAMPLE_BRIEF)
+    setView('summary')
+  }
+
   const handleStartOver = () => {
     setBrief(EMPTY_BRIEF)
     setStep(1)
@@ -122,7 +128,14 @@ export default function AgentFormPage() {
       </header>
 
       {view === 'wizard' && (
-        <IntakeWizard step={step} brief={brief} setBrief={setBrief} onNext={handleNext} onBack={handleBack} />
+        <IntakeWizard
+          step={step}
+          brief={brief}
+          setBrief={setBrief}
+          onNext={handleNext}
+          onBack={handleBack}
+          onInstantFill={handleInstantFill}
+        />
       )}
 
       {view === 'summary' && (
