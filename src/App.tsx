@@ -9,6 +9,7 @@ import PaymentPage from './pages/workspace/PaymentPage'
 import PortfolioDetailPage from './pages/workspace/PortfolioDetailPage'
 import InquiryBranchPage from './pages/workspace/InquiryBranchPage'
 import CreateInquiryPage from './pages/workspace/CreateInquiryPage'
+import RecommendPage from './pages/workspace/RecommendPage'
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/portfolio/:id" element={<PortfolioDetailPage />} />
       </Route>
       <Route path="/inquiry" element={<InquiryBranchPage />} />
+      <Route path="/inquiry/recommend" element={<RecommendPage />} />
       <Route path="/estimate-requests/create" element={<CreateInquiryPage />} />
 
       {/* 기존 팀 프로토타입 */}

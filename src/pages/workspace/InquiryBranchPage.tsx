@@ -32,7 +32,7 @@ export default function InquiryBranchPage() {
 
           <button
             type="button"
-            onClick={() => navigate('/')}
+            onClick={() => navigate('/inquiry/recommend')}
             className="flex w-64 flex-col items-center rounded-2xl bg-white px-8 py-12 shadow-sm transition-shadow hover:shadow-md"
           >
             <span className="text-7xl">🗂️</span>

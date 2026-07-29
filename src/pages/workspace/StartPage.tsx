@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { CATEGORIES, PORTFOLIO, type Category } from './data/portfolio'
 
@@ -23,6 +23,7 @@ function PortfolioCard({ id, emoji, gradient, name, category, tall }: (typeof PO
 
 export default function StartPage() {
   const navigate = useNavigate()
+  const galleryRef = useRef<HTMLElement>(null)
   const [category, setCategory] = useState<Category>('전체')
   const [query, setQuery] = useState('')
 
@@ -49,7 +50,7 @@ export default function StartPage() {
         <div className="mx-auto mt-14 grid max-w-2xl grid-cols-1 gap-4 sm:grid-cols-2">
           <button
             type="button"
-            onClick={() => navigate('/estimate-requests/create')}
+            onClick={() => navigate('/inquiry')}
             className="rounded-2xl border border-neutral-100 bg-white p-6 text-left shadow-sm transition-shadow hover:shadow-md"
           >
             <span className="inline-block rounded-md bg-indigo-50 px-2 py-1 text-xs font-semibold text-indigo-500">
@@ -65,7 +66,7 @@ export default function StartPage() {
 
           <button
             type="button"
-            onClick={() => navigate('/inquiry')}
+            onClick={() => galleryRef.current?.scrollIntoView({ behavior: 'smooth' })}
             className="rounded-2xl border border-neutral-100 bg-white p-6 text-left shadow-sm transition-shadow hover:shadow-md"
           >
             <span className="inline-block rounded-md bg-rose-50 px-2 py-1 text-xs font-semibold text-rose-500">
@@ -82,7 +83,10 @@ export default function StartPage() {
       </section>
 
       {/* 카테고리 필터 + 검색 */}
-      <section className="sticky top-0 z-10 -mx-10 flex flex-wrap items-center gap-3 bg-white/95 px-10 py-4 backdrop-blur">
+      <section
+        ref={galleryRef}
+        className="sticky top-0 z-10 -mx-10 flex flex-wrap items-center gap-3 bg-white/95 px-10 py-4 backdrop-blur"
+      >
         <span className="mr-1 text-sm font-medium text-neutral-400">카테고리</span>
         {CATEGORIES.map((c) => (
           <button
