@@ -155,10 +155,6 @@ export default function AgentFormPage() {
     }
   }
 
-  const handleAppendNote = (text: string) => {
-    setBrief((prev) => ({ ...prev, notes: prev.notes ? `${prev.notes} ${text}` : text }))
-  }
-
   const handleContinueFromClarify = () => {
     void submitForRecommendations(brief)
   }
@@ -231,7 +227,6 @@ export default function AgentFormPage() {
           suggestions={clarifySuggestions}
           notes={brief.notes ?? ''}
           onNotesChange={(notes) => setBrief((prev) => ({ ...prev, notes }))}
-          onAppendSuggestion={handleAppendNote}
           onContinue={handleContinueFromClarify}
         />
       )}

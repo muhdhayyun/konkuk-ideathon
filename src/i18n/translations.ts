@@ -70,6 +70,8 @@ export const translations = {
     'clarify.nudge': 'A few ways similar clients have described this — tap to add:',
     'clarify.notesLabel': 'Notes',
     'clarify.continue': 'Continue to recommendations',
+    'clarify.otherOption': 'Other (write your own)',
+    'clarify.otherPlaceholder': 'Write your own...',
 
     // Insights
     'insights.title': 'Insights (accepted vs. rejected by tag)',
@@ -421,6 +423,8 @@ export const translations = {
     'clarify.nudge': '비슷한 고객들이 이렇게 표현했어요 — 탭하여 추가하세요:',
     'clarify.notesLabel': '메모',
     'clarify.continue': '추천 결과 보기',
+    'clarify.otherOption': '기타 (직접 입력)',
+    'clarify.otherPlaceholder': '직접 입력...',
 
     // Insights
     'insights.title': '인사이트 (태그별 수락 대 거절)',
