@@ -4,7 +4,14 @@ import { useLanguage } from '../../i18n/LanguageContext'
 import { translateWorkspaceValue, type TranslationKey } from '../../i18n/translations'
 import LanguageToggle from '../../components/LanguageToggle'
 import type { ClientBrief, Recommendation } from '../client-form/types'
-import { INDUSTRIES, OCCASIONS, RECIPIENTS, BUDGET_TIER_LABELS, EMOTIONAL_OUTCOMES } from '../client-form/constants'
+import {
+  INDUSTRIES,
+  OCCASIONS,
+  RECIPIENTS,
+  BUDGET_TIER_LABELS,
+  EMOTIONAL_OUTCOMES,
+  SAMPLE_BRIEF,
+} from '../client-form/constants'
 import { products } from '../client-form/data/products'
 import { getNotQuiteRecommendations, BUDGET_TIERS } from '../client-form/lib/matcher'
 import InternalMatchesPanel from '../client-form/components/InternalMatchesPanel'
@@ -344,6 +351,22 @@ export default function RecommendPage() {
     setView('form')
   }
 
+  // Same ClientBrief values as /ai-agent's "Instant fill (testing)" — this page just
+  // has extra fields SAMPLE_BRIEF doesn't cover (mode, wish text), filled with
+  // reasonable defaults so the form is immediately submittable.
+  const handleInstantFill = () => {
+    if (mode === null) setMode(MODES[0])
+    setBrief({ ...SAMPLE_BRIEF, brandTone: DEFAULT_BRAND_TONE, companySize: DEFAULT_COMPANY_SIZE })
+    setQuantityOther(true)
+    setBudgetOther(false)
+    setCustomBudgetValue('')
+    setNoteSelected(new Set())
+    setNoteOtherEnabled(true)
+    const sampleWish = 'Need something modern and reusable for a tech conference booth.'
+    setNoteOtherText(sampleWish)
+    setWish(sampleWish)
+  }
+
   const loadingStages = [t('agent.loading1'), t('agent.loading2'), t('agent.loading3')]
   const loadingStage = loadingSeconds < 2 ? 0 : loadingSeconds < 8 ? 1 : 2
   const agreement =
@@ -423,6 +446,16 @@ export default function RecommendPage() {
       </header>
 
       <main className="mx-auto max-w-2xl pb-32">
+        <div className="flex justify-end">
+          <button
+            type="button"
+            onClick={handleInstantFill}
+            className="text-xs text-neutral-400 underline hover:text-indigo-500"
+          >
+            {t('wizard.instantFill')}
+          </button>
+        </div>
+
         <h1 className="text-center text-xl font-bold text-neutral-900">
           {mode === null ? t('workspace.recommend.titleModeSelect') : t('workspace.recommend.titleQuestions')}
         </h1>
