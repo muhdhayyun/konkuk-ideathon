@@ -68,7 +68,16 @@ export async function googleSearchCollector(input: CollectorInput): Promise<Norm
       return []
     }
 
-    const groundingChunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks ?? []
+    const groundingMetadata = response.candidates?.[0]?.groundingMetadata
+    // webSearchQueries is populated whenever the model actually invoked the search
+    // tool, independent of whether any citable chunk came back — this is the one
+    // signal that tells "didn't search" apart from "searched, found nothing citable"
+    // apart from "searched, but we're reading the wrong field for this API shape."
+    console.info(
+      `googleSearchCollector: groundingMetadata present=${Boolean(groundingMetadata)}, webSearchQueries=${JSON.stringify(groundingMetadata?.webSearchQueries)}, groundingChunks count=${groundingMetadata?.groundingChunks?.length ?? 0}, raw groundingChunks=${JSON.stringify(groundingMetadata?.groundingChunks)?.slice(0, 1500)}`,
+    )
+
+    const groundingChunks = groundingMetadata?.groundingChunks ?? []
     const rawUrls = [
       ...new Set(groundingChunks.map((c) => c.web?.uri).filter((uri): uri is string => Boolean(uri))),
     ]
