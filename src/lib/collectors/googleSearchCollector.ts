@@ -28,6 +28,7 @@ interface ParsedSearchResponse {
 // unofficial endpoint that used to back this collector was unreliably rate-limited.
 // Source id/label reflect what this actually is: a search summary, not a Trends metric.
 export async function googleSearchCollector(input: CollectorInput): Promise<NormalizedTrend[]> {
+  const start = Date.now()
   try {
     const ai = getGeminiClient()
     const response = await ai.models.generateContent({
@@ -38,20 +39,38 @@ export async function googleSearchCollector(input: CollectorInput): Promise<Norm
         tools: [{ googleSearch: {} }],
       },
     })
+    console.info(`googleSearchCollector: generateContent returned after ${Date.now() - start}ms`)
 
     const text = response.text
-    if (!text) return []
+    if (!text) {
+      console.info('googleSearchCollector: response had no text — returning []')
+      return []
+    }
 
     const cleaned = text.trim().replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/i, '')
-    const parsed = JSON.parse(cleaned) as ParsedSearchResponse
+    let parsed: ParsedSearchResponse
+    try {
+      parsed = JSON.parse(cleaned) as ParsedSearchResponse
+    } catch (parseErr) {
+      console.error('googleSearchCollector: JSON.parse failed, raw text was:', text, parseErr)
+      return []
+    }
 
-    if (parsed.trends.length === 0) return []
+    if (parsed.trends.length === 0) {
+      console.info('googleSearchCollector: model reported 0 trends — returning []')
+      return []
+    }
 
     const groundingChunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks ?? []
     const rawUrls = [
       ...new Set(groundingChunks.map((c) => c.web?.uri).filter((uri): uri is string => Boolean(uri))),
     ]
-    if (rawUrls.length === 0) return []
+    if (rawUrls.length === 0) {
+      console.info(
+        `googleSearchCollector: parsed ${parsed.trends.length} trends but groundingChunks had 0 usable URLs — returning [] (grounding may not have triggered)`,
+      )
+      return []
+    }
 
     // Grounding chunks come back as opaque vertexaisearch.cloud.google.com redirect
     // links — resolve to real destinations before showing/counting them.
@@ -75,7 +94,8 @@ export async function googleSearchCollector(input: CollectorInput): Promise<Norm
       // whether the cited pages are real (which we did check above).
       confidence: 'unverified' as const,
     }))
-  } catch {
+  } catch (err) {
+    console.error(`googleSearchCollector: threw after ${Date.now() - start}ms —`, err)
     return []
   }
 }

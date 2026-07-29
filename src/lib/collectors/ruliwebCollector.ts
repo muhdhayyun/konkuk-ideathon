@@ -24,6 +24,7 @@ interface ParsedRuliwebResponse {
 }
 
 export async function ruliwebCollector(input: CollectorInput): Promise<NormalizedTrend[]> {
+  const start = Date.now()
   try {
     const ai = getGeminiClient()
     const response = await ai.models.generateContent({
@@ -34,20 +35,38 @@ export async function ruliwebCollector(input: CollectorInput): Promise<Normalize
         tools: [{ googleSearch: {} }],
       },
     })
+    console.info(`ruliwebCollector: generateContent returned after ${Date.now() - start}ms`)
 
     const text = response.text
-    if (!text) return []
+    if (!text) {
+      console.info('ruliwebCollector: response had no text — returning []')
+      return []
+    }
 
     const cleaned = text.trim().replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/i, '')
-    const parsed = JSON.parse(cleaned) as ParsedRuliwebResponse
+    let parsed: ParsedRuliwebResponse
+    try {
+      parsed = JSON.parse(cleaned) as ParsedRuliwebResponse
+    } catch (parseErr) {
+      console.error('ruliwebCollector: JSON.parse failed, raw text was:', text, parseErr)
+      return []
+    }
 
-    if (parsed.trends.length === 0) return []
+    if (parsed.trends.length === 0) {
+      console.info('ruliwebCollector: model reported 0 trends — returning []')
+      return []
+    }
 
     const groundingChunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks ?? []
     const rawUrls = [
       ...new Set(groundingChunks.map((c) => c.web?.uri).filter((uri): uri is string => Boolean(uri))),
     ]
-    if (rawUrls.length === 0) return []
+    if (rawUrls.length === 0) {
+      console.info(
+        `ruliwebCollector: parsed ${parsed.trends.length} trends but groundingChunks had 0 usable URLs — returning [] (grounding may not have triggered)`,
+      )
+      return []
+    }
 
     // Grounding chunks come back as opaque vertexaisearch.cloud.google.com redirect
     // links, never the real domain — so the "is this actually ruliweb.com" check has to
@@ -57,7 +76,12 @@ export async function ruliwebCollector(input: CollectorInput): Promise<Normalize
     // real evidence at all, regardless of what the model claims.
     const resolved = await resolveAll(rawUrls)
     const ruliwebUrls = [...resolved.values()].filter((url) => url.includes('ruliweb'))
-    if (ruliwebUrls.length === 0) return []
+    if (ruliwebUrls.length === 0) {
+      console.info(
+        `ruliwebCollector: resolved ${rawUrls.length} grounding URLs but none were ruliweb.com — returning []`,
+      )
+      return []
+    }
 
     const primaryUrl = ruliwebUrls[0]
     // Real (not fabricated) signal: how many distinct ruliweb.com pages grounding
@@ -77,7 +101,8 @@ export async function ruliwebCollector(input: CollectorInput): Promise<Normalize
       // whether the cited page is real (which we did check above).
       confidence: 'unverified' as const,
     }))
-  } catch {
+  } catch (err) {
+    console.error(`ruliwebCollector: threw after ${Date.now() - start}ms —`, err)
     return []
   }
 }
