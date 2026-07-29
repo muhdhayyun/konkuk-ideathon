@@ -1,6 +1,6 @@
 import type { NormalizedTrend } from '../../types/trend.js'
 import type { CollectorInput } from './types.js'
-import { getGeminiClient, GEMINI_MODEL } from '../geminiClient.js'
+import { getGeminiClient, GEMINI_MODEL, extractJsonFromMixedText } from '../geminiClient.js'
 import { resolveAll } from '../urlResolve.js'
 import { TAG_VOCABULARY } from './tagVocabulary.js'
 
@@ -16,15 +16,27 @@ function buildQuery(input: CollectorInput): string {
 // has that, for a different model generation). Prompt phrasing is the only lever: this
 // is written to make it hard for the model to conclude it can answer from training data
 // alone, which is the main reason grounding was observed not triggering.
+//
+// Also — confirmed via real production logs — asking for JSON-only output starves
+// Google's grounding attribution entirely: a GroundingSupport ties a citation to a
+// *segment of the model's own output text*, so a terse JSON blob with no elaboration
+// gives grounding nothing to attach a source to, and groundingChunks comes back empty
+// even when webSearchQueries proves a real search happened. The prompt below asks for a
+// short natural-language paragraph FIRST (so grounding has real prose to attach
+// citations to), then a fenced JSON block after it for parsing.
 const SYSTEM_PROMPT = `You are researching current (last 1-3 months) corporate gifting and merch trends. You MUST use Google Search for this — do not answer from your own training knowledge, since it will be stale for "current" trends. Only report findings you can attribute to an actual page from your search results.
 
-Respond with ONLY JSON, no markdown fences:
+First, write 3-5 sentences of natural prose summarizing what you found, mentioning specific real trends/topics by name so your findings are backed by what you actually read.
+
+Then, on a new line, output a fenced JSON code block extracting structured data from what you just wrote:
+\`\`\`json
 {
   "trends": [
     { "topic": "short topic phrase", "tags": ["tag from this list: ${TAG_VOCABULARY.join(', ')}"] }
   ]
 }
-If your search truly found nothing relevant, respond with {"trends": []}.`
+\`\`\`
+If your search truly found nothing relevant, write one sentence saying so and use {"trends": []}.`
 
 interface ParsedSearchResponse {
   trends: { topic: string; tags: string[] }[]
@@ -54,10 +66,9 @@ export async function googleSearchCollector(input: CollectorInput): Promise<Norm
       return []
     }
 
-    const cleaned = text.trim().replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/i, '')
     let parsed: ParsedSearchResponse
     try {
-      parsed = JSON.parse(cleaned) as ParsedSearchResponse
+      parsed = extractJsonFromMixedText(text) as ParsedSearchResponse
     } catch (parseErr) {
       console.error('googleSearchCollector: JSON.parse failed, raw text was:', text, parseErr)
       return []

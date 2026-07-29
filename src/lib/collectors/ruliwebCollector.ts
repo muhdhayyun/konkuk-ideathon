@@ -1,6 +1,6 @@
 import type { NormalizedTrend } from '../../types/trend.js'
 import type { CollectorInput } from './types.js'
-import { getGeminiClient, GEMINI_MODEL } from '../geminiClient.js'
+import { getGeminiClient, GEMINI_MODEL, extractJsonFromMixedText } from '../geminiClient.js'
 import { resolveAll } from '../urlResolve.js'
 import { TAG_VOCABULARY } from './tagVocabulary.js'
 
@@ -9,15 +9,24 @@ function buildQuery(input: CollectorInput): string {
   return `site:ruliweb.com ${input.industry} ${tagPart} 기업 선물 트렌드`
 }
 
+// Confirmed via real production logs (googleSearchCollector, same googleSearch-tool +
+// JSON-only-output shape): a GroundingSupport ties a citation to a *segment of the
+// model's own output text*, so asking for terse JSON only gives grounding nothing to
+// attach a source to — groundingChunks comes back empty even when a real search
+// happened. Ask for natural prose first, then a fenced JSON block after it for parsing.
 const SYSTEM_PROMPT = `You are researching what's trending on ruliweb.com (a Korean gaming/tech community forum) related to corporate gifting and merch. Use Google Search scoped to ruliweb.com only — include "site:ruliweb.com" in your search queries. Only report findings you can attribute to an actual ruliweb.com page from your search results.
 
-Respond with ONLY JSON, no markdown fences:
+First, write 2-4 sentences of natural prose summarizing what you found on ruliweb.com, mentioning specific posts/topics by name.
+
+Then, on a new line, output a fenced JSON code block extracting structured data from what you just wrote:
+\`\`\`json
 {
   "trends": [
     { "topic": "short topic phrase", "tags": ["tag from this list: ${TAG_VOCABULARY.join(', ')}"] }
   ]
 }
-If you found nothing relevant on ruliweb.com, respond with {"trends": []}.`
+\`\`\`
+If you found nothing relevant on ruliweb.com, write one sentence saying so and use {"trends": []}.`
 
 interface ParsedRuliwebResponse {
   trends: { topic: string; tags: string[] }[]
@@ -43,10 +52,9 @@ export async function ruliwebCollector(input: CollectorInput): Promise<Normalize
       return []
     }
 
-    const cleaned = text.trim().replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/i, '')
     let parsed: ParsedRuliwebResponse
     try {
-      parsed = JSON.parse(cleaned) as ParsedRuliwebResponse
+      parsed = extractJsonFromMixedText(text) as ParsedRuliwebResponse
     } catch (parseErr) {
       console.error('ruliwebCollector: JSON.parse failed, raw text was:', text, parseErr)
       return []
