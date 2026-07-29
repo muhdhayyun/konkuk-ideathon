@@ -26,9 +26,7 @@ export interface Recommendation {
   product: Product
   matchScore: number
   reasonWhy: string
-  // Multi-source trend evidence for this specific product, only set by the live agent —
-  // deterministic tag-overlap against MatchedTrend[], never a model self-report.
-  contributingTrends?: import('../../../lib/trendMatcher.js').MatchedTrend[]
+  sourceUrls?: string[] // per-product citations, only set by the live agent (verified against real search results)
 }
 
 export interface FeedbackEvent {

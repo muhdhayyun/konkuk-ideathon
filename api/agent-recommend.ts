@@ -1,16 +1,8 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
+import { GoogleGenAI } from '@google/genai'
 import type { ClientBrief, Product, Recommendation } from '../src/pages/client-form/types/index.js'
 import { products } from '../src/pages/client-form/data/products.js'
-import { getRecommendations, EMOTIONAL_OUTCOME_TAG_BOOSTS } from '../src/pages/client-form/lib/matcher.js'
-import { getGeminiClient, GEMINI_MODEL, extractJson } from '../src/lib/geminiClient.js'
-import { withTimeout } from '../src/lib/withTimeout.js'
-import type { CollectorInput } from '../src/lib/collectors/types.js'
-import type { NormalizedTrend } from '../src/types/trend.js'
-import { googleSearchCollector } from '../src/lib/collectors/googleSearchCollector.js'
-import { youtubeCollector } from '../src/lib/collectors/youtubeCollector.js'
-import { naverCollector } from '../src/lib/collectors/naverCollector.js'
-import { ruliwebCollector } from '../src/lib/collectors/ruliwebCollector.js'
-import { crossMatchTrends, type MatchedTrend } from '../src/lib/trendMatcher.js'
+import { getRecommendations } from '../src/pages/client-form/lib/matcher.js'
 
 type Language = 'en' | 'ko'
 
@@ -22,80 +14,45 @@ interface AgentRecommendRequestBody {
 interface AgentRecommendResponse {
   recommendations: Recommendation[]
   trendSummary: string
-  matchedTrends: MatchedTrend[]
+  searchQueriesUsed: string[]
+  sourcesUsed: string[]
   usedFallback: boolean
 }
 
-// Collectors that call Gemini *with* the googleSearch grounding tool are genuinely
-// slower than plain generation (grounded calls have been observed taking well over
-// 15s in this same project) — give them more room. Collectors that only do raw HTTP
-// + plain (non-grounded) Gemini calls finish fast, so a tight cap doesn't cost
-// anything there. Either way, a timed-out collector is just treated as empty — never
-// blocks the others or blows the whole request past Vercel's function time limit.
-const SEARCH_COLLECTOR_TIMEOUT_MS = 25000
-const FAST_COLLECTOR_TIMEOUT_MS = 12000
+const MODEL = 'gemini-2.5-flash'
 
-// Turns the client's emotional-outcome chips into the tag vocabulary the collectors
-// probe for — the same mapping the local matcher already uses to score products, so
-// "what we search for" and "what we score against" stay in sync.
-function deriveCollectorInput(brief: ClientBrief): CollectorInput {
-  const tags = new Set<string>()
-  for (const outcome of brief.emotionalOutcomes) {
-    const mapping = EMOTIONAL_OUTCOME_TAG_BOOSTS[outcome]
-    mapping?.tags.forEach((tag) => tags.add(tag))
-  }
-  return { industry: brief.industry, occasion: brief.occasion, tags: [...tags] }
+let client: GoogleGenAI | null = null
+
+function getClient(): GoogleGenAI {
+  if (client) return client
+
+  client = new GoogleGenAI({
+    vertexai: true,
+    project: process.env.GOOGLE_VERTEX_PROJECT,
+    location: process.env.GOOGLE_VERTEX_LOCATION || 'global',
+    googleAuthOptions: {
+      credentials: {
+        client_email: process.env.GOOGLE_CLIENT_EMAIL,
+        // Vercel's env var UI can flatten real newlines to literal "\n" — restore them.
+        private_key: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+      },
+    },
+  })
+  return client
 }
 
-async function collectAllTrends(input: CollectorInput): Promise<NormalizedTrend[]> {
-  const results = await Promise.allSettled([
-    withTimeout(googleSearchCollector(input), SEARCH_COLLECTOR_TIMEOUT_MS, [] as NormalizedTrend[]),
-    withTimeout(youtubeCollector(input), FAST_COLLECTOR_TIMEOUT_MS, [] as NormalizedTrend[]),
-    withTimeout(naverCollector(input), FAST_COLLECTOR_TIMEOUT_MS, [] as NormalizedTrend[]),
-    withTimeout(ruliwebCollector(input), SEARCH_COLLECTOR_TIMEOUT_MS, [] as NormalizedTrend[]),
-  ])
-
-  return results.flatMap((r) => (r.status === 'fulfilled' ? r.value : []))
-}
-
-// Deterministic evidence link between a product and the trends that support it — a tag
-// overlap, never a model self-report. Top 3 by composite score keeps cards readable.
-function contributingTrendsFor(product: Product, matchedTrends: MatchedTrend[]): MatchedTrend[] {
-  return matchedTrends
-    .filter((trend) => {
-      const trendTags = new Set(trend.matchedFrom.flatMap((t) => t.tags))
-      return product.tags.some((tag) => trendTags.has(tag))
-    })
-    .sort((a, b) => b.compositeScore - a.compositeScore)
-    .slice(0, 3)
-}
-
-function buildPrompt(brief: ClientBrief, matchedTrends: MatchedTrend[], language: Language): string {
-  const trendContext =
-    matchedTrends.length > 0
-      ? `Here is a pre-verified list of what's currently trending, aggregated and scored from real data sources (Google Search, YouTube, Naver, Ruliweb) — sourceCount is how many independent sources confirmed it, compositeScore is its overall strength (0-100+):\n${JSON.stringify(
-          matchedTrends.map((m) => ({
-            topic: m.canonicalTopic,
-            sourceCount: m.sourceCount,
-            compositeScore: m.compositeScore,
-            tags: [...new Set(m.matchedFrom.flatMap((t) => t.tags))],
-          })),
-          null,
-          2,
-        )}`
-      : 'No live trend data could be collected for this request (all sources returned nothing or timed out). Do not invent or imply trend support — reason from catalog fit alone.'
-
+function buildPrompt(brief: ClientBrief, language: Language): string {
   const base = `I'm sourcing corporate merch for a ${brief.industry} client. Occasion: ${brief.occasion}. Recipient: ${brief.recipient}. Desired feeling: ${brief.emotionalOutcomes.join(', ')}. Budget per unit: ${brief.budgetTier}. Quantity: ${brief.quantity}.${brief.notes ? ` Additional notes: ${brief.notes}` : ''}
 
-${trendContext}
+Search for current (last 1-3 months) corporate gifting and merch trends relevant to this brief.
 
 Here is our product catalog:
 ${JSON.stringify(products, null, 2)}
 
-Recommend the top 3-5 products from this catalog that best match both the client's stated needs and, where genuinely relevant, the trend data above. For each, give a matchScore (0-100) and a one-line reasonWhy. Only mention a trend in reasonWhy if it's actually in the trend list above and actually relevant to that product — never fabricate a trend or imply data you weren't given.`
+Recommend the top 3-5 products from this catalog that best match both the client's stated needs AND the trends you found. For each, give a matchScore (0-100), a one-line reasonWhy that references the trend you found, and the specific web page URL(s) from your search results that support that product's trend claim.`
 
   if (language === 'ko') {
-    return `${base}\n\nRespond in Korean (한국어): write "reasonWhy" and "trendSummary" entirely in natural, fluent Korean. Keep JSON keys and product IDs in English exactly as given.`
+    return `${base}\n\nRespond in Korean (한국어): write "reasonWhy" and "trendSummary" entirely in natural, fluent Korean. Keep JSON keys and product IDs in English exactly as given. Prefer Korean-language sources when relevant, but include any useful source regardless of language.`
   }
   return base
 }
@@ -106,90 +63,104 @@ function systemPrompt(language: Language): string {
       ? '\n\nRespond in Korean: "reasonWhy" and "trendSummary" must be written in natural Korean. JSON keys and productId values stay in English.'
       : ''
 
-  return `You are a corporate merch matching agent. You are given pre-verified trend data (already collected and scored from real sources) plus a product catalog — you do not search for anything yourself. Recommend products from the given catalog.${languageInstruction}
+  return `You are a corporate merch trend-matching agent. Use Google Search to research current gifting/merch trends, then recommend products from the given catalog.${languageInstruction}
 
 Respond with ONLY a single JSON object matching this exact shape, no markdown fences, no commentary before or after:
 {
   "recommendations": [
-    { "productId": "string (must be an id from the given catalog)", "matchScore": 0-100, "reasonWhy": "string" }
+    { "productId": "string (must be an id from the given catalog)", "matchScore": 0-100, "reasonWhy": "string, must mention the trend it found", "sourceUrls": ["string — URL(s) you actually found via search that support this specific product's trend claim; omit if none apply"] }
   ],
-  "trendSummary": "2-3 sentence summary of what's currently trending for this brief, based only on the trend data you were given — if none was given, say so plainly instead of inventing trends"
+  "trendSummary": "2-3 sentence summary of what's currently trending for this brief"
 }`
 }
 
-// This step has no search tool attached (plain generation), but it does serialize the
-// full product catalog into the prompt — this project already measured that shape of
-// call taking anywhere from a few seconds up to 100+ seconds in production. 15s was
-// too tight and was cutting it off constantly. Worst-case total budget: 25s
-// (collectors, parallel) + 10s (grouping) + 30s (this) = 65s, leaving ~25s headroom
-// under vercel.json's 90s maxDuration.
-const RECOMMEND_TIMEOUT_MS = 30000
-
-interface GeneratedRecommendations {
-  recommendations: Recommendation[]
-  trendSummary: string
+function extractJson(text: string): unknown {
+  const cleaned = text.trim().replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/i, '')
+  return JSON.parse(cleaned)
 }
 
-async function generateRecommendations(
-  brief: ClientBrief,
-  matchedTrends: MatchedTrend[],
-  language: Language,
-): Promise<GeneratedRecommendations> {
-  const ai = getGeminiClient()
+// Vertex AI's grounding chunks point at a vertexaisearch.cloud.google.com redirector,
+// not the actual source page. Resolve each to its real destination so users see (and can
+// click) the genuine URL rather than an opaque Google redirect link.
+async function resolveRedirect(url: string): Promise<string> {
+  try {
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), 4000)
+    const res = await fetch(url, { method: 'HEAD', redirect: 'follow', signal: controller.signal })
+    clearTimeout(timeout)
+    return res.url || url
+  } catch {
+    return url
+  }
+}
+
+async function resolveAll(urls: string[]): Promise<Map<string, string>> {
+  const resolved = new Map<string, string>()
+  await Promise.all(
+    urls.map(async (url) => {
+      resolved.set(url, await resolveRedirect(url))
+    }),
+  )
+  return resolved
+}
+
+async function callAgent(brief: ClientBrief, language: Language): Promise<AgentRecommendResponse> {
+  const ai = getClient()
+
   const response = await ai.models.generateContent({
-    model: GEMINI_MODEL,
-    contents: buildPrompt(brief, matchedTrends, language),
-    config: { systemInstruction: systemPrompt(language) },
+    model: MODEL,
+    contents: buildPrompt(brief, language),
+    config: {
+      systemInstruction: systemPrompt(language),
+      tools: [{ googleSearch: {} }],
+    },
   })
 
   const text = response.text
   if (!text) throw new Error('No text in Gemini response')
 
   const parsed = extractJson(text) as {
-    recommendations: { productId: string; matchScore: number; reasonWhy: string }[]
+    recommendations: { productId: string; matchScore: number; reasonWhy: string; sourceUrls?: string[] }[]
     trendSummary: string
   }
+
+  const groundingMetadata = response.candidates?.[0]?.groundingMetadata
+  const groundingChunks = groundingMetadata?.groundingChunks ?? []
+  // Raw redirect URIs, exactly as Google Search returned them — this is also what the
+  // model sees and echoes back in sourceUrls, so matching/validation must use these.
+  const rawSourceUrls = [
+    ...new Set(groundingChunks.map((chunk) => chunk.web?.uri).filter((uri): uri is string => Boolean(uri))),
+  ]
+  const searchQueriesUsed = groundingMetadata?.webSearchQueries ?? []
+  const groundedUrls = new Set(rawSourceUrls)
+
+  const resolvedUrls = await resolveAll(rawSourceUrls)
+  const displayUrl = (url: string) => resolvedUrls.get(url) ?? url
 
   const productsById = new Map(products.map((p) => [p.id, p]))
   const recommendations: Recommendation[] = parsed.recommendations
     .map((r) => {
       const product = productsById.get(r.productId)
       if (!product) return null
-      const contributingTrends = contributingTrendsFor(product, matchedTrends)
+      // Validate against the raw grounded URIs (what the model actually saw), then map to
+      // the resolved real URL for display — anything the model claims that Google Search
+      // never returned gets silently dropped rather than shown as unverified "proof".
+      const sourceUrls = (r.sourceUrls ?? []).filter((url) => groundedUrls.has(url)).map(displayUrl)
       return {
         product,
         matchScore: r.matchScore,
         reasonWhy: r.reasonWhy,
-        ...(contributingTrends.length > 0 ? { contributingTrends } : {}),
+        ...(sourceUrls.length > 0 ? { sourceUrls } : {}),
       } satisfies Recommendation
     })
     .filter((r): r is Recommendation => r !== null)
 
-  return { recommendations, trendSummary: parsed.trendSummary }
-}
-
-async function callAgent(brief: ClientBrief, language: Language): Promise<AgentRecommendResponse> {
-  const collectorInput = deriveCollectorInput(brief)
-  const allTrends = await collectAllTrends(collectorInput)
-  const matchedTrends = await crossMatchTrends(allTrends)
-
-  const generated = await withTimeout(generateRecommendations(brief, matchedTrends, language), RECOMMEND_TIMEOUT_MS, null)
-
-  if (generated) {
-    return { ...generated, matchedTrends, usedFallback: false }
-  }
-
-  // The final matching step itself timed out — degrade to local matching rather than
-  // failing outright, but keep whatever real trend evidence collection did succeed
-  // rather than throwing it away just because the last step ran out of time.
   return {
-    recommendations: getRecommendations(brief, products, { language }),
-    trendSummary:
-      language === 'ko'
-        ? '실시간 트렌드 데이터는 수집했지만, 최종 매칭 단계가 시간 초과되어 로컬 매칭 결과를 대신 보여드립니다.'
-        : 'Live trend data was collected, but the final matching step timed out — showing locally matched picks instead.',
-    matchedTrends,
-    usedFallback: true,
+    recommendations,
+    trendSummary: parsed.trendSummary,
+    searchQueriesUsed,
+    sourcesUsed: rawSourceUrls.map(displayUrl),
+    usedFallback: false,
   }
 }
 
@@ -200,7 +171,8 @@ function fallbackResponse(brief: ClientBrief, language: Language): AgentRecommen
       language === 'ko'
         ? '실시간 트렌드 검색을 사용할 수 없어 로컬 매칭 결과를 대신 보여드립니다.'
         : 'Live trend search is unavailable right now — showing locally matched picks instead.',
-    matchedTrends: [],
+    searchQueriesUsed: [],
+    sourcesUsed: [],
     usedFallback: true,
   }
 }

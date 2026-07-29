@@ -7,10 +7,9 @@ import { getNotQuiteRecommendations } from '../client-form/lib/matcher'
 import IntakeWizard from '../client-form/components/IntakeWizard'
 import SummaryReview from '../client-form/components/SummaryReview'
 import RecommendationResults from '../client-form/components/RecommendationResults'
-import MultiSourceTrendPanel from './components/MultiSourceTrendPanel'
+import AgentInsights from './components/AgentInsights'
 import LanguageToggle from '../../components/LanguageToggle'
 import { useLanguage } from '../../i18n/LanguageContext'
-import type { MatchedTrend } from '../../lib/trendMatcher'
 
 const EMPTY_BRIEF: ClientBrief = {
   industry: '',
@@ -27,7 +26,8 @@ const EMPTY_BRIEF: ClientBrief = {
 interface AgentRecommendResponse {
   recommendations: Recommendation[]
   trendSummary: string
-  matchedTrends: MatchedTrend[]
+  searchQueriesUsed: string[]
+  sourcesUsed: string[]
   usedFallback: boolean
 }
 
@@ -86,7 +86,8 @@ export default function AgentFormPage() {
       setAgentResult({
         recommendations: [],
         trendSummary: t('agent.somethingWentWrong'),
-        matchedTrends: [],
+        searchQueriesUsed: [],
+        sourcesUsed: [],
         usedFallback: true,
       })
       setRecommendations([])
@@ -159,9 +160,10 @@ export default function AgentFormPage() {
 
       {view === 'results' && agentResult && (
         <>
-          <MultiSourceTrendPanel
+          <AgentInsights
             trendSummary={agentResult.trendSummary}
-            matchedTrends={agentResult.matchedTrends}
+            searchQueriesUsed={agentResult.searchQueriesUsed}
+            sourcesUsed={agentResult.sourcesUsed}
             usedFallback={agentResult.usedFallback}
           />
           <RecommendationResults
@@ -171,7 +173,6 @@ export default function AgentFormPage() {
             onNotQuite={handleNotQuite}
             onReject={handleReject}
             onStartOver={handleStartOver}
-            showTrendEvidence={!agentResult.usedFallback}
           />
         </>
       )}

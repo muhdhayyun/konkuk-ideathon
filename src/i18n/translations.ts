@@ -54,9 +54,7 @@ export const translations = {
     'results.notQuite': 'Not quite — show me more like this',
     'results.reject': 'Reject',
     'results.trending': 'Trending',
-    'results.whyTrending': 'Why this is trending →',
-    'results.hideTrending': 'Hide trend evidence',
-    'results.noTrendSignal': 'Based on catalog fit — no live trend signal available for this item.',
+    'results.sourcedFrom': 'Sourced from:',
 
     // Insights
     'insights.title': 'Insights (accepted vs. rejected by tag)',
@@ -65,6 +63,10 @@ export const translations = {
 
     // Agent
     'agent.trendSummary': 'Trend summary',
+    'agent.searchedFor': 'What the agent actually searched',
+    'agent.sourcesCited': 'Sources cited ({count})',
+    'agent.hideSources': 'Hide sources',
+    'agent.usingCached': 'Using cached matching (live search unavailable)',
     'agent.loading1': 'Searching for current trends...',
     'agent.loading2': 'Matching against catalog...',
     'agent.loading3': 'Still working — live search can take up to a minute...',
@@ -73,12 +75,7 @@ export const translations = {
     'agent.radarTitle': 'Trend Radar',
     'agent.liveBadge': 'LIVE',
     'agent.cachedBadge': 'CACHED',
-
-    // Multi-source trend panel
-    'trendPanel.sourceCount': 'Trending across {count}/4 sources',
-    'trendPanel.verified': 'Verified',
-    'trendPanel.unverified': 'Unverified',
-    'trendPanel.noSignal': 'No live trend signal could be collected for this request — recommendations below use catalog fit alone.',
+    'agent.searchedLive': 'Searched live',
 
     // Options — industries
     'option.Finance/Asset Management': 'Finance/Asset Management',
@@ -185,9 +182,7 @@ export const translations = {
     'results.notQuite': '조금 다른 느낌으로 — 비슷한 다른 제품 보기',
     'results.reject': '거절',
     'results.trending': '인기 상승 중',
-    'results.whyTrending': '왜 인기 상승 중인가요 →',
-    'results.hideTrending': '트렌드 근거 숨기기',
-    'results.noTrendSignal': '카탈로그 적합도만 기반으로 함 — 이 제품에 대한 실시간 트렌드 신호가 없습니다.',
+    'results.sourcedFrom': '출처:',
 
     // Insights
     'insights.title': '인사이트 (태그별 수락 대 거절)',
@@ -196,6 +191,10 @@ export const translations = {
 
     // Agent
     'agent.trendSummary': '트렌드 요약',
+    'agent.searchedFor': '에이전트가 실제로 검색한 내용',
+    'agent.sourcesCited': '인용된 출처 ({count})',
+    'agent.hideSources': '출처 숨기기',
+    'agent.usingCached': '캐시된 매칭 사용 중 (실시간 검색 불가)',
     'agent.loading1': '최신 트렌드 검색 중...',
     'agent.loading2': '카탈로그와 매칭 중...',
     'agent.loading3': '아직 진행 중입니다 — 실시간 검색은 최대 1분까지 걸릴 수 있어요...',
@@ -204,12 +203,7 @@ export const translations = {
     'agent.radarTitle': '트렌드 레이더',
     'agent.liveBadge': '실시간',
     'agent.cachedBadge': '캐시됨',
-
-    // Multi-source trend panel
-    'trendPanel.sourceCount': '{count}/4개 소스에서 트렌드 확인됨',
-    'trendPanel.verified': '검증됨',
-    'trendPanel.unverified': '미검증',
-    'trendPanel.noSignal': '이 요청에 대한 실시간 트렌드 신호를 수집할 수 없었습니다 — 아래 추천은 카탈로그 적합도만 기반으로 합니다.',
+    'agent.searchedLive': '실시간 검색됨',
 
     // Options — industries
     'option.Finance/Asset Management': '금융/자산 운용',
