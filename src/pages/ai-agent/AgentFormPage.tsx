@@ -35,11 +35,11 @@ type View = 'wizard' | 'summary' | 'loading' | 'results' | 'error'
 
 export default function AgentFormPage() {
   const { t, language } = useLanguage()
-  const loadingStages = [t('agent.loading1'), t('agent.loading2')]
+  const loadingStages = [t('agent.loading1'), t('agent.loading2'), t('agent.loading3')]
   const [view, setView] = useState<View>('wizard')
   const [step, setStep] = useState(1)
   const [brief, setBrief] = useState<ClientBrief>(EMPTY_BRIEF)
-  const [loadingStage, setLoadingStage] = useState(0)
+  const [loadingSeconds, setLoadingSeconds] = useState(0)
   const [agentResult, setAgentResult] = useState<AgentRecommendResponse | null>(null)
   const [excludedIds, setExcludedIds] = useState<string[]>([])
   const [requestedIds, setRequestedIds] = useState<string[]>([])
@@ -47,10 +47,12 @@ export default function AgentFormPage() {
 
   useEffect(() => {
     if (view !== 'loading') return
-    setLoadingStage(0)
-    const timer = setTimeout(() => setLoadingStage(1), 1800)
-    return () => clearTimeout(timer)
+    setLoadingSeconds(0)
+    const interval = setInterval(() => setLoadingSeconds((s) => s + 1), 1000)
+    return () => clearInterval(interval)
   }, [view])
+
+  const loadingStage = loadingSeconds < 2 ? 0 : loadingSeconds < 8 ? 1 : 2
 
   const handleNext = () => {
     if (step < 5) setStep(step + 1)
@@ -152,6 +154,7 @@ export default function AgentFormPage() {
       {view === 'loading' && (
         <div className="max-w-2xl mx-auto py-24 px-4 text-center">
           <div className="animate-pulse text-slate-500">{loadingStages[loadingStage]}</div>
+          <p className="mt-2 text-xs text-slate-400">{t('agent.elapsed', { seconds: loadingSeconds })}</p>
         </div>
       )}
 
