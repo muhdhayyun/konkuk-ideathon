@@ -10,9 +10,9 @@
 
 import orderHistoryData from '../../data/order-history.json'
 import productCatalogData from '../../data/product-catalog.json'
-import type { OrderHistoryRow, ProductCatalogRow } from '../types/orderHistory'
-import type { ClientBrief } from '../pages/client-form/types'
-import { BUDGET_TIERS } from '../pages/client-form/lib/matcher'
+import type { OrderHistoryRow, ProductCatalogRow } from '../types/orderHistory.js'
+import type { ClientBrief } from '../pages/client-form/types/index.js'
+import { BUDGET_TIERS } from '../pages/client-form/lib/matcher.js'
 
 const orderHistory = orderHistoryData as OrderHistoryRow[]
 const productCatalog = productCatalogData as ProductCatalogRow[]
@@ -63,7 +63,9 @@ const TOP_N_RESULTS = 5
 // Fixed approximate rate for comparing the brief's USD budget tier against the
 // dataset's KRW prices. In production this would use a live FX rate or the catalog
 // would already be priced in the client's local currency; this is a demo simplification.
-const USD_TO_KRW_RATE = 1350
+// Exported so api/agent-recommend.ts uses the exact same rate rather than a second,
+// potentially-drifting copy of the same magic number.
+export const USD_TO_KRW_RATE = 1350
 
 // ─── Vocabulary mapping ───────────────────────────────────────────────────────────
 // The app's own wizard options (ClientBrief.industry/occasion, from

@@ -3,6 +3,15 @@ import { GoogleGenAI } from '@google/genai'
 import type { ClientBrief, Product, Recommendation } from '../src/pages/client-form/types/index.js'
 import { products } from '../src/pages/client-form/data/products.js'
 import { getRecommendations } from '../src/pages/client-form/lib/matcher.js'
+import productCatalogData from '../data/product-catalog.json'
+import type { ProductCatalogRow } from '../src/types/orderHistory.js'
+import { USD_TO_KRW_RATE } from '../src/lib/internal-matcher.js'
+
+// The REAL BrandBoost catalog (parsed from data/BrandBoost_Order_History_2022-2026.xlsx
+// — same source Panel A / internal-matcher.ts reads). Gemini is given ONLY this list to
+// recommend from, and every recommendation is cross-checked against it after parsing —
+// never trust a search-grounded model to only suggest real inventory on its own word.
+const catalog = productCatalogData as ProductCatalogRow[]
 
 type Language = 'en' | 'ko'
 
@@ -46,13 +55,13 @@ function buildPrompt(brief: ClientBrief, language: Language): string {
 
 Search for current (last 1-3 months) corporate gifting and merch trends relevant to this brief.
 
-Here is our product catalog:
-${JSON.stringify(products, null, 2)}
+Here is our REAL product catalog — the only products we actually carry. Do not suggest anything outside this list, even if you find something more trend-relevant in your search:
+${JSON.stringify(catalog, null, 2)}
 
-Recommend the top 3-5 products from this catalog that best match both the client's stated needs AND the trends you found. For each, give a matchScore (0-100), a one-line reasonWhy that references the trend you found, and the specific web page URL(s) from your search results that support that product's trend claim.`
+Recommend the top 3-5 products from this catalog that best match both the client's stated needs AND the trends you found. For each, give the exact "product_name" as it appears in the catalog above, a matchScore (0-100), a one-line reasonWhy that references the trend you found, and the specific web page URL(s) from your search results that support that product's trend claim.`
 
   if (language === 'ko') {
-    return `${base}\n\nRespond in Korean (한국어): write "reasonWhy" and "trendSummary" entirely in natural, fluent Korean. Keep JSON keys and product IDs in English exactly as given. Prefer Korean-language sources when relevant, but include any useful source regardless of language.`
+    return `${base}\n\nRespond in Korean (한국어): write "reasonWhy" and "trendSummary" entirely in natural, fluent Korean. Keep JSON keys and the "productName" value in English exactly as given in the catalog. Prefer Korean-language sources when relevant, but include any useful source regardless of language.`
   }
   return base
 }
@@ -60,15 +69,15 @@ Recommend the top 3-5 products from this catalog that best match both the client
 function systemPrompt(language: Language): string {
   const languageInstruction =
     language === 'ko'
-      ? '\n\nRespond in Korean: "reasonWhy" and "trendSummary" must be written in natural Korean. JSON keys and productId values stay in English.'
+      ? '\n\nRespond in Korean: "reasonWhy" and "trendSummary" must be written in natural Korean. JSON keys and productName values stay in English exactly as given.'
       : ''
 
-  return `You are a corporate merch trend-matching agent. Use Google Search to research current gifting/merch trends, then recommend products from the given catalog.${languageInstruction}
+  return `You are a corporate merch trend-matching agent. Use Google Search to research current gifting/merch trends, then recommend products from the given catalog — never invent or suggest a product that isn't in it.${languageInstruction}
 
 Respond with ONLY a single JSON object matching this exact shape, no markdown fences, no commentary before or after:
 {
   "recommendations": [
-    { "productId": "string (must be an id from the given catalog)", "matchScore": 0-100, "reasonWhy": "string, must mention the trend it found", "sourceUrls": ["string — URL(s) you actually found via search that support this specific product's trend claim; omit if none apply"] }
+    { "productName": "string (must exactly match a \"product_name\" from the given catalog)", "matchScore": 0-100, "reasonWhy": "string, must mention the trend it found", "sourceUrls": ["string — URL(s) you actually found via search that support this specific product's trend claim; omit if none apply"] }
   ],
   "trendSummary": "2-3 sentence summary of what's currently trending for this brief"
 }`
@@ -120,7 +129,7 @@ async function callAgent(brief: ClientBrief, language: Language): Promise<AgentR
   if (!text) throw new Error('No text in Gemini response')
 
   const parsed = extractJson(text) as {
-    recommendations: { productId: string; matchScore: number; reasonWhy: string; sourceUrls?: string[] }[]
+    recommendations: { productName: string; matchScore: number; reasonWhy: string; sourceUrls?: string[] }[]
     trendSummary: string
   }
 
@@ -137,11 +146,30 @@ async function callAgent(brief: ClientBrief, language: Language): Promise<AgentR
   const resolvedUrls = await resolveAll(rawSourceUrls)
   const displayUrl = (url: string) => resolvedUrls.get(url) ?? url
 
-  const productsById = new Map(products.map((p) => [p.id, p]))
+  // Normalized (trim + lowercase) lookup against the REAL catalog we actually gave
+  // Gemini — tolerates minor case/whitespace echo differences, but a name that isn't a
+  // genuine match gets silently dropped rather than shown as a real product. Search
+  // grounding only vouches for the *trend claim*, never for whether we carry the item.
+  const normalize = (s: string) => s.trim().toLowerCase()
+  const catalogByName = new Map(catalog.map((p) => [normalize(p.product_name), p]))
+
   const recommendations: Recommendation[] = parsed.recommendations
     .map((r) => {
-      const product = productsById.get(r.productId)
-      if (!product) return null
+      const catalogEntry = catalogByName.get(normalize(r.productName))
+      if (!catalogEntry) return null
+
+      const product: Product = {
+        id: catalogEntry.product_name,
+        name: catalogEntry.product_name,
+        category: catalogEntry.category,
+        basePrice: Math.round(catalogEntry.unit_price_krw / USD_TO_KRW_RATE),
+        tags: catalogEntry.trend_tags,
+        trendScore: catalogEntry.trend_tags.length > 0 ? 80 : 55,
+        industryFit: [],
+        toneFit: [],
+        minQuantity: 1,
+      }
+
       // Validate against the raw grounded URIs (what the model actually saw), then map to
       // the resolved real URL for display — anything the model claims that Google Search
       // never returned gets silently dropped rather than shown as unverified "proof".
@@ -154,6 +182,14 @@ async function callAgent(brief: ClientBrief, language: Language): Promise<AgentR
       } satisfies Recommendation
     })
     .filter((r): r is Recommendation => r !== null)
+
+  const droppedCount = parsed.recommendations.length - recommendations.length
+  if (droppedCount > 0) {
+    console.info(
+      `agent-recommend: dropped ${droppedCount} recommendation(s) not found in the real catalog — ` +
+        `model suggested: ${parsed.recommendations.map((r) => r.productName).join(', ')}`,
+    )
+  }
 
   return {
     recommendations,
