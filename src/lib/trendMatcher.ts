@@ -1,5 +1,11 @@
 import type { NormalizedTrend } from '../types/trend.js'
 import { getGeminiClient, GEMINI_MODEL } from './geminiClient.js'
+import { withTimeout } from './withTimeout.js'
+
+// The 4 collectors are each capped individually (see agent-recommend.ts), but this
+// grouping call sat uncapped — on a slow day it could push the whole serverless
+// function past Vercel's function timeout with nothing to show for it. Bound it too.
+const GROUPING_TIMEOUT_MS = 10000
 
 export interface MatchedTrend {
   canonicalTopic: string
@@ -85,14 +91,16 @@ export async function crossMatchTrends(allTrends: NormalizedTrend[]): Promise<Ma
   if (allTrends.length === 1) return [buildMatchedTrend(allTrends[0].topic, allTrends)]
 
   try {
-    const { groups } = await groupTopicsByLLM(allTrends.map((t) => t.topic))
-    return groups
+    const result = await withTimeout(groupTopicsByLLM(allTrends.map((t) => t.topic)), GROUPING_TIMEOUT_MS, null)
+    if (!result) throw new Error('grouping timed out')
+
+    return result.groups
       .map((g) => buildMatchedTrend(g.canonicalTopic, g.indices.map((i) => allTrends[i]).filter(Boolean)))
       .filter((m) => m.matchedFrom.length > 0)
       .sort((a, b) => b.compositeScore - a.compositeScore)
   } catch {
-    // Grouping failed — degrade to "no cross-source merging" rather than losing the
-    // data entirely. Each trend just becomes its own single-source group.
+    // Grouping failed or timed out — degrade to "no cross-source merging" rather than
+    // losing the data entirely. Each trend just becomes its own single-source group.
     return allTrends
       .map((t) => buildMatchedTrend(t.topic, [t]))
       .sort((a, b) => b.compositeScore - a.compositeScore)

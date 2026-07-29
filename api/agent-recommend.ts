@@ -113,11 +113,21 @@ Respond with ONLY a single JSON object matching this exact shape, no markdown fe
 }`
 }
 
-async function callAgent(brief: ClientBrief, language: Language): Promise<AgentRecommendResponse> {
-  const collectorInput = deriveCollectorInput(brief)
-  const allTrends = await collectAllTrends(collectorInput)
-  const matchedTrends = await crossMatchTrends(allTrends)
+// This step alone used to have no timeout — a slow (but successful) collector phase
+// plus a slow grouping call plus a slow final call could stack well past Vercel's
+// function timeout with nothing to show for it. Bound it explicitly.
+const RECOMMEND_TIMEOUT_MS = 20000
 
+interface GeneratedRecommendations {
+  recommendations: Recommendation[]
+  trendSummary: string
+}
+
+async function generateRecommendations(
+  brief: ClientBrief,
+  matchedTrends: MatchedTrend[],
+  language: Language,
+): Promise<GeneratedRecommendations> {
   const ai = getGeminiClient()
   const response = await ai.models.generateContent({
     model: GEMINI_MODEL,
@@ -148,11 +158,31 @@ async function callAgent(brief: ClientBrief, language: Language): Promise<AgentR
     })
     .filter((r): r is Recommendation => r !== null)
 
+  return { recommendations, trendSummary: parsed.trendSummary }
+}
+
+async function callAgent(brief: ClientBrief, language: Language): Promise<AgentRecommendResponse> {
+  const collectorInput = deriveCollectorInput(brief)
+  const allTrends = await collectAllTrends(collectorInput)
+  const matchedTrends = await crossMatchTrends(allTrends)
+
+  const generated = await withTimeout(generateRecommendations(brief, matchedTrends, language), RECOMMEND_TIMEOUT_MS, null)
+
+  if (generated) {
+    return { ...generated, matchedTrends, usedFallback: false }
+  }
+
+  // The final matching step itself timed out — degrade to local matching rather than
+  // failing outright, but keep whatever real trend evidence collection did succeed
+  // rather than throwing it away just because the last step ran out of time.
   return {
-    recommendations,
-    trendSummary: parsed.trendSummary,
+    recommendations: getRecommendations(brief, products, { language }),
+    trendSummary:
+      language === 'ko'
+        ? '실시간 트렌드 데이터는 수집했지만, 최종 매칭 단계가 시간 초과되어 로컬 매칭 결과를 대신 보여드립니다.'
+        : 'Live trend data was collected, but the final matching step timed out — showing locally matched picks instead.',
     matchedTrends,
-    usedFallback: false,
+    usedFallback: true,
   }
 }
 
