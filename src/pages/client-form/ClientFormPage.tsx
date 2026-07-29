@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import type { ClientBrief, FeedbackEvent, Recommendation } from './types'
 import { products } from './data/products'
 import { getRecommendations, getNotQuiteRecommendations } from './lib/matcher'
@@ -83,8 +84,11 @@ export default function ClientFormPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <header className="border-b border-slate-100 px-4 py-3">
+      <header className="border-b border-slate-100 px-4 py-3 flex items-center justify-between">
         <p className="text-sm font-semibold text-slate-900">BrandBoost Product Matcher</p>
+        <Link to="/ai-agent" className="text-xs text-slate-500 hover:text-blue-600">
+          Try the live AI agent version
+        </Link>
       </header>
 
       {view === 'wizard' && (
