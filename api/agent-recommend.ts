@@ -117,13 +117,13 @@ Respond with ONLY a single JSON object matching this exact shape, no markdown fe
 }`
 }
 
-// This step alone used to have no timeout — a slow (but successful) collector phase
-// plus a slow grouping call plus a slow final call could stack well past Vercel's
-// function timeout with nothing to show for it. Bound it explicitly. This call has no
-// search tool attached, so it's plain generation — 15s is generous, not tight.
-// Worst-case total budget: 25s (collectors, parallel) + 10s (grouping) + 15s (this) =
-// 50s, leaving ~10s headroom under vercel.json's 60s maxDuration.
-const RECOMMEND_TIMEOUT_MS = 15000
+// This step has no search tool attached (plain generation), but it does serialize the
+// full product catalog into the prompt — this project already measured that shape of
+// call taking anywhere from a few seconds up to 100+ seconds in production. 15s was
+// too tight and was cutting it off constantly. Worst-case total budget: 25s
+// (collectors, parallel) + 10s (grouping) + 30s (this) = 65s, leaving ~25s headroom
+// under vercel.json's 90s maxDuration.
+const RECOMMEND_TIMEOUT_MS = 30000
 
 interface GeneratedRecommendations {
   recommendations: Recommendation[]
