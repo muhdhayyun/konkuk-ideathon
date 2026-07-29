@@ -8,8 +8,8 @@
 // calls, pure computation over data/*.json — it must work even if the external call is
 // slow, loading, or has failed outright.
 
-import orderHistoryData from '../../data/order-history.json'
-import productCatalogData from '../../data/product-catalog.json'
+import orderHistoryData from '../../data/order-history.json' with { type: 'json' }
+import productCatalogData from '../../data/product-catalog.json' with { type: 'json' }
 import type { OrderHistoryRow, ProductCatalogRow } from '../types/orderHistory.js'
 import type { ClientBrief } from '../pages/client-form/types/index.js'
 import { BUDGET_TIERS } from '../pages/client-form/lib/matcher.js'

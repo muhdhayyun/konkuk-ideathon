@@ -3,7 +3,7 @@ import { GoogleGenAI } from '@google/genai'
 import type { ClientBrief, Product, Recommendation } from '../src/pages/client-form/types/index.js'
 import { products } from '../src/pages/client-form/data/products.js'
 import { getRecommendations } from '../src/pages/client-form/lib/matcher.js'
-import productCatalogData from '../data/product-catalog.json'
+import productCatalogData from '../data/product-catalog.json' with { type: 'json' }
 import type { ProductCatalogRow } from '../src/types/orderHistory.js'
 import { USD_TO_KRW_RATE } from '../src/lib/internal-matcher.js'
 
