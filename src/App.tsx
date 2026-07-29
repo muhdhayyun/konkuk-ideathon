@@ -1,32 +1,30 @@
-import { Route, Routes, Link } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import ClientFormPage from './pages/client-form/ClientFormPage'
 import AgentFormPage from './pages/ai-agent/AgentFormPage'
-import LanguageToggle from './components/LanguageToggle'
-import { useLanguage } from './i18n/LanguageContext'
-
-function Home() {
-  const { t } = useLanguage()
-  return (
-    <main className="relative min-h-screen flex flex-col items-center justify-center gap-4 text-slate-900">
-      <div className="absolute top-4 right-4">
-        <LanguageToggle />
-      </div>
-      <h1 className="text-2xl font-semibold">Kokuk</h1>
-      <p className="text-slate-500">{t('home.subtitle')}</p>
-      <Link to="/client-form" className="text-blue-600 underline">
-        {t('home.local')}
-      </Link>
-      <Link to="/ai-agent" className="text-blue-600 underline">
-        {t('home.live')}
-      </Link>
-    </main>
-  )
-}
+import WorkspaceLayout from './pages/workspace/WorkspaceLayout'
+import StartPage from './pages/workspace/StartPage'
+import HomePage from './pages/workspace/HomePage'
+import EstimateRequestsPage from './pages/workspace/EstimateRequestsPage'
+import PaymentPage from './pages/workspace/PaymentPage'
+import PortfolioDetailPage from './pages/workspace/PortfolioDetailPage'
+import InquiryBranchPage from './pages/workspace/InquiryBranchPage'
+import CreateInquiryPage from './pages/workspace/CreateInquiryPage'
 
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
+      {/* 브랜드부스트 워크스페이스 클론 */}
+      <Route element={<WorkspaceLayout />}>
+        <Route path="/" element={<StartPage />} />
+        <Route path="/home" element={<HomePage />} />
+        <Route path="/estimate-requests" element={<EstimateRequestsPage />} />
+        <Route path="/payment" element={<PaymentPage />} />
+        <Route path="/portfolio/:id" element={<PortfolioDetailPage />} />
+      </Route>
+      <Route path="/inquiry" element={<InquiryBranchPage />} />
+      <Route path="/estimate-requests/create" element={<CreateInquiryPage />} />
+
+      {/* 기존 팀 프로토타입 */}
       <Route path="/client-form/*" element={<ClientFormPage />} />
       <Route path="/ai-agent/*" element={<AgentFormPage />} />
     </Routes>
