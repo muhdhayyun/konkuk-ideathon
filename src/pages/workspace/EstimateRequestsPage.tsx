@@ -16,9 +16,16 @@ export default function EstimateRequestsPage() {
         </button>
 
         <div className="ml-auto flex items-center gap-3">
-          <div className="flex w-32 items-center justify-between rounded-lg border border-neutral-200 px-3 py-2 text-sm text-neutral-400">
-            전체 상태 <span>▾</span>
-          </div>
+          <select
+            aria-label="상태 필터"
+            className="w-32 rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-500 outline-none focus:border-indigo-400"
+          >
+            <option>전체 상태</option>
+            <option>견적 대기</option>
+            <option>답변 도착</option>
+            <option>작업계획 확정</option>
+            <option>제작중</option>
+          </select>
           <div className="flex min-w-[220px] items-center gap-2 rounded-lg border border-neutral-200 px-3 py-2">
             <input
               placeholder="검색어를 입력해주세요"

@@ -21,11 +21,11 @@ const STEPS = ['제작 내용', '제작 상황', '문의 정보'] as const
 
 function StepIndicator({ current }: { current: number }) {
   return (
-    <div className="mx-auto flex max-w-md items-center justify-center gap-0 pt-10">
+    <div className="mx-auto flex max-w-md items-start justify-center pt-10">
       {STEPS.map((label, i) => (
-        <div key={label} className="flex items-center">
-          {i > 0 && <span className="mx-3 h-px w-10 bg-neutral-200" />}
-          <div className="flex flex-col items-center gap-2">
+        <div key={label} className="flex items-start">
+          {i > 0 && <span className="mx-3 mt-3.5 h-px w-10 bg-neutral-200" />}
+          <div className="flex w-16 flex-col items-center gap-2">
             <span
               className={`flex h-7 w-7 items-center justify-center rounded-full text-sm font-semibold ${
                 i === current
@@ -38,7 +38,7 @@ function StepIndicator({ current }: { current: number }) {
               {i + 1}
             </span>
             <span
-              className={`text-[13px] font-medium ${
+              className={`text-[13px] font-medium whitespace-nowrap ${
                 i === current ? 'text-indigo-500' : 'text-neutral-300'
               }`}
             >
@@ -366,18 +366,18 @@ export default function CreateInquiryPage() {
             />
           </section>
         )}
-      </main>
 
-      <div className="fixed right-8 bottom-8">
-        <button
-          type="button"
-          disabled={!canNext}
-          onClick={() => (step < 2 ? setStep(step + 1) : setDone(true))}
-          className="rounded-lg bg-indigo-500 px-6 py-3 text-[15px] font-bold text-white transition-colors hover:bg-indigo-600 disabled:bg-neutral-200 disabled:text-neutral-400"
-        >
-          {step < 2 ? '다음 단계 ›' : '문의 접수하기'}
-        </button>
-      </div>
+        <div className="mt-8 flex justify-end">
+          <button
+            type="button"
+            disabled={!canNext}
+            onClick={() => (step < 2 ? setStep(step + 1) : setDone(true))}
+            className="rounded-lg bg-indigo-500 px-6 py-3 text-[15px] font-bold text-white transition-colors hover:bg-indigo-600 disabled:bg-neutral-200 disabled:text-neutral-400"
+          >
+            {step < 2 ? '다음 단계 ›' : '문의 접수하기'}
+          </button>
+        </div>
+      </main>
 
       {modalOpen && (
         <AddProductModal

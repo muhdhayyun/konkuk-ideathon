@@ -35,7 +35,7 @@ export default function PortfolioDetailPage() {
         <span className="text-neutral-300">‹</span> {item.name}
       </button>
 
-      <div className="mt-6 grid grid-cols-1 gap-8 xl:grid-cols-[380px_1fr_360px]">
+      <div className="mt-6 grid grid-cols-1 gap-8 xl:grid-cols-[minmax(280px,360px)_minmax(360px,1fr)_340px]">
         {/* 제품 이미지 */}
         <div
           className={`flex h-[420px] items-center justify-center rounded-2xl bg-gradient-to-br ${item.gradient}`}
@@ -56,14 +56,16 @@ export default function PortfolioDetailPage() {
 
           <div className="mt-6 flex gap-3">
             <div className="rounded-xl border border-neutral-100 bg-white px-5 py-4 shadow-sm">
-              <p className="text-xs font-medium text-neutral-400">◎ 개당 단가</p>
-              <p className="mt-1.5 text-lg font-bold text-neutral-900">
+              <p className="text-xs font-medium whitespace-nowrap text-neutral-400">◎ 개당 단가</p>
+              <p className="mt-1.5 text-lg font-bold whitespace-nowrap text-neutral-900">
                 {item.unitPrice.toLocaleString()}원{' '}
                 <span className="text-xs font-medium text-neutral-400">({item.priceBasis})</span>
               </p>
             </div>
             <div className="rounded-xl border border-neutral-100 bg-white px-5 py-4 shadow-sm">
-              <p className="text-xs font-medium text-neutral-400">☑ 총 제작 소요기간</p>
+              <p className="text-xs font-medium whitespace-nowrap text-neutral-400">
+                ☑ 총 제작 소요기간
+              </p>
               <p className="mt-1.5 text-lg font-bold text-neutral-900">{item.leadTime}</p>
             </div>
           </div>
@@ -81,12 +83,12 @@ export default function PortfolioDetailPage() {
                     <span className="my-1 w-px flex-1 bg-neutral-200" />
                   )}
                 </div>
-                <div className="flex flex-1 items-center justify-between rounded-xl border border-neutral-100 bg-white px-5 py-4 shadow-sm">
+                <div className="flex flex-1 flex-col justify-between gap-2 rounded-xl border border-neutral-100 bg-white px-5 py-4 shadow-sm">
                   <p className="text-sm font-semibold text-neutral-800">
                     <span className="mr-2 text-indigo-500">{i + 1}</span>
                     {step.name}
                   </p>
-                  <p className="text-xs text-neutral-400">
+                  <p className="self-end text-xs whitespace-nowrap text-neutral-400">
                     🔧 {step.partner} · ☑ {step.duration}
                   </p>
                 </div>
