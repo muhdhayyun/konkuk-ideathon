@@ -1,7 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { AnthropicVertex } from '@anthropic-ai/vertex-sdk'
-import { GoogleAuth } from 'google-auth-library'
-import type Anthropic from '@anthropic-ai/sdk'
+import { GoogleGenAI } from '@google/genai'
 import type { ClientBrief, Product, Recommendation } from '../src/pages/client-form/types'
 import { products } from '../src/pages/client-form/data/products'
 import { getRecommendations } from '../src/pages/client-form/lib/matcher'
@@ -13,62 +11,26 @@ interface AgentRecommendResponse {
   usedFallback: boolean
 }
 
-const MODEL = 'claude-opus-4-8'
+const MODEL = 'gemini-2.5-flash'
 
-// Vertex only exposes the basic web_search tool variant (no dynamic-filtering _20260209 variant there).
-const WEB_SEARCH_TOOL = { type: 'web_search_20250305', name: 'web_search' } as const
+let client: GoogleGenAI | null = null
 
-const RESPONSE_SCHEMA = {
-  type: 'object',
-  properties: {
-    recommendations: {
-      type: 'array',
-      items: {
-        type: 'object',
-        properties: {
-          productId: { type: 'string' },
-          matchScore: { type: 'integer' },
-          reasonWhy: { type: 'string' },
-        },
-        required: ['productId', 'matchScore', 'reasonWhy'],
-        additionalProperties: false,
+function getClient(): GoogleGenAI {
+  if (client) return client
+
+  client = new GoogleGenAI({
+    vertexai: true,
+    project: process.env.GOOGLE_VERTEX_PROJECT,
+    location: process.env.GOOGLE_VERTEX_LOCATION || 'global',
+    googleAuthOptions: {
+      credentials: {
+        client_email: process.env.GOOGLE_CLIENT_EMAIL,
+        // Vercel's env var UI can flatten real newlines to literal "\n" — restore them.
+        private_key: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
       },
     },
-    trendSummary: { type: 'string' },
-    sourcesUsed: { type: 'array', items: { type: 'string' } },
-  },
-  required: ['recommendations', 'trendSummary', 'sourcesUsed'],
-  additionalProperties: false,
-}
-
-let vertexClient: AnthropicVertex | null = null
-
-// AnthropicVertex's constructor kicks off Google auth resolution as an
-// internal, unawaited promise (`this._authClientPromise = auth.getClient()`).
-// If that promise rejects before anything attaches a handler to it, Node
-// treats it as an unhandled rejection and kills the whole process — which
-// bypasses any try/catch around code that merely constructs the client.
-// Resolving the auth client ourselves, awaited inside our own try block,
-// keeps a credential failure inside our normal error handling instead.
-async function getVertexClient(): Promise<AnthropicVertex> {
-  if (vertexClient) return vertexClient
-
-  const googleAuth = new GoogleAuth({
-    credentials: {
-      client_email: process.env.GOOGLE_CLIENT_EMAIL,
-      // Vercel's env var UI can flatten real newlines to literal "\n" — restore them.
-      private_key: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-    },
-    scopes: ['https://www.googleapis.com/auth/cloud-platform'],
   })
-  const authClient = await googleAuth.getClient()
-
-  vertexClient = new AnthropicVertex({
-    projectId: process.env.GOOGLE_VERTEX_PROJECT,
-    region: process.env.GOOGLE_VERTEX_LOCATION || 'global',
-    authClient,
-  })
-  return vertexClient
+  return client
 }
 
 function buildPrompt(brief: ClientBrief): string {
@@ -82,15 +44,14 @@ ${JSON.stringify(products, null, 2)}
 Recommend the top 3-5 products from this catalog that best match both the client's stated needs AND the trends you found. For each, give a matchScore (0-100) and a one-line reasonWhy that references the trend you found.`
 }
 
-const SYSTEM_PROMPT = `You are a corporate merch trend-matching agent. Use the web_search tool to research current gifting/merch trends, then recommend products from the given catalog.
+const SYSTEM_PROMPT = `You are a corporate merch trend-matching agent. Use Google Search to research current gifting/merch trends, then recommend products from the given catalog.
 
 Respond with ONLY a single JSON object matching this exact shape, no markdown fences, no commentary before or after:
 {
   "recommendations": [
     { "productId": "string (must be an id from the given catalog)", "matchScore": 0-100, "reasonWhy": "string, must mention the trend it found" }
   ],
-  "trendSummary": "2-3 sentence summary of what's currently trending for this brief",
-  "sourcesUsed": ["url1", "url2"]
+  "trendSummary": "2-3 sentence summary of what's currently trending for this brief"
 }`
 
 function extractJson(text: string): unknown {
@@ -98,45 +59,24 @@ function extractJson(text: string): unknown {
   return JSON.parse(cleaned)
 }
 
-function findTextBlock(content: Anthropic.ContentBlock[]): string {
-  const block = content.find((b): b is Anthropic.TextBlock => b.type === 'text')
-  if (!block) throw new Error('No text block in agent response')
-  return block.text
-}
-
 async function callAgent(brief: ClientBrief): Promise<AgentRecommendResponse> {
-  const client = await getVertexClient()
+  const ai = getClient()
 
-  let messages: Anthropic.MessageParam[] = [{ role: 'user', content: buildPrompt(brief) }]
-
-  let response = await client.messages.create({
+  const response = await ai.models.generateContent({
     model: MODEL,
-    max_tokens: 4096,
-    system: SYSTEM_PROMPT,
-    tools: [WEB_SEARCH_TOOL],
-    output_config: { format: { type: 'json_schema', schema: RESPONSE_SCHEMA } },
-    messages,
+    contents: buildPrompt(brief),
+    config: {
+      systemInstruction: SYSTEM_PROMPT,
+      tools: [{ googleSearch: {} }],
+    },
   })
 
-  // Server-side web_search loop caps at 10 iterations; resume once if paused.
-  if (response.stop_reason === 'pause_turn') {
-    messages = [...messages, { role: 'assistant', content: response.content }]
-    response = await client.messages.create({
-      model: MODEL,
-      max_tokens: 4096,
-      system: SYSTEM_PROMPT,
-      tools: [WEB_SEARCH_TOOL],
-      output_config: { format: { type: 'json_schema', schema: RESPONSE_SCHEMA } },
-      messages,
-    })
-  }
+  const text = response.text
+  if (!text) throw new Error('No text in Gemini response')
 
-  const content = response.content
-  const text = findTextBlock(content)
   const parsed = extractJson(text) as {
     recommendations: { productId: string; matchScore: number; reasonWhy: string }[]
     trendSummary: string
-    sourcesUsed: string[]
   }
 
   const productsById = new Map(products.map((p) => [p.id, p]))
@@ -148,10 +88,15 @@ async function callAgent(brief: ClientBrief): Promise<AgentRecommendResponse> {
     })
     .filter((r): r is Recommendation => r !== null)
 
+  const groundingChunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks ?? []
+  const sourcesUsed = [
+    ...new Set(groundingChunks.map((chunk) => chunk.web?.uri).filter((uri): uri is string => Boolean(uri))),
+  ]
+
   return {
     recommendations,
     trendSummary: parsed.trendSummary,
-    sourcesUsed: parsed.sourcesUsed,
+    sourcesUsed,
     usedFallback: false,
   }
 }
