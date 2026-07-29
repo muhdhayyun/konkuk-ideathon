@@ -1,4 +1,4 @@
-import type { ClientBrief, Product, Recommendation } from '../types'
+import type { ClientBrief, Product, Recommendation } from '../types/index.js'
 
 // Weighted scoring rubric — tune these to change recommendation behavior.
 export const WEIGHTS = {

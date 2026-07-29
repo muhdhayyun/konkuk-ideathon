@@ -1,8 +1,8 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { GoogleGenAI } from '@google/genai'
-import type { ClientBrief, Product, Recommendation } from '../src/pages/client-form/types'
-import { products } from '../src/pages/client-form/data/products'
-import { getRecommendations } from '../src/pages/client-form/lib/matcher'
+import type { ClientBrief, Product, Recommendation } from '../src/pages/client-form/types/index.js'
+import { products } from '../src/pages/client-form/data/products.js'
+import { getRecommendations } from '../src/pages/client-form/lib/matcher.js'
 
 interface AgentRecommendResponse {
   recommendations: Recommendation[]
