@@ -42,7 +42,7 @@ Search for current (last 1-3 months) corporate gifting and merch trends relevant
 Here is our product catalog:
 ${JSON.stringify(products, null, 2)}
 
-Recommend the top 3-5 products from this catalog that best match both the client's stated needs AND the trends you found. For each, give a matchScore (0-100) and a one-line reasonWhy that references the trend you found.`
+Recommend the top 3-5 products from this catalog that best match both the client's stated needs AND the trends you found. For each, give a matchScore (0-100), a one-line reasonWhy that references the trend you found, and the specific web page URL(s) from your search results that support that product's trend claim.`
 }
 
 const SYSTEM_PROMPT = `You are a corporate merch trend-matching agent. Use Google Search to research current gifting/merch trends, then recommend products from the given catalog.
@@ -50,7 +50,7 @@ const SYSTEM_PROMPT = `You are a corporate merch trend-matching agent. Use Googl
 Respond with ONLY a single JSON object matching this exact shape, no markdown fences, no commentary before or after:
 {
   "recommendations": [
-    { "productId": "string (must be an id from the given catalog)", "matchScore": 0-100, "reasonWhy": "string, must mention the trend it found" }
+    { "productId": "string (must be an id from the given catalog)", "matchScore": 0-100, "reasonWhy": "string, must mention the trend it found", "sourceUrls": ["string — URL(s) you actually found via search that support this specific product's trend claim; omit if none apply"] }
   ],
   "trendSummary": "2-3 sentence summary of what's currently trending for this brief"
 }`
@@ -76,18 +76,9 @@ async function callAgent(brief: ClientBrief): Promise<AgentRecommendResponse> {
   if (!text) throw new Error('No text in Gemini response')
 
   const parsed = extractJson(text) as {
-    recommendations: { productId: string; matchScore: number; reasonWhy: string }[]
+    recommendations: { productId: string; matchScore: number; reasonWhy: string; sourceUrls?: string[] }[]
     trendSummary: string
   }
-
-  const productsById = new Map(products.map((p) => [p.id, p]))
-  const recommendations: Recommendation[] = parsed.recommendations
-    .map((r) => {
-      const product = productsById.get(r.productId)
-      if (!product) return null
-      return { product, matchScore: r.matchScore, reasonWhy: r.reasonWhy } satisfies Recommendation
-    })
-    .filter((r): r is Recommendation => r !== null)
 
   const groundingMetadata = response.candidates?.[0]?.groundingMetadata
   const groundingChunks = groundingMetadata?.groundingChunks ?? []
@@ -95,6 +86,26 @@ async function callAgent(brief: ClientBrief): Promise<AgentRecommendResponse> {
     ...new Set(groundingChunks.map((chunk) => chunk.web?.uri).filter((uri): uri is string => Boolean(uri))),
   ]
   const searchQueriesUsed = groundingMetadata?.webSearchQueries ?? []
+
+  // The model self-reports which URL(s) back each product's claim. Only keep ones that
+  // match a URL Google Search actually returned — anything else gets silently dropped
+  // rather than shown as unverified "proof".
+  const groundedUrls = new Set(sourcesUsed)
+
+  const productsById = new Map(products.map((p) => [p.id, p]))
+  const recommendations: Recommendation[] = parsed.recommendations
+    .map((r) => {
+      const product = productsById.get(r.productId)
+      if (!product) return null
+      const sourceUrls = (r.sourceUrls ?? []).filter((url) => groundedUrls.has(url))
+      return {
+        product,
+        matchScore: r.matchScore,
+        reasonWhy: r.reasonWhy,
+        ...(sourceUrls.length > 0 ? { sourceUrls } : {}),
+      } satisfies Recommendation
+    })
+    .filter((r): r is Recommendation => r !== null)
 
   return {
     recommendations,

@@ -1,5 +1,13 @@
 import type { Recommendation } from '../types'
 
+function hostnameOf(url: string): string {
+  try {
+    return new URL(url).hostname.replace(/^www\./, '')
+  } catch {
+    return url
+  }
+}
+
 interface RecommendationResultsProps {
   recommendations: Recommendation[]
   requestedIds: string[]
@@ -53,6 +61,24 @@ export default function RecommendationResults({
 
             <p className="text-sm text-slate-600">{rec.reasonWhy}</p>
             <p className="text-xs text-slate-400">Match score: {rec.matchScore}</p>
+
+            {rec.sourceUrls && rec.sourceUrls.length > 0 && (
+              <div className="flex flex-wrap items-center gap-1.5 -mt-1">
+                <span className="text-xs text-slate-400">Sourced from:</span>
+                {rec.sourceUrls.map((url) => (
+                  <a
+                    key={url}
+                    href={url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-xs text-blue-600 underline"
+                    title={url}
+                  >
+                    {hostnameOf(url)}
+                  </a>
+                ))}
+              </div>
+            )}
 
             <div className="flex flex-wrap gap-2 mt-auto pt-2">
               <button

@@ -26,6 +26,7 @@ export interface Recommendation {
   product: Product
   matchScore: number
   reasonWhy: string
+  sourceUrls?: string[] // per-product citations, only set by the live agent (verified against real search results)
 }
 
 export interface FeedbackEvent {
