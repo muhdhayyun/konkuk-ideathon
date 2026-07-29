@@ -379,13 +379,29 @@ export default function CreateInquiryPage() {
         <p className="mt-2 text-sm text-neutral-500">
           담당 매니저가 확인 후 견적서를 보내드릴게요 (데모 화면입니다)
         </p>
-        <button
-          type="button"
-          onClick={() => navigate('/estimate-requests')}
-          className="mt-8 rounded-lg bg-indigo-500 px-6 py-3 text-[15px] font-bold text-white"
-        >
-          진행중인 문의/주문 보기
-        </button>
+        <div className="mt-8 flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() =>
+              navigate('/inquiry/report', {
+                state: { title, company, products: products.map((p) => p.name) },
+              })
+            }
+            className="rounded-lg border border-indigo-300 bg-white px-6 py-3 text-[15px] font-bold text-indigo-500 hover:bg-indigo-50"
+          >
+            📊 트렌드 근거 리포트 보기
+          </button>
+          <button
+            type="button"
+            onClick={() => navigate('/estimate-requests')}
+            className="rounded-lg bg-indigo-500 px-6 py-3 text-[15px] font-bold text-white"
+          >
+            진행중인 문의/주문 보기
+          </button>
+        </div>
+        <p className="mt-3 text-[13px] text-neutral-400">
+          이번 발주 선택의 트렌드 근거를 정리해드렸어요 · 내부 보고에 활용해보세요
+        </p>
       </div>
     )
   }
