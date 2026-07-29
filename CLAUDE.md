@@ -14,3 +14,4 @@ Development will happen entirely in an online/cloud environment, not locally. Do
 
 - After making changes to this project, commit and push them to `origin` without asking for confirmation first.
 - Use clear, concise commit messages describing the change.
+- Don't stop to ask for permission before proceeding — make the reasonable judgment call and just do it (merges, reverts, scope calls on ambiguous asks, etc.). Still flag genuinely destructive/irreversible actions (force-push, hard reset discarding work) before running them.

@@ -4,6 +4,7 @@ import { INTERNAL_TRENDS, buildTrendReport, type EvidenceSource } from './data/t
 import { USER_NAME } from './data/portfolio'
 import { useLanguage } from '../../i18n/LanguageContext'
 import { translateWorkspaceValue } from '../../i18n/translations'
+import LanguageToggle from '../../components/LanguageToggle'
 
 // 문의 완료 후 제공되는 발주 근거 리포트.
 // 담당자가 내부 보고에 그대로 쓸 수 있도록 문서 형태로 구성한다.
@@ -73,6 +74,7 @@ export default function TrendReportPage() {
           <span className="text-neutral-300">‹</span> {t('workspace.trendReport.backToOrders')}
         </button>
         <div className="flex items-center gap-3">
+          <LanguageToggle />
           <button
             type="button"
             onClick={copyReport}

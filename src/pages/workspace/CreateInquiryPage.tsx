@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useLanguage } from '../../i18n/LanguageContext'
 import { translateWorkspaceValue } from '../../i18n/translations'
+import LanguageToggle from '../../components/LanguageToggle'
 
 interface DraftProduct {
   name: string
@@ -117,9 +118,12 @@ function AddProductModal({
     <div className="fixed inset-0 z-50 overflow-y-auto bg-neutral-100">
       <header className="flex items-center justify-between px-8 py-6">
         <p className="text-lg font-bold text-neutral-900">{t('workspace.createInquiry.modalTitle')}</p>
-        <button type="button" onClick={onClose} aria-label={t('workspace.recommend.closeAriaLabel')} className="text-2xl text-neutral-400">
-          ✕
-        </button>
+        <div className="flex items-center gap-4">
+          <LanguageToggle />
+          <button type="button" onClick={onClose} aria-label={t('workspace.recommend.closeAriaLabel')} className="text-2xl text-neutral-400">
+            ✕
+          </button>
+        </div>
       </header>
 
       <div className="mx-auto max-w-2xl space-y-6 pb-32">
@@ -405,7 +409,7 @@ export default function CreateInquiryPage() {
 
   return (
     <div className="min-h-screen bg-neutral-50">
-      <header className="px-8 py-6">
+      <header className="flex items-center justify-between px-8 py-6">
         <button
           type="button"
           onClick={() => navigate('/inquiry')}
@@ -413,6 +417,7 @@ export default function CreateInquiryPage() {
         >
           <span className="text-neutral-300">‹</span> {t('workspace.createInquiry.backToHome')}
         </button>
+        <LanguageToggle />
       </header>
 
       <StepIndicator current={step} />

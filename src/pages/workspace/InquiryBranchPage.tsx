@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { useLanguage } from '../../i18n/LanguageContext'
+import LanguageToggle from '../../components/LanguageToggle'
 
 export default function InquiryBranchPage() {
   const navigate = useNavigate()
@@ -7,7 +8,7 @@ export default function InquiryBranchPage() {
 
   return (
     <div className="min-h-screen bg-neutral-50">
-      <header className="px-8 py-6">
+      <header className="flex items-center justify-between px-8 py-6">
         <button
           type="button"
           onClick={() => navigate(-1)}
@@ -15,6 +16,7 @@ export default function InquiryBranchPage() {
         >
           <span className="text-neutral-300">‹</span> {t('workspace.inquiryBranch.headerTitle')}
         </button>
+        <LanguageToggle />
       </header>
 
       <main className="flex flex-col items-center pt-16 pb-24">

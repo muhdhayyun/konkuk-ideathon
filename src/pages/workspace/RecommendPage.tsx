@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useLanguage } from '../../i18n/LanguageContext'
 import { translateWorkspaceValue } from '../../i18n/translations'
+import LanguageToggle from '../../components/LanguageToggle'
 
 const MODES = ['하나의 제품 추천', '키트 구성 추천', '행사 준비 추천'] as const
 
@@ -113,14 +114,17 @@ export default function RecommendPage() {
         >
           <span className="text-neutral-300">‹</span> {t('workspace.recommend.backBtn')}
         </button>
-        <button
-          type="button"
-          onClick={() => navigate('/')}
-          aria-label={t('workspace.recommend.closeAriaLabel')}
-          className="text-2xl text-neutral-400"
-        >
-          ✕
-        </button>
+        <div className="flex items-center gap-4">
+          <LanguageToggle />
+          <button
+            type="button"
+            onClick={() => navigate('/')}
+            aria-label={t('workspace.recommend.closeAriaLabel')}
+            className="text-2xl text-neutral-400"
+          >
+            ✕
+          </button>
+        </div>
       </header>
 
       <main className="mx-auto max-w-2xl pb-32">
