@@ -97,25 +97,47 @@ async function fetchComments(videoId: string, apiKey: string): Promise<string[]>
   }
 }
 
-// The ONLY LLM call in this collector — pure extraction, no search, no scoring.
-async function extractTagsFromComments(comments: string[]): Promise<string[]> {
-  if (comments.length === 0) return []
+interface VideoWithComments {
+  video: YouTubeVideoItem
+  tag: string
+  comments: string[]
+}
+
+// The ONLY LLM call in this collector — pure extraction, no search, no scoring. Batched
+// across ALL videos in a single call rather than one call per video: Vertex AI enforces
+// a per-minute request quota on the shared Gemini client, and this collector used to be
+// responsible for up to 6 of the ~10 Gemini calls one user request could fire (2
+// queries x 3 videos each), which was enough on its own to trip 429 RESOURCE_EXHAUSTED
+// for the rest of the pipeline.
+async function extractTagsForAllVideos(videos: VideoWithComments[]): Promise<Map<number, string[]>> {
+  const withComments = videos.map((v, i) => ({ i, comments: v.comments })).filter((v) => v.comments.length > 0)
+  if (withComments.length === 0) return new Map()
+
   try {
     const ai = getGeminiClient()
+    const prompt = withComments
+      .map((v) => `Video ${v.i}:\n${v.comments.map((c, ci) => `${ci + 1}. ${c}`).join('\n')}`)
+      .join('\n\n')
+
     const response = await ai.models.generateContent({
       model: GEMINI_MODEL,
-      contents: `Comments:\n${comments.map((c, i) => `${i + 1}. ${c}`).join('\n')}`,
+      contents: prompt,
       config: {
-        systemInstruction: `Given a list of YouTube comments, decide which of these tags apply based on what people are actually praising/discussing: ${TAG_VOCABULARY.join(', ')}. Respond with ONLY a JSON array of applicable tag strings from that exact list, no commentary. Example: ["sustainable", "premium"]`,
+        systemInstruction: `You are given comments from several YouTube videos, each labeled "Video N:". For each video, decide which of these tags apply based on what people are actually praising/discussing: ${TAG_VOCABULARY.join(', ')}. Respond with ONLY JSON, no markdown fences: {"results": [{"index": N, "tags": ["tag1", "tag2"]}]}. Include every video index that was given, even if tags is an empty array.`,
       },
     })
     const text = response.text
-    if (!text) return []
+    if (!text) return new Map()
     const cleaned = text.trim().replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/i, '')
-    const parsed = JSON.parse(cleaned) as string[]
-    return parsed.filter((tag) => (TAG_VOCABULARY as readonly string[]).includes(tag))
+    const parsed = JSON.parse(cleaned) as { results: { index: number; tags: string[] }[] }
+    return new Map(
+      parsed.results.map((r) => [
+        r.index,
+        r.tags.filter((tag) => (TAG_VOCABULARY as readonly string[]).includes(tag)),
+      ]),
+    )
   } catch {
-    return []
+    return new Map()
   }
 }
 
@@ -146,26 +168,27 @@ export async function youtubeCollector(input: CollectorInput): Promise<Normalize
       videos.forEach((video) => videosByTag.push({ video, tag }))
     }
 
-    const results = await Promise.all(
-      videosByTag.map(async ({ video, tag }): Promise<NormalizedTrend> => {
-        const comments = await fetchComments(video.id, apiKey)
-        const extractedTags = await extractTagsFromComments(comments)
-        const tags = [...new Set([...(tag === 'general' ? [] : [tag]), ...extractedTags])]
-
-        return {
-          source: 'youtube',
-          topic: video.snippet.title,
-          volumeScore: computeVolumeScore(video),
-          growthRatePct: null, // single snapshot, no historical series — never estimate
-          timeframe: '3m',
-          tags,
-          sourceUrl: `https://www.youtube.com/watch?v=${video.id}`,
-          confidence: 'verified',
-        }
-      }),
+    const videosWithComments: VideoWithComments[] = await Promise.all(
+      videosByTag.map(async ({ video, tag }) => ({ video, tag, comments: await fetchComments(video.id, apiKey) })),
     )
 
-    return results
+    const extractedTagsByIndex = await extractTagsForAllVideos(videosWithComments)
+
+    return videosWithComments.map(({ video, tag }, i) => {
+      const extractedTags = extractedTagsByIndex.get(i) ?? []
+      const tags = [...new Set([...(tag === 'general' ? [] : [tag]), ...extractedTags])]
+
+      return {
+        source: 'youtube',
+        topic: video.snippet.title,
+        volumeScore: computeVolumeScore(video),
+        growthRatePct: null, // single snapshot, no historical series — never estimate
+        timeframe: '3m',
+        tags,
+        sourceUrl: `https://www.youtube.com/watch?v=${video.id}`,
+        confidence: 'verified',
+      }
+    })
   } catch {
     return []
   }

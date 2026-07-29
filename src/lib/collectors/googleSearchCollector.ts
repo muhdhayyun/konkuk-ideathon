@@ -6,10 +6,17 @@ import { TAG_VOCABULARY } from './tagVocabulary.js'
 
 function buildQuery(input: CollectorInput): string {
   const tagPart = input.tags.length > 0 ? input.tags.join(', ') : input.occasion
-  return `current corporate gifting and merch trends: ${input.industry} ${tagPart}`
+  const today = new Date().toISOString().slice(0, 10)
+  return `Search the web right now (today's date: ${today}) for news, blog posts, or articles published in the last 30 days about: ${input.industry} corporate gifting and merch trends, ${tagPart}. Do not answer from memory — you must actually search, since this needs genuinely current results you can't know without looking.`
 }
 
-const SYSTEM_PROMPT = `You are researching current (last 1-3 months) corporate gifting and merch trends via general web search. Only report findings you can attribute to an actual page from your search results.
+// There is no API-level way to force the googleSearch tool to trigger (verified against
+// the installed @google/genai types — the modern "google_search" tool has no
+// force/always-trigger config; only the older, unrelated googleSearchRetrieval tool
+// has that, for a different model generation). Prompt phrasing is the only lever: this
+// is written to make it hard for the model to conclude it can answer from training data
+// alone, which is the main reason grounding was observed not triggering.
+const SYSTEM_PROMPT = `You are researching current (last 1-3 months) corporate gifting and merch trends. You MUST use Google Search for this — do not answer from your own training knowledge, since it will be stale for "current" trends. Only report findings you can attribute to an actual page from your search results.
 
 Respond with ONLY JSON, no markdown fences:
 {
@@ -17,7 +24,7 @@ Respond with ONLY JSON, no markdown fences:
     { "topic": "short topic phrase", "tags": ["tag from this list: ${TAG_VOCABULARY.join(', ')}"] }
   ]
 }
-If you found nothing relevant, respond with {"trends": []}.`
+If your search truly found nothing relevant, respond with {"trends": []}.`
 
 interface ParsedSearchResponse {
   trends: { topic: string; tags: string[] }[]
