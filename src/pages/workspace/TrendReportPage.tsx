@@ -2,6 +2,8 @@ import { useMemo, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { INTERNAL_TRENDS, buildTrendReport, type EvidenceSource } from './data/trends'
 import { USER_NAME } from './data/portfolio'
+import { useLanguage } from '../../i18n/LanguageContext'
+import { translateWorkspaceValue } from '../../i18n/translations'
 
 // 문의 완료 후 제공되는 발주 근거 리포트.
 // 담당자가 내부 보고에 그대로 쓸 수 있도록 문서 형태로 구성한다.
@@ -22,8 +24,9 @@ export default function TrendReportPage() {
   const navigate = useNavigate()
   const location = useLocation() as { state?: ReportState }
   const [copied, setCopied] = useState(false)
+  const { t, language } = useLanguage()
 
-  const title = location.state?.title || '발주 검토 리포트'
+  const title = location.state?.title || t('workspace.trendReport.defaultTitle')
   const company = location.state?.company || ''
   const productNames = location.state?.products?.length
     ? location.state.products
@@ -39,7 +42,7 @@ export default function TrendReportPage() {
 
   const copyReport = async () => {
     const lines = [
-      `[발주 근거 리포트] ${title}`,
+      t('workspace.trendReport.clipboardHeader', { title }),
       `${company ? `${company} · ` : ''}${today} · 브랜드부스트 트렌드 데이터 기반`,
       '',
       ...reports.flatMap((r) => [
@@ -67,7 +70,7 @@ export default function TrendReportPage() {
           onClick={() => navigate('/estimate-requests')}
           className="flex items-center gap-2 text-lg font-bold text-neutral-400"
         >
-          <span className="text-neutral-300">‹</span> 진행중인 문의/주문으로
+          <span className="text-neutral-300">‹</span> {t('workspace.trendReport.backToOrders')}
         </button>
         <div className="flex items-center gap-3">
           <button
@@ -75,14 +78,14 @@ export default function TrendReportPage() {
             onClick={copyReport}
             className="rounded-lg border border-indigo-300 bg-white px-4 py-2.5 text-sm font-bold text-indigo-500 hover:bg-indigo-50"
           >
-            {copied ? '✓ 복사됐어요' : '📋 리포트 복사'}
+            {copied ? t('workspace.trendReport.copiedBtn') : t('workspace.trendReport.copyBtn')}
           </button>
           <button
             type="button"
             onClick={() => window.print()}
             className="rounded-lg bg-indigo-500 px-4 py-2.5 text-sm font-bold text-white hover:bg-indigo-600"
           >
-            🖨️ 인쇄 / PDF 저장
+            {t('workspace.trendReport.printBtn')}
           </button>
         </div>
       </header>
@@ -90,16 +93,21 @@ export default function TrendReportPage() {
       <main className="mx-auto max-w-2xl pb-24">
         <div className="rounded-2xl bg-white p-10 shadow-sm">
           <p className="text-[13px] font-semibold text-indigo-500">BRANDBOOST TREND REPORT</p>
-          <h1 className="mt-2 text-2xl font-bold text-neutral-900">발주 근거 리포트</h1>
+          <h1 className="mt-2 text-2xl font-bold text-neutral-900">{t('workspace.trendReport.h1Fixed')}</h1>
           <p className="mt-1.5 text-[15px] font-semibold text-neutral-700">{title}</p>
           <p className="mt-3 text-[13px] leading-relaxed text-neutral-400">
             {company && (
               <>
-                {company} · {USER_NAME} 님<br />
+                {t('workspace.trendReport.metaCompanyUser', { company, name: USER_NAME })}
+                <br />
               </>
             )}
-            {today} 생성 · {viewer.industry} · {viewer.sizeBand} 규모 기준 · 내부 주문 데이터(
-            {periodLabel}) + 외부 트렌드 지표
+            {t('workspace.trendReport.metaGenerated', {
+              date: today,
+              industry: viewer.industry,
+              sizeBand: viewer.sizeBand,
+              period: periodLabel,
+            })}
           </p>
 
           {reports.map((r) => (
@@ -116,8 +124,12 @@ export default function TrendReportPage() {
                   <h2 className="text-lg font-bold text-neutral-900">{r.productName}</h2>
                   {r.item && (
                     <p className="text-xs text-neutral-400">
-                      {r.item.category} · 예상 단가 {r.item.unitPrice.toLocaleString()}원 (
-                      {r.item.priceBasis}) · 제작 {r.item.leadTime}
+                      {t('workspace.trendReport.itemMetaLine', {
+                        category: translateWorkspaceValue(r.item.category, language),
+                        price: r.item.unitPrice.toLocaleString(),
+                        basis: r.item.priceBasis,
+                        leadTime: r.item.leadTime,
+                      })}
                     </p>
                   )}
                 </div>
@@ -156,8 +168,7 @@ export default function TrendReportPage() {
           ))}
 
           <p className="mt-10 border-t border-neutral-100 pt-5 text-xs leading-relaxed text-neutral-300">
-            본 리포트는 브랜드부스트 내부 주문 데이터와 외부 트렌드 지표(유튜브, 네이버
-            데이터랩)를 기반으로 자동 생성되었습니다. 수치는 집계 기간에 따라 달라질 수 있습니다.
+            {t('workspace.trendReport.footerDisclaimer')}
           </p>
         </div>
       </main>

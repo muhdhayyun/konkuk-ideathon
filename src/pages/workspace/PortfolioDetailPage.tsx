@@ -1,23 +1,26 @@
 import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { PORTFOLIO } from './data/portfolio'
+import { useLanguage } from '../../i18n/LanguageContext'
+import { translateWorkspaceValue } from '../../i18n/translations'
 
 export default function PortfolioDetailPage() {
   const { id } = useParams()
   const navigate = useNavigate()
   const item = PORTFOLIO.find((p) => p.id === Number(id))
   const [specTab, setSpecTab] = useState<'draft' | 'editable'>('draft')
+  const { t, language } = useLanguage()
 
   if (!item) {
     return (
       <div className="flex flex-col items-center py-40">
-        <p className="text-lg font-bold">제품을 찾을 수 없어요</p>
+        <p className="text-lg font-bold">{t('workspace.portfolioDetail.notFoundTitle')}</p>
         <button
           type="button"
           onClick={() => navigate('/')}
           className="mt-6 rounded-lg bg-indigo-500 px-5 py-2.5 text-sm font-bold text-white"
         >
-          제작 시작하기로 돌아가기
+          {t('workspace.portfolioDetail.backToStart')}
         </button>
       </div>
     )
@@ -45,7 +48,7 @@ export default function PortfolioDetailPage() {
 
         {/* 제품 정보 */}
         <div>
-          <p className="text-xs font-medium text-neutral-400">{item.category}</p>
+          <p className="text-xs font-medium text-neutral-400">{translateWorkspaceValue(item.category, language)}</p>
           <h2 className="mt-1 text-xl font-bold text-neutral-900">{item.name}</h2>
 
           <ul className="mt-4 list-disc space-y-1.5 pl-5 text-sm leading-relaxed text-neutral-600">
@@ -56,22 +59,24 @@ export default function PortfolioDetailPage() {
 
           <div className="mt-6 flex gap-3">
             <div className="rounded-xl border border-neutral-100 bg-white px-5 py-4 shadow-sm">
-              <p className="text-xs font-medium whitespace-nowrap text-neutral-400">◎ 개당 단가</p>
+              <p className="text-xs font-medium whitespace-nowrap text-neutral-400">
+                {t('workspace.portfolioDetail.unitPriceLabel')}
+              </p>
               <p className="mt-1.5 text-lg font-bold whitespace-nowrap text-neutral-900">
-                {item.unitPrice.toLocaleString()}원{' '}
+                {t('workspace.portfolioDetail.priceWon', { price: item.unitPrice.toLocaleString() })}{' '}
                 <span className="text-xs font-medium text-neutral-400">({item.priceBasis})</span>
               </p>
             </div>
             <div className="rounded-xl border border-neutral-100 bg-white px-5 py-4 shadow-sm">
               <p className="text-xs font-medium whitespace-nowrap text-neutral-400">
-                ☑ 총 제작 소요기간
+                {t('workspace.portfolioDetail.leadTimeLabel')}
               </p>
               <p className="mt-1.5 text-lg font-bold text-neutral-900">{item.leadTime}</p>
             </div>
           </div>
 
           {/* 제작 공정 타임라인 */}
-          <h3 className="mt-8 text-[15px] font-bold text-neutral-900">제작 공정</h3>
+          <h3 className="mt-8 text-[15px] font-bold text-neutral-900">{t('workspace.portfolioDetail.processTitle')}</h3>
           <ol className="mt-4 space-y-3">
             {item.process.map((step, i) => (
               <li key={step.name} className="flex items-stretch gap-4">
@@ -100,7 +105,7 @@ export default function PortfolioDetailPage() {
         {/* 사양 패널 */}
         <div className="relative self-start rounded-2xl border border-neutral-100 bg-white p-6 shadow-sm">
           <span className="absolute -top-3 right-4 rounded-lg bg-neutral-900 px-3 py-1.5 text-xs font-semibold text-white">
-            실제 제작시, 커스텀 가능한 사양은 더 많아요!
+            {t('workspace.portfolioDetail.specBannerNote')}
           </span>
 
           <div className="flex gap-5 border-b border-neutral-100 pb-3">
@@ -111,7 +116,7 @@ export default function PortfolioDetailPage() {
                 specTab === 'draft' ? 'text-neutral-900' : 'text-neutral-300'
               }`}
             >
-              시안 반영사양
+              {t('workspace.portfolioDetail.draftSpecTab')}
               <span
                 className={`flex h-4.5 w-4.5 items-center justify-center rounded-full text-[10px] text-white ${
                   specTab === 'draft' ? 'bg-rose-500' : 'bg-neutral-300'
@@ -127,7 +132,7 @@ export default function PortfolioDetailPage() {
                 specTab === 'editable' ? 'text-neutral-900' : 'text-neutral-300'
               }`}
             >
-              전체 수정가능 사양
+              {t('workspace.portfolioDetail.editableSpecTab')}
               <span
                 className={`flex h-4.5 w-4.5 items-center justify-center rounded-full text-[10px] text-white ${
                   specTab === 'editable' ? 'bg-rose-500' : 'bg-neutral-300'
@@ -154,7 +159,7 @@ export default function PortfolioDetailPage() {
             onClick={() => navigate('/estimate-requests/create', { state: { product: item.name } })}
             className="mt-6 w-full rounded-lg bg-gradient-to-r from-cyan-400 to-violet-500 py-3.5 text-[15px] font-bold text-white transition-opacity hover:opacity-90"
           >
-            제품 사양 커스텀하기
+            {t('workspace.portfolioDetail.customizeCta')}
           </button>
         </div>
       </div>

@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { useLanguage } from '../../i18n/LanguageContext'
+import { translateWorkspaceValue } from '../../i18n/translations'
 
 interface DraftProduct {
   name: string
@@ -31,6 +33,7 @@ const PRIORITY_CHIPS = [
 const STEPS = ['제작 내용', '제작 상황', '문의 정보'] as const
 
 function StepIndicator({ current }: { current: number }) {
+  const { language } = useLanguage()
   return (
     <div className="mx-auto flex max-w-md items-start justify-center pt-10">
       {STEPS.map((label, i) => (
@@ -53,7 +56,7 @@ function StepIndicator({ current }: { current: number }) {
                 i === current ? 'text-indigo-500' : 'text-neutral-300'
               }`}
             >
-              {label}
+              {translateWorkspaceValue(label, language)}
             </span>
           </div>
         </div>
@@ -63,13 +66,14 @@ function StepIndicator({ current }: { current: number }) {
 }
 
 function FileDropPlaceholder() {
+  const { t } = useLanguage()
   return (
     <button
       type="button"
       className="flex w-full flex-col items-center gap-1 rounded-lg border border-neutral-200 py-8 text-[13px] text-neutral-400 hover:border-neutral-300"
     >
       <span className="text-lg">⬆️</span>
-      참고할 이미지나 파일이 있다면 첨부해주세요
+      {t('workspace.createInquiry.filePlaceholderHint')}
     </button>
   )
 }
@@ -96,6 +100,7 @@ function AddProductModal({
   const [canDesignLater, setCanDesignLater] = useState('')
   // 디자인 가이드 확인 체크
   const [guideChecked, setGuideChecked] = useState(false)
+  const { t, language } = useLanguage()
 
   const noFile = form.designFile === DESIGN_OPTIONS[2]
   const needsGuide =
@@ -111,43 +116,42 @@ function AddProductModal({
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-neutral-100">
       <header className="flex items-center justify-between px-8 py-6">
-        <p className="text-lg font-bold text-neutral-900">제품별 문의</p>
-        <button type="button" onClick={onClose} aria-label="닫기" className="text-2xl text-neutral-400">
+        <p className="text-lg font-bold text-neutral-900">{t('workspace.createInquiry.modalTitle')}</p>
+        <button type="button" onClick={onClose} aria-label={t('workspace.recommend.closeAriaLabel')} className="text-2xl text-neutral-400">
           ✕
         </button>
       </header>
 
       <div className="mx-auto max-w-2xl space-y-6 pb-32">
         <section className="rounded-2xl bg-white p-8 shadow-sm">
-          <h3 className="text-lg font-bold text-neutral-900">제작 내용</h3>
+          <h3 className="text-lg font-bold text-neutral-900">{t('workspace.createInquiry.contentSectionTitle')}</h3>
 
           <div className="mt-6">
             <p className="text-sm font-semibold text-neutral-800">
-              제작하고 싶은 제품을 입력해주세요<span className="text-rose-500">*</span>
+              {t('workspace.createInquiry.productNameQuestion')}<span className="text-rose-500">*</span>
             </p>
             <p className="mt-1 text-[13px] text-neutral-400">
-              <span className="text-rose-500">한 제품 기준</span>으로 작성해주세요. 여러 제품은 나누어
-              등록해야 정확한 안내가 가능합니다
+              {t('workspace.createInquiry.productNameHintPrefix')}
+              <span className="text-rose-500">{t('workspace.createInquiry.productNameHintEmphasis')}</span>
+              {t('workspace.createInquiry.productNameHintSuffix')}
             </p>
             <input
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
-              placeholder="ex. 반팔티셔츠"
+              placeholder={t('workspace.createInquiry.namePlaceholder')}
               className="mt-3 w-full rounded-lg border border-neutral-200 px-4 py-3 text-sm outline-none placeholder:text-neutral-300 focus:border-indigo-400"
             />
           </div>
 
           <div className="mt-8">
             <p className="text-sm font-semibold text-neutral-800">
-              원하는 수량을 입력해주세요<span className="text-rose-500">*</span>
+              {t('workspace.recommend.quantityQuestion')}<span className="text-rose-500">*</span>
             </p>
-            <p className="mt-1 text-[13px] text-neutral-400">
-              아직 정해지지 않았다면 대략적인 수량만 입력해주셔도 괜찮아요
-            </p>
+            <p className="mt-1 text-[13px] text-neutral-400">{t('workspace.recommend.quantityHint')}</p>
             <input
               value={form.quantity}
               onChange={(e) => setForm({ ...form, quantity: e.target.value })}
-              placeholder="ex. 100"
+              placeholder={t('workspace.createInquiry.quantityPlaceholder')}
               inputMode="numeric"
               className="mt-3 w-full rounded-lg border border-neutral-200 px-4 py-3 text-sm outline-none placeholder:text-neutral-300 focus:border-indigo-400"
             />
@@ -158,22 +162,20 @@ function AddProductModal({
                 onChange={(e) => setForm({ ...form, flexibleQuantity: e.target.checked })}
                 className="h-4 w-4 accent-indigo-500"
               />
-              예산에 맞춰 유동적으로 변경 가능해요
+              {t('workspace.recommend.flexibleQuantityLabel')}
             </label>
           </div>
 
           <div className="mt-8">
             <p className="text-sm font-semibold text-neutral-800">
-              희망 수령일이 있으신가요? <span className="font-normal text-neutral-400">(선택)</span>
+              {t('workspace.recommend.desiredDateQuestion')}{' '}
+              <span className="font-normal text-neutral-400">{t('workspace.recommend.optionalTag')}</span>
             </p>
-            <p className="mt-1 text-[13px] text-neutral-400">
-              최대한 희망 수령일에 맞는 기업과 매치해드릴게요. 지나치게 촉박한 일정은 불가능할 수
-              있어요.
-            </p>
+            <p className="mt-1 text-[13px] text-neutral-400">{t('workspace.createInquiry.desiredDateHint')}</p>
             <input
               value={form.desiredDate}
               onChange={(e) => setForm({ ...form, desiredDate: e.target.value })}
-              placeholder="ex. 1월 2일 오후 10시 전까지"
+              placeholder={t('workspace.createInquiry.desiredDatePlaceholder')}
               className="mt-3 w-full rounded-lg border border-neutral-200 px-4 py-3 text-sm outline-none placeholder:text-neutral-300 focus:border-indigo-400"
             />
             <label className="mt-3 flex items-center justify-end gap-2 text-[13px] text-neutral-500">
@@ -183,20 +185,20 @@ function AddProductModal({
                 onChange={(e) => setForm({ ...form, fixedDeadline: e.target.checked })}
                 className="h-4 w-4 accent-indigo-500"
               />
-              납기일 조정이 불가해요
+              {t('workspace.recommend.fixedDeadlineLabel')}
             </label>
           </div>
 
           <div className="mt-8">
             <p className="text-sm font-semibold text-neutral-800">
-              어떻게 제작을 원하시나요?<span className="text-rose-500">*</span>
+              {t('workspace.createInquiry.methodQuestion')}<span className="text-rose-500">*</span>
             </p>
             <div className="mt-3 flex items-center justify-between gap-3 rounded-lg border border-indigo-300 bg-indigo-50/40 px-4 py-3">
               <p className="text-[13px] text-neutral-600">
                 💬{' '}
                 {form.name.trim() === ''
-                  ? '위에서 제작하고 싶은 제품을 먼저 입력해주시면 구체화를 도와드릴게요'
-                  : '어떤 형태로 제작할지 고민되시나요? 구체화 할 수 있도록 도와드릴게요'}
+                  ? t('workspace.createInquiry.methodHintEmpty')
+                  : t('workspace.createInquiry.methodHintFilled')}
               </p>
               <button
                 type="button"
@@ -204,16 +206,14 @@ function AddProductModal({
                   form.name.trim() === '' ? 'text-neutral-300' : 'text-indigo-500'
                 }`}
               >
-                다른 형태 고르기 ›
+                {t('workspace.createInquiry.methodOtherFormCta')}
               </button>
             </div>
             <textarea
               value={form.detail}
               onChange={(e) => setForm({ ...form, detail: e.target.value })}
               rows={4}
-              placeholder={
-                '품질, 재질, 사이즈, 인쇄, 디자인 등 원하는 내용을 자유롭게 입력해주세요\nex. 흰색 컬러, 양면인쇄 필요, 인쇄 영역 대략 A3 사이즈'
-              }
+              placeholder={t('workspace.createInquiry.detailPlaceholder')}
               className="mt-3 w-full resize-none rounded-lg border border-neutral-200 px-4 py-3 text-sm outline-none placeholder:text-neutral-300 focus:border-indigo-400"
             />
             <div className="mt-3">
@@ -223,13 +223,11 @@ function AddProductModal({
         </section>
 
         <section className="rounded-2xl bg-white p-8 shadow-sm">
-          <h3 className="text-lg font-bold text-neutral-900">디자인 파일</h3>
+          <h3 className="text-lg font-bold text-neutral-900">{t('workspace.createInquiry.designFileSectionTitle')}</h3>
           <p className="mt-4 text-sm font-semibold text-neutral-800">
-            현재 준비된 디자인 파일이 있나요?<span className="text-rose-500">*</span>
+            {t('workspace.createInquiry.designFileQuestion')}<span className="text-rose-500">*</span>
           </p>
-          <p className="mt-1 text-[13px] text-neutral-400">
-            디자인 예정이거나 디자인이 어려운 상황이어도 괜찮아요
-          </p>
+          <p className="mt-1 text-[13px] text-neutral-400">{t('workspace.createInquiry.designFileHint')}</p>
           <div className="mt-4 space-y-3">
             {DESIGN_OPTIONS.map((opt, i) => (
               <label key={opt} className="flex items-center gap-2.5 text-sm text-neutral-700">
@@ -243,8 +241,10 @@ function AddProductModal({
                   }}
                   className="h-4 w-4 accent-indigo-500"
                 />
-                {opt}
-                {i === 1 && <span className="text-[13px] text-neutral-400">*디자인 작업 요청</span>}
+                {translateWorkspaceValue(opt, language)}
+                {i === 1 && (
+                  <span className="text-[13px] text-neutral-400">{t('workspace.createInquiry.designWorkNote')}</span>
+                )}
               </label>
             ))}
           </div>
@@ -253,10 +253,10 @@ function AddProductModal({
         {noFile && (
           <section className="rounded-2xl bg-white p-8 shadow-sm">
             <p className="text-sm font-semibold text-neutral-800">
-              이후에 디자인 작업 후 전달 예정인가요?<span className="text-rose-500">*</span>
+              {t('workspace.createInquiry.canDesignLaterQuestion')}<span className="text-rose-500">*</span>
               {canDesignLater === '' && (
                 <span className="ml-2 text-[13px] font-medium text-rose-500">
-                  *필수항목의 선택이 필요해요
+                  {t('workspace.createInquiry.requiredNote')}
                 </span>
               )}
             </p>
@@ -271,7 +271,7 @@ function AddProductModal({
                   }}
                   className="h-4 w-4 accent-indigo-500"
                 />
-                네, 디자인 할 수 있는 상황이에요
+                {t('workspace.createInquiry.canDesignYes')}
               </label>
               <label className="flex items-center gap-2.5 text-sm text-neutral-700">
                 <input
@@ -283,8 +283,8 @@ function AddProductModal({
                   }}
                   className="h-4 w-4 accent-indigo-500"
                 />
-                아니요, 디자인이 어려운 상황이에요{' '}
-                <span className="text-neutral-400">(디자인 툴 미숙, 사내 디자인 리소스 부재 등)</span>
+                {t('workspace.createInquiry.canDesignNo')}{' '}
+                <span className="text-neutral-400">{t('workspace.createInquiry.canDesignNoDetail')}</span>
               </label>
             </div>
           </section>
@@ -293,26 +293,26 @@ function AddProductModal({
         {needsGuide && (
           <section className="rounded-2xl bg-white p-8 shadow-sm">
             <p className="text-sm text-neutral-800">
-              아래 가이드에 따라 디자인 파일을 제작하고{' '}
+              {t('workspace.createInquiry.guideIntroPrefix')}
               <span className="font-semibold text-indigo-500">
-                [문의/주문 상세 - 히스토리: 제작파일]
+                {t('workspace.createInquiry.guideIntroEmphasis')}
               </span>
-              을 통해 전달해주세요
+              {t('workspace.createInquiry.guideIntroSuffix')}
             </p>
             <button
               type="button"
               className="mt-4 flex w-full items-center justify-between rounded-lg border border-neutral-200 px-4 py-3.5 text-sm font-semibold text-neutral-700 hover:border-neutral-300"
             >
-              <span>📁 브랜드부스트 전용 디자인 가이드 확인하기</span>
+              <span>{t('workspace.createInquiry.guideLinkCta')}</span>
               <span className="text-neutral-300">›</span>
             </button>
-            <p className="mt-2 text-right text-[13px] text-neutral-400">ⓘ 용어가 이해되지 않아요</p>
+            <p className="mt-2 text-right text-[13px] text-neutral-400">{t('workspace.createInquiry.guideTermsHelp')}</p>
             <ul className="mt-4 space-y-1.5 rounded-lg bg-neutral-50 p-5 text-[13px] leading-relaxed text-neutral-600">
-              <li>· 실제 인쇄/제작 사이즈(mm/cm)로 디자인을 제작해주세요</li>
-              <li>· 색상모드 CMYK로 파일을 설정해주세요 (RGB X)</li>
-              <li>· 이미지(jpg/png)가 있는 파일의 경우, 이미지 포함(embed) 작업을 진행해주세요</li>
-              <li>· 폰트를 사용한 텍스트가 있는 경우, 윤곽선 처리(Outline Stroke) 작업을 진행해주세요</li>
-              <li>· 스티커, 키링 등 '칼선'이 필요한 제품들은 칼선 작업까지 완료해주세요</li>
+              <li>· {t('workspace.createInquiry.guideBullet1')}</li>
+              <li>· {t('workspace.createInquiry.guideBullet2')}</li>
+              <li>· {t('workspace.createInquiry.guideBullet3')}</li>
+              <li>· {t('workspace.createInquiry.guideBullet4')}</li>
+              <li>· {t('workspace.createInquiry.guideBullet5')}</li>
             </ul>
             <label className="mt-4 flex items-center gap-2.5 text-sm font-semibold text-neutral-800">
               <input
@@ -321,10 +321,10 @@ function AddProductModal({
                 onChange={(e) => setGuideChecked(e.target.checked)}
                 className="h-4 w-4 accent-indigo-500"
               />
-              네, 확인했어요!
+              {t('workspace.createInquiry.guideConfirmedLabel')}
               {!guideChecked && (
                 <span className="text-[13px] font-medium text-rose-500">
-                  *필수항목의 선택이 필요해요
+                  {t('workspace.createInquiry.requiredNote')}
                 </span>
               )}
             </label>
@@ -339,7 +339,7 @@ function AddProductModal({
           onClick={() => onAdd(form)}
           className="rounded-lg bg-indigo-500 px-6 py-3 text-[15px] font-bold text-white transition-colors hover:bg-indigo-600 disabled:bg-neutral-200 disabled:text-neutral-400"
         >
-          제품 추가하기
+          {t('workspace.createInquiry.addProductCta')}
         </button>
       </div>
     </div>
@@ -359,6 +359,7 @@ export default function CreateInquiryPage() {
   const [company, setCompany] = useState('')
   const [notify, setNotify] = useState<'email' | 'kakao'>('email')
   const [done, setDone] = useState(false)
+  const { t, language } = useLanguage()
 
   const canNext = step === 0 ? products.length > 0 : step === 1 ? true : title.trim() !== ''
 
@@ -375,10 +376,8 @@ export default function CreateInquiryPage() {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-neutral-50">
         <span className="text-6xl">✅</span>
-        <h1 className="mt-6 text-xl font-bold text-neutral-900">문의가 접수됐어요</h1>
-        <p className="mt-2 text-sm text-neutral-500">
-          담당 매니저가 확인 후 견적서를 보내드릴게요 (데모 화면입니다)
-        </p>
+        <h1 className="mt-6 text-xl font-bold text-neutral-900">{t('workspace.createInquiry.doneTitle')}</h1>
+        <p className="mt-2 text-sm text-neutral-500">{t('workspace.createInquiry.doneBody')}</p>
         <div className="mt-8 flex items-center gap-3">
           <button
             type="button"
@@ -389,19 +388,17 @@ export default function CreateInquiryPage() {
             }
             className="rounded-lg border border-indigo-300 bg-white px-6 py-3 text-[15px] font-bold text-indigo-500 hover:bg-indigo-50"
           >
-            📊 트렌드 근거 리포트 보기
+            {t('workspace.createInquiry.viewTrendReportCta')}
           </button>
           <button
             type="button"
             onClick={() => navigate('/estimate-requests')}
             className="rounded-lg bg-indigo-500 px-6 py-3 text-[15px] font-bold text-white"
           >
-            진행중인 문의/주문 보기
+            {t('workspace.createInquiry.viewOrdersCta')}
           </button>
         </div>
-        <p className="mt-3 text-[13px] text-neutral-400">
-          이번 발주 선택의 트렌드 근거를 정리해드렸어요 · 내부 보고에 활용해보세요
-        </p>
+        <p className="mt-3 text-[13px] text-neutral-400">{t('workspace.createInquiry.doneFootnote')}</p>
       </div>
     )
   }
@@ -414,7 +411,7 @@ export default function CreateInquiryPage() {
           onClick={() => navigate('/inquiry')}
           className="flex items-center gap-2 text-lg font-bold text-neutral-400"
         >
-          <span className="text-neutral-300">‹</span> 처음으로 돌아가기
+          <span className="text-neutral-300">‹</span> {t('workspace.createInquiry.backToHome')}
         </button>
       </header>
 
@@ -423,15 +420,13 @@ export default function CreateInquiryPage() {
       <main className="mx-auto max-w-2xl pt-10 pb-32">
         {step === 0 && (
           <section className="rounded-2xl bg-white p-8 shadow-sm">
-            <h3 className="text-lg font-bold text-neutral-900">제작 내용</h3>
+            <h3 className="text-lg font-bold text-neutral-900">{t('workspace.createInquiry.contentSectionTitle')}</h3>
             <div className="mt-4 flex items-start justify-between gap-4">
               <div>
                 <p className="text-sm font-semibold text-neutral-800">
-                  제작 하고 싶은 제품을 추가해주세요<span className="text-rose-500">*</span>
+                  {t('workspace.createInquiry.addProductQuestion')}<span className="text-rose-500">*</span>
                 </p>
-                <p className="mt-1 text-[13px] text-neutral-400">
-                  아래 버튼을 눌러 한 제품씩 추가해주세요
-                </p>
+                <p className="mt-1 text-[13px] text-neutral-400">{t('workspace.createInquiry.addProductHint')}</p>
               </div>
               {products.length > 0 && (
                 <button
@@ -439,7 +434,7 @@ export default function CreateInquiryPage() {
                   onClick={() => setModalOpen(true)}
                   className="rounded-lg bg-indigo-50 px-4 py-2.5 text-sm font-semibold whitespace-nowrap text-indigo-500 hover:bg-indigo-100"
                 >
-                  + 제품 추가하기
+                  {t('workspace.createInquiry.addProductBtn')}
                 </button>
               )}
             </div>
@@ -451,7 +446,7 @@ export default function CreateInquiryPage() {
                     <p className="text-[15px] font-bold text-neutral-900">{p.name}</p>
                     <button
                       type="button"
-                      aria-label="제품 삭제"
+                      aria-label={t('workspace.createInquiry.deleteProductAriaLabel')}
                       onClick={() => setProducts(products.filter((_, j) => j !== i))}
                       className="text-neutral-300 hover:text-neutral-500"
                     >
@@ -460,24 +455,24 @@ export default function CreateInquiryPage() {
                   </div>
                   <dl className="mt-3 space-y-1.5 text-[13px]">
                     <div className="flex gap-3">
-                      <dt className="w-7 shrink-0 text-neutral-300">수량</dt>
+                      <dt className="w-7 shrink-0 text-neutral-300">{t('workspace.createInquiry.quantityDdLabel')}</dt>
                       <dd className="text-neutral-700">
                         {p.quantity}
-                        {p.flexibleQuantity && ' (유동적)'}
+                        {p.flexibleQuantity && t('workspace.createInquiry.flexibleSuffix')}
                       </dd>
                     </div>
                     <div className="flex gap-3">
-                      <dt className="w-7 shrink-0 text-neutral-300">기간</dt>
+                      <dt className="w-7 shrink-0 text-neutral-300">{t('workspace.createInquiry.durationDdLabel')}</dt>
                       <dd className="text-neutral-700">{p.desiredDate || '-'}</dd>
                     </div>
                     <div className="flex gap-3">
-                      <dt className="w-7 shrink-0 text-neutral-300">내용</dt>
+                      <dt className="w-7 shrink-0 text-neutral-300">{t('workspace.createInquiry.contentDdLabel')}</dt>
                       <dd className="line-clamp-1 text-neutral-700">{p.detail || '-'}</dd>
                     </div>
                     <div className="flex gap-3">
-                      <dt className="w-7 shrink-0 text-neutral-300">파일</dt>
+                      <dt className="w-7 shrink-0 text-neutral-300">{t('workspace.createInquiry.fileDdLabel')}</dt>
                       <dd className="line-clamp-1 text-neutral-700">
-                        {p.designFile.replace(/^(네, |아니요, )/, '')}
+                        {translateWorkspaceValue(p.designFile.replace(/^(네, |아니요, )/, ''), language)}
                       </dd>
                     </div>
                   </dl>
@@ -491,7 +486,7 @@ export default function CreateInquiryPage() {
                   className="flex h-48 flex-col items-center justify-center rounded-xl border border-neutral-200 text-sm text-neutral-500 hover:border-indigo-300 hover:text-indigo-500"
                 >
                   <span className="text-xl">+</span>
-                  제품 추가하기
+                  {t('workspace.createInquiry.addProductBtn').replace(/^\+ /, '')}
                 </button>
               )}
             </div>
@@ -501,14 +496,15 @@ export default function CreateInquiryPage() {
         {step === 1 && (
           <section className="rounded-2xl bg-white p-8 shadow-sm">
             <h3 className="text-lg font-bold text-neutral-900">
-              제작 상황 <span className="text-sm font-normal text-neutral-400">(선택)</span>
+              {t('workspace.createInquiry.situationSectionTitle')}{' '}
+              <span className="text-sm font-normal text-neutral-400">{t('workspace.recommend.optionalTag')}</span>
             </h3>
 
             <p className="mt-6 text-sm font-semibold text-neutral-800">
-              이번 제작에서 어떤 부분을 가장 중요하게 보시나요?{' '}
-              <span className="font-normal text-neutral-400">(선택)</span>
+              {t('workspace.recommend.priorityQuestion')}{' '}
+              <span className="font-normal text-neutral-400">{t('workspace.recommend.optionalTag')}</span>
             </p>
-            <p className="mt-1 text-[13px] text-neutral-400">최대 두 가지까지 선택해주세요</p>
+            <p className="mt-1 text-[13px] text-neutral-400">{t('workspace.recommend.priorityHint')}</p>
             <div className="mt-3 flex flex-wrap gap-2.5">
               {PRIORITY_CHIPS.map((chip) => (
                 <button
@@ -521,31 +517,31 @@ export default function CreateInquiryPage() {
                       : 'border-neutral-200 text-neutral-400 hover:border-neutral-300'
                   }`}
                 >
-                  {chip}
+                  {translateWorkspaceValue(chip, language)}
                 </button>
               ))}
             </div>
 
             <p className="mt-8 text-sm font-semibold text-neutral-800">
-              참고할 예산 규모가 있다면 입력해주세요{' '}
-              <span className="font-normal text-neutral-400">(선택)</span>
+              {t('workspace.createInquiry.budgetQuestion')}{' '}
+              <span className="font-normal text-neutral-400">{t('workspace.recommend.optionalTag')}</span>
             </p>
             <input
               value={budget}
               onChange={(e) => setBudget(e.target.value)}
-              placeholder="ex. 5백만원 이하, 키트당 4만원 내"
+              placeholder={t('workspace.createInquiry.budgetPlaceholder')}
               className="mt-3 w-full max-w-xl rounded-lg border border-neutral-200 px-4 py-3 text-sm outline-none placeholder:text-neutral-300 focus:border-indigo-400"
             />
 
             <p className="mt-8 text-sm font-semibold text-neutral-800">
-              추가로 전달하고 싶은 요청사항이 있으신가요?{' '}
-              <span className="font-normal text-neutral-400">(선택)</span>
+              {t('workspace.createInquiry.requestQuestion')}{' '}
+              <span className="font-normal text-neutral-400">{t('workspace.recommend.optionalTag')}</span>
             </p>
             <textarea
               value={request}
               onChange={(e) => setRequest(e.target.value)}
               rows={4}
-              placeholder="제작을 위해 참고할 요청사항이나 전달할 내용을 자유롭게 입력해주세요"
+              placeholder={t('workspace.createInquiry.requestPlaceholder')}
               className="mt-3 w-full resize-none rounded-lg border border-neutral-200 px-4 py-3 text-sm outline-none placeholder:text-neutral-300 focus:border-indigo-400"
             />
             <div className="mt-3">
@@ -556,31 +552,29 @@ export default function CreateInquiryPage() {
 
         {step === 2 && (
           <section className="rounded-2xl bg-white p-8 shadow-sm">
-            <h3 className="text-lg font-bold text-neutral-900">문의 정보</h3>
+            <h3 className="text-lg font-bold text-neutral-900">{t('workspace.createInquiry.infoSectionTitle')}</h3>
 
             <p className="mt-6 text-sm font-semibold text-neutral-800">
-              문의 제목을 설정해주세요<span className="text-rose-500">*</span>
+              {t('workspace.createInquiry.titleQuestion')}<span className="text-rose-500">*</span>
             </p>
-            <p className="mt-1 text-[13px] text-neutral-400">붙여주신 제목으로 문의 내용이 관리돼요</p>
+            <p className="mt-1 text-[13px] text-neutral-400">{t('workspace.createInquiry.titleHint')}</p>
             <input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="ex. 24기 신입사원 웰컴키트, 부스트 부서 워크샵 단체티셔츠"
+              placeholder={t('workspace.createInquiry.titlePlaceholder')}
               className="mt-3 w-full rounded-lg border border-neutral-200 px-4 py-3 text-sm outline-none placeholder:text-neutral-300 focus:border-indigo-400"
             />
 
-            <p className="mt-8 text-sm font-semibold text-neutral-800">기업명</p>
+            <p className="mt-8 text-sm font-semibold text-neutral-800">{t('workspace.createInquiry.companyLabel')}</p>
             <input
               value={company}
               onChange={(e) => setCompany(e.target.value)}
-              placeholder="기업명을 입력해주세요"
+              placeholder={t('workspace.createInquiry.companyPlaceholder')}
               className="mt-3 w-full rounded-lg border border-neutral-200 px-4 py-3 text-sm outline-none placeholder:text-neutral-300 focus:border-indigo-400"
             />
 
-            <p className="mt-8 text-sm font-semibold text-neutral-800">알림 수단</p>
-            <p className="mt-1 text-[13px] text-neutral-400">
-              견적 도착, 제작 시작 등의 상태 알림을 받고 싶은 수단을 선택해주세요
-            </p>
+            <p className="mt-8 text-sm font-semibold text-neutral-800">{t('workspace.createInquiry.notifyLabel')}</p>
+            <p className="mt-1 text-[13px] text-neutral-400">{t('workspace.createInquiry.notifyHint')}</p>
             <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
               <button
                 type="button"
@@ -591,7 +585,7 @@ export default function CreateInquiryPage() {
                     : 'border-neutral-200 hover:border-neutral-300'
                 }`}
               >
-                <p className="font-semibold text-neutral-700">✉️ 이메일 알림</p>
+                <p className="font-semibold text-neutral-700">{t('workspace.createInquiry.emailNotify')}</p>
                 <p className="mt-1 text-neutral-500">user@example.com</p>
               </button>
               <button
@@ -603,7 +597,7 @@ export default function CreateInquiryPage() {
                     : 'border-neutral-200 hover:border-neutral-300'
                 }`}
               >
-                <p className="font-semibold text-neutral-700">💬 카카오 채널톡 알림</p>
+                <p className="font-semibold text-neutral-700">{t('workspace.createInquiry.kakaoNotify')}</p>
                 <p className="mt-1 text-neutral-500">-</p>
               </button>
             </div>
@@ -617,7 +611,7 @@ export default function CreateInquiryPage() {
               onClick={() => setStep(step - 1)}
               className="rounded-lg border border-indigo-300 bg-white px-6 py-3 text-[15px] font-bold text-indigo-500 hover:bg-indigo-50"
             >
-              ‹ 이전 단계
+              {t('workspace.createInquiry.prevStep')}
             </button>
           ) : (
             <span />
@@ -628,7 +622,7 @@ export default function CreateInquiryPage() {
             onClick={() => (step < 2 ? setStep(step + 1) : setDone(true))}
             className="rounded-lg bg-indigo-500 px-6 py-3 text-[15px] font-bold text-white transition-colors hover:bg-indigo-600 disabled:bg-neutral-200 disabled:text-neutral-400"
           >
-            {step < 2 ? '다음 단계 ›' : '문의하기 ›'}
+            {step < 2 ? t('workspace.createInquiry.nextStep') : t('workspace.createInquiry.submitInquiry')}
           </button>
         </div>
       </main>

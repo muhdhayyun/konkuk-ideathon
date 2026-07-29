@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useLanguage } from '../../i18n/LanguageContext'
+import { translateWorkspaceValue } from '../../i18n/translations'
 
 const MODES = ['하나의 제품 추천', '키트 구성 추천', '행사 준비 추천'] as const
 
@@ -59,6 +61,7 @@ const HINTS = [
 
 export default function RecommendPage() {
   const navigate = useNavigate()
+  const { t, language } = useLanguage()
   const [mode, setMode] = useState<(typeof MODES)[number] | null>(null)
   const [purpose, setPurpose] = useState('')
   const [quantity, setQuantity] = useState('')
@@ -87,16 +90,14 @@ export default function RecommendPage() {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-neutral-50">
         <span className="text-6xl">🎯</span>
-        <h1 className="mt-6 text-xl font-bold text-neutral-900">추천 결과를 준비하고 있어요</h1>
-        <p className="mt-2 text-sm text-neutral-500">
-          입력해주신 조건에 맞는 제품을 제안해드릴게요 (데모 화면입니다)
-        </p>
+        <h1 className="mt-6 text-xl font-bold text-neutral-900">{t('workspace.recommend.doneTitle')}</h1>
+        <p className="mt-2 text-sm text-neutral-500">{t('workspace.recommend.doneBody')}</p>
         <button
           type="button"
           onClick={() => navigate('/')}
           className="mt-8 rounded-lg bg-indigo-500 px-6 py-3 text-[15px] font-bold text-white"
         >
-          제작 시작하기로 돌아가기
+          {t('workspace.recommend.doneCta')}
         </button>
       </div>
     )
@@ -110,12 +111,12 @@ export default function RecommendPage() {
           onClick={() => navigate('/inquiry')}
           className="flex items-center gap-2 text-lg font-bold text-neutral-400"
         >
-          <span className="text-neutral-300">‹</span> 뒤로가기
+          <span className="text-neutral-300">‹</span> {t('workspace.recommend.backBtn')}
         </button>
         <button
           type="button"
           onClick={() => navigate('/')}
-          aria-label="닫기"
+          aria-label={t('workspace.recommend.closeAriaLabel')}
           className="text-2xl text-neutral-400"
         >
           ✕
@@ -124,7 +125,7 @@ export default function RecommendPage() {
 
       <main className="mx-auto max-w-2xl pb-32">
         <h1 className="text-center text-xl font-bold text-neutral-900">
-          {mode === null ? '어떤 방식으로 추천받고 싶으신가요?' : '추천을 위해 몇 가지 질문에 답해주세요'}
+          {mode === null ? t('workspace.recommend.titleModeSelect') : t('workspace.recommend.titleQuestions')}
         </h1>
 
         <div className="mt-8 flex justify-center gap-3">
@@ -139,7 +140,7 @@ export default function RecommendPage() {
                   : 'border-neutral-200 bg-white text-neutral-500 hover:border-neutral-300'
               }`}
             >
-              {m}
+              {translateWorkspaceValue(m, language)}
             </button>
           ))}
         </div>
@@ -147,10 +148,10 @@ export default function RecommendPage() {
         {mode !== null && (
           <>
             <section className="mt-8 rounded-2xl bg-white p-8 shadow-sm">
-              <h3 className="text-lg font-bold text-neutral-900">필수 입력 항목</h3>
+              <h3 className="text-lg font-bold text-neutral-900">{t('workspace.recommend.requiredSectionTitle')}</h3>
 
               <p className="mt-6 text-sm font-semibold text-neutral-800">
-                제작 목적을 선택해주세요<span className="text-rose-500">*</span>
+                {t('workspace.recommend.purposeQuestion')}<span className="text-rose-500">*</span>
               </p>
               <select
                 value={purpose}
@@ -158,19 +159,17 @@ export default function RecommendPage() {
                 className="mt-3 w-full rounded-lg border border-neutral-200 bg-white px-4 py-3 text-sm text-neutral-700 outline-none focus:border-indigo-400"
               >
                 <option value="" disabled>
-                  선택
+                  {t('workspace.recommend.selectPlaceholder')}
                 </option>
                 {PURPOSES.map((p) => (
-                  <option key={p}>{p}</option>
+                  <option key={p}>{translateWorkspaceValue(p, language)}</option>
                 ))}
               </select>
 
               <p className="mt-8 text-sm font-semibold text-neutral-800">
-                원하는 수량을 입력해주세요<span className="text-rose-500">*</span>
+                {t('workspace.recommend.quantityQuestion')}<span className="text-rose-500">*</span>
               </p>
-              <p className="mt-1 text-[13px] text-neutral-400">
-                아직 정해지지 않았다면 대략적인 수량만 입력해주셔도 괜찮아요
-              </p>
+              <p className="mt-1 text-[13px] text-neutral-400">{t('workspace.recommend.quantityHint')}</p>
               <input
                 value={quantity}
                 onChange={(e) => setQuantity(e.target.value)}
@@ -185,15 +184,13 @@ export default function RecommendPage() {
                   onChange={(e) => setFlexibleQuantity(e.target.checked)}
                   className="h-4 w-4 accent-indigo-500"
                 />
-                예산에 맞춰 유동적으로 변경 가능해요
+                {t('workspace.recommend.flexibleQuantityLabel')}
               </label>
 
               <p className="mt-8 text-sm font-semibold text-neutral-800">
-                제품 개당 예산을 입력해주세요<span className="text-rose-500">*</span>
+                {t('workspace.recommend.budgetQuestion')}<span className="text-rose-500">*</span>
               </p>
-              <p className="mt-1 text-[13px] text-neutral-400">
-                아직 정해지지 않았다면, 희망하시는 대략적인 금액만 입력해주셔도 괜찮아요
-              </p>
+              <p className="mt-1 text-[13px] text-neutral-400">{t('workspace.recommend.budgetHint')}</p>
               <input
                 value={unitBudget}
                 onChange={(e) => setUnitBudget(e.target.value)}
@@ -203,22 +200,23 @@ export default function RecommendPage() {
               />
 
               <p className="mt-8 text-sm font-semibold text-neutral-800">
-                어떤 제품을 추천 받고 싶으신가요?<span className="text-rose-500">*</span>
+                {t('workspace.recommend.wishQuestion')}<span className="text-rose-500">*</span>
               </p>
               <textarea
                 value={wish}
                 onChange={(e) => setWish(e.target.value)}
                 rows={4}
-                placeholder="사용 목적, 컨셉, 참고 제품 등을 자유롭게 입력해주세요. 자세할수록 추천이 더 정확해져요"
+                placeholder={t('workspace.recommend.wishPlaceholder')}
                 className="mt-3 w-full resize-none rounded-lg border border-neutral-200 px-4 py-3 text-sm outline-none placeholder:text-neutral-300 focus:border-indigo-400"
               />
             </section>
 
             <section className="mt-6 rounded-2xl bg-white p-8 shadow-sm">
-              <h3 className="text-lg font-bold text-neutral-900">선택 입력 항목</h3>
+              <h3 className="text-lg font-bold text-neutral-900">{t('workspace.recommend.optionalSectionTitle')}</h3>
 
               <p className="mt-6 text-sm font-semibold text-neutral-800">
-                희망 수령일이 있으신가요? <span className="font-normal text-neutral-400">(선택)</span>
+                {t('workspace.recommend.desiredDateQuestion')}{' '}
+                <span className="font-normal text-neutral-400">{t('workspace.recommend.optionalTag')}</span>
               </p>
               <input
                 value={desiredDate}
@@ -233,13 +231,11 @@ export default function RecommendPage() {
                   onChange={(e) => setFixedDeadline(e.target.checked)}
                   className="h-4 w-4 accent-indigo-500"
                 />
-                납기일 조정이 불가해요
+                {t('workspace.recommend.fixedDeadlineLabel')}
               </label>
 
-              <p className="mt-8 text-sm font-semibold text-neutral-800">
-                이번 제작에서 어떤 부분을 가장 중요하게 보시나요?
-              </p>
-              <p className="mt-1 text-[13px] text-neutral-400">최대 두 가지까지 선택해주세요</p>
+              <p className="mt-8 text-sm font-semibold text-neutral-800">{t('workspace.recommend.priorityQuestion')}</p>
+              <p className="mt-1 text-[13px] text-neutral-400">{t('workspace.recommend.priorityHint')}</p>
               <div className="mt-3 flex flex-wrap gap-2.5">
                 {PRIORITY_CHIPS.map((chip) => (
                   <button
@@ -252,15 +248,16 @@ export default function RecommendPage() {
                         : 'border-neutral-200 text-neutral-400 hover:border-neutral-300'
                     }`}
                   >
-                    {chip}
+                    {translateWorkspaceValue(chip, language)}
                   </button>
                 ))}
               </div>
 
               <p className="mt-8 text-sm font-semibold text-neutral-800">
-                어떤 분야에 해당하시나요? <span className="font-normal text-neutral-400">(선택)</span>
+                {t('workspace.recommend.industryQuestion')}{' '}
+                <span className="font-normal text-neutral-400">{t('workspace.recommend.optionalTag')}</span>
               </p>
-              <p className="mt-1 text-[13px] text-neutral-400">가장 가까운 분야를 한 가지 선택해주세요</p>
+              <p className="mt-1 text-[13px] text-neutral-400">{t('workspace.recommend.industryHint')}</p>
               <div className="mt-3 flex flex-wrap gap-2.5">
                 {INDUSTRIES.map((chip) => (
                   <button
@@ -273,7 +270,7 @@ export default function RecommendPage() {
                         : 'border-neutral-200 text-neutral-400 hover:border-neutral-300'
                     }`}
                   >
-                    {chip}
+                    {translateWorkspaceValue(chip, language)}
                   </button>
                 ))}
               </div>
@@ -285,8 +282,10 @@ export default function RecommendPage() {
       {mode !== null && (
         <>
           <aside className="fixed bottom-24 left-8 hidden w-56 rounded-xl bg-white p-5 shadow-md lg:block">
-            <p className="text-[13px] font-medium text-neutral-300">입력 제안</p>
-            <p className="mt-2 text-sm leading-relaxed text-neutral-700">{HINTS[hintIndex]}</p>
+            <p className="text-[13px] font-medium text-neutral-300">{t('workspace.recommend.hintLabel')}</p>
+            <p className="mt-2 text-sm leading-relaxed text-neutral-700">
+              {translateWorkspaceValue(HINTS[hintIndex], language)}
+            </p>
           </aside>
 
           <div className="fixed right-8 bottom-8">
@@ -296,7 +295,7 @@ export default function RecommendPage() {
               onClick={() => setDone(true)}
               className="rounded-lg bg-indigo-500 px-6 py-3 text-[15px] font-bold text-white transition-colors hover:bg-indigo-600 disabled:bg-neutral-200 disabled:text-neutral-400"
             >
-              결과 확인하기
+              {t('workspace.recommend.submitCta')}
             </button>
           </div>
         </>
