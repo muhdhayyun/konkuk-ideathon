@@ -11,6 +11,7 @@ import InquiryBranchPage from './pages/workspace/InquiryBranchPage'
 import CreateInquiryPage from './pages/workspace/CreateInquiryPage'
 import RecommendPage from './pages/workspace/RecommendPage'
 import TrendReportPage from './pages/workspace/TrendReportPage'
+import InternalMatcherTestPage from './pages/internal-matcher-test/InternalMatcherTestPage'
 
 function App() {
   return (
@@ -31,6 +32,9 @@ function App() {
       {/* 기존 팀 프로토타입 */}
       <Route path="/client-form/*" element={<ClientFormPage />} />
       <Route path="/ai-agent/*" element={<AgentFormPage />} />
+
+      {/* Internal historical matcher — standalone test page, not linked from any nav */}
+      <Route path="/internal-matcher-test" element={<InternalMatcherTestPage />} />
     </Routes>
   )
 }

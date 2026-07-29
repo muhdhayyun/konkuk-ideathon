@@ -1,0 +1,238 @@
+[
+  {
+    "product_name": "Knit Blanket",
+    "category": "Welcome Kit Item",
+    "unit_price_krw": 22000,
+    "trend_tags": [
+      "premium",
+      "seasonal"
+    ],
+    "peak_season": "Nov-Jan"
+  },
+  {
+    "product_name": "Wool Scarf",
+    "category": "Premium Gift",
+    "unit_price_krw": 18000,
+    "trend_tags": [
+      "premium",
+      "seasonal"
+    ],
+    "peak_season": "Nov-Jan"
+  },
+  {
+    "product_name": "Leather Diary",
+    "category": "Office Goods",
+    "unit_price_krw": 15000,
+    "trend_tags": [
+      "classic"
+    ],
+    "peak_season": "Jan-Feb, Sep"
+  },
+  {
+    "product_name": "Acrylic Figure",
+    "category": "Character Goods",
+    "unit_price_krw": 6000,
+    "trend_tags": [
+      "trendy",
+      "playful"
+    ],
+    "peak_season": "Mar-Apr, Sep-Oct"
+  },
+  {
+    "product_name": "ID Badge Lanyard Set",
+    "category": "Welcome Kit Item",
+    "unit_price_krw": 4000,
+    "trend_tags": [
+      "practical"
+    ],
+    "peak_season": "Jan-Mar, Sep"
+  },
+  {
+    "product_name": "Power Bank",
+    "category": "Tech Goods",
+    "unit_price_krw": 18000,
+    "trend_tags": [
+      "tech-forward",
+      "practical"
+    ],
+    "peak_season": "Jan, Jun-Jul"
+  },
+  {
+    "product_name": "Canvas Tote Bag",
+    "category": "Event Merch",
+    "unit_price_krw": 5500,
+    "trend_tags": [
+      "minimalist",
+      "sustainable"
+    ],
+    "peak_season": "Apr-May, Sep"
+  },
+  {
+    "product_name": "Stainless Tumbler",
+    "category": "Tumbler",
+    "unit_price_krw": 8500,
+    "trend_tags": [
+      "practical",
+      "minimalist"
+    ],
+    "peak_season": "May-Jul"
+  },
+  {
+    "product_name": "Camping Mat Set",
+    "category": "Premium Gift",
+    "unit_price_krw": 45000,
+    "trend_tags": [
+      "experiential",
+      "trendy"
+    ],
+    "peak_season": "Apr-Jun"
+  },
+  {
+    "product_name": "Engraved Leather Pouch",
+    "category": "Premium Gift",
+    "unit_price_krw": 28000,
+    "trend_tags": [
+      "premium",
+      "classic"
+    ],
+    "peak_season": "Nov-Dec"
+  },
+  {
+    "product_name": "Folding Hand Fan",
+    "category": "Event Merch",
+    "unit_price_krw": 1200,
+    "trend_tags": [
+      "practical"
+    ],
+    "peak_season": "Jun-Aug"
+  },
+  {
+    "product_name": "Portable Mini Fan",
+    "category": "Tech Goods",
+    "unit_price_krw": 11200,
+    "trend_tags": [
+      "tech-forward",
+      "practical"
+    ],
+    "peak_season": "Jun-Aug"
+  },
+  {
+    "product_name": "Acrylic Keyring",
+    "category": "Character Goods",
+    "unit_price_krw": 2400,
+    "trend_tags": [
+      "trendy",
+      "playful"
+    ],
+    "peak_season": "Mar-Apr, Sep-Oct"
+  },
+  {
+    "product_name": "Recycled Fabric Pouch",
+    "category": "Sustainable Goods",
+    "unit_price_krw": 9000,
+    "trend_tags": [
+      "sustainable",
+      "minimalist"
+    ],
+    "peak_season": "Apr-May, Sep-Oct"
+  },
+  {
+    "product_name": "Eco Bamboo Notebook",
+    "category": "Sustainable Goods",
+    "unit_price_krw": 4200,
+    "trend_tags": [
+      "sustainable",
+      "minimalist"
+    ],
+    "peak_season": "Jan-Feb, Sep"
+  },
+  {
+    "product_name": "Spiral Notebook",
+    "category": "Office Goods",
+    "unit_price_krw": 3500,
+    "trend_tags": [
+      "classic",
+      "practical"
+    ],
+    "peak_season": "Jan-Feb, Sep"
+  },
+  {
+    "product_name": "Custom Picnic Mat",
+    "category": "Premium Gift",
+    "unit_price_krw": 16900,
+    "trend_tags": [
+      "experiential",
+      "trendy"
+    ],
+    "peak_season": "Apr-Jun"
+  },
+  {
+    "product_name": "Wireless Charging Pad",
+    "category": "Tech Goods",
+    "unit_price_krw": 16000,
+    "trend_tags": [
+      "tech-forward"
+    ],
+    "peak_season": "Jan, Jun, Nov"
+  },
+  {
+    "product_name": "Daily Calendar Set",
+    "category": "Office Goods",
+    "unit_price_krw": 6950,
+    "trend_tags": [
+      "classic",
+      "practical"
+    ],
+    "peak_season": "Nov-Jan"
+  },
+  {
+    "product_name": "Silicone Phone Grip",
+    "category": "Character Goods",
+    "unit_price_krw": 4800,
+    "trend_tags": [
+      "playful",
+      "trendy"
+    ],
+    "peak_season": "Mar-Apr, Sep-Oct"
+  },
+  {
+    "product_name": "Reusable Cup Sleeve",
+    "category": "Sustainable Goods",
+    "unit_price_krw": 3000,
+    "trend_tags": [
+      "sustainable",
+      "minimalist"
+    ],
+    "peak_season": "May-Jun, Sep"
+  },
+  {
+    "product_name": "Travel Amenity Kit",
+    "category": "Welcome Kit Item",
+    "unit_price_krw": 10500,
+    "trend_tags": [
+      "premium",
+      "practical"
+    ],
+    "peak_season": "Mar, Sep"
+  },
+  {
+    "product_name": "Cooling Neck Towel",
+    "category": "Event Merch",
+    "unit_price_krw": 4600,
+    "trend_tags": [
+      "practical",
+      "seasonal"
+    ],
+    "peak_season": "Jun-Aug"
+  },
+  {
+    "product_name": "Desk Organizer Set",
+    "category": "Office Goods",
+    "unit_price_krw": 9800,
+    "trend_tags": [
+      "minimalist",
+      "practical"
+    ],
+    "peak_season": "Jan-Mar"
+  }
+]

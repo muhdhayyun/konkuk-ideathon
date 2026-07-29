@@ -1,0 +1,72 @@
+[
+  {
+    "client_id": "C001",
+    "industry": "Asset Management",
+    "brand_tone": "Formal / Prestige",
+    "size": "Large",
+    "region": "Seoul"
+  },
+  {
+    "client_id": "C002",
+    "industry": "IT / Startup",
+    "brand_tone": "Playful / Casual",
+    "size": "Small",
+    "region": "Seoul"
+  },
+  {
+    "client_id": "C003",
+    "industry": "Pharmaceutical",
+    "brand_tone": "Formal / Conservative",
+    "size": "Large",
+    "region": "Gyeonggi"
+  },
+  {
+    "client_id": "C004",
+    "industry": "Fashion / Beauty",
+    "brand_tone": "Trendy / Bold",
+    "size": "Medium",
+    "region": "Seoul"
+  },
+  {
+    "client_id": "C005",
+    "industry": "Consumer Electronics",
+    "brand_tone": "Modern / Tech",
+    "size": "Large",
+    "region": "Suwon"
+  },
+  {
+    "client_id": "C006",
+    "industry": "Public / Government Agency",
+    "brand_tone": "Formal / Conservative",
+    "size": "Large",
+    "region": "Sejong"
+  },
+  {
+    "client_id": "C007",
+    "industry": "F&B / Retail",
+    "brand_tone": "Playful / Casual",
+    "size": "Medium",
+    "region": "Seoul"
+  },
+  {
+    "client_id": "C008",
+    "industry": "Consulting",
+    "brand_tone": "Formal / Prestige",
+    "size": "Medium",
+    "region": "Seoul"
+  },
+  {
+    "client_id": "C009",
+    "industry": "Gaming / Entertainment",
+    "brand_tone": "Trendy / Bold",
+    "size": "Small",
+    "region": "Seoul"
+  },
+  {
+    "client_id": "C010",
+    "industry": "University / Education",
+    "brand_tone": "Formal / Conservative",
+    "size": "Medium",
+    "region": "Incheon"
+  }
+]

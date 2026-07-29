@@ -1,0 +1,2144 @@
+[
+  {
+    "order_id": "O00341",
+    "client_id": "C003",
+    "industry": "Pharmaceutical",
+    "order_date": "2022-01-15",
+    "occasion": "New Hire Kit",
+    "product_name": "ID Badge Lanyard Set",
+    "category": "Welcome Kit Item",
+    "qty": 200,
+    "unit_price_krw": 4000,
+    "trend_tags": [
+      "practical"
+    ],
+    "outcome": "accepted_after_revision"
+  },
+  {
+    "order_id": "O00346",
+    "client_id": "C002",
+    "industry": "IT / Startup",
+    "order_date": "2022-01-22",
+    "occasion": "Conference Swag",
+    "product_name": "ID Badge Lanyard Set",
+    "category": "Welcome Kit Item",
+    "qty": 120,
+    "unit_price_krw": 4000,
+    "trend_tags": [
+      "practical"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00348",
+    "client_id": "C010",
+    "industry": "University / Education",
+    "order_date": "2022-03-19",
+    "occasion": "New Hire Kit",
+    "product_name": "Travel Amenity Kit",
+    "category": "Welcome Kit Item",
+    "qty": 150,
+    "unit_price_krw": 10500,
+    "trend_tags": [
+      "premium",
+      "practical"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00350",
+    "client_id": "C010",
+    "industry": "University / Education",
+    "order_date": "2022-04-24",
+    "occasion": "New Hire Kit",
+    "product_name": "Spiral Notebook",
+    "category": "Office Goods",
+    "qty": 80,
+    "unit_price_krw": 3500,
+    "trend_tags": [
+      "classic",
+      "practical"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00353",
+    "client_id": "C010",
+    "industry": "University / Education",
+    "order_date": "2022-06-13",
+    "occasion": "New Hire Kit",
+    "product_name": "Stainless Tumbler",
+    "category": "Tumbler",
+    "qty": 25,
+    "unit_price_krw": 8500,
+    "trend_tags": [
+      "practical",
+      "minimalist"
+    ],
+    "outcome": "accepted_after_revision"
+  },
+  {
+    "order_id": "O00358",
+    "client_id": "C008",
+    "industry": "Consulting",
+    "order_date": "2022-08-08",
+    "occasion": "VIP Gift",
+    "product_name": "Cooling Neck Towel",
+    "category": "Event Merch",
+    "qty": 200,
+    "unit_price_krw": 4600,
+    "trend_tags": [
+      "practical",
+      "seasonal"
+    ],
+    "outcome": "rejected_first_round"
+  },
+  {
+    "order_id": "O00359",
+    "client_id": "C002",
+    "industry": "IT / Startup",
+    "order_date": "2022-08-25",
+    "occasion": "New Hire Kit",
+    "product_name": "Folding Hand Fan",
+    "category": "Event Merch",
+    "qty": 30,
+    "unit_price_krw": 1200,
+    "trend_tags": [
+      "practical"
+    ],
+    "outcome": "rejected_first_round"
+  },
+  {
+    "order_id": "O00362",
+    "client_id": "C002",
+    "industry": "IT / Startup",
+    "order_date": "2022-09-03",
+    "occasion": "New Hire Kit",
+    "product_name": "Acrylic Figure",
+    "category": "Character Goods",
+    "qty": 60,
+    "unit_price_krw": 6000,
+    "trend_tags": [
+      "trendy",
+      "playful"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00365",
+    "client_id": "C001",
+    "industry": "Asset Management",
+    "order_date": "2022-10-07",
+    "occasion": "VIP Gift",
+    "product_name": "Stainless Tumbler",
+    "category": "Tumbler",
+    "qty": 120,
+    "unit_price_krw": 8500,
+    "trend_tags": [
+      "practical",
+      "minimalist"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00369",
+    "client_id": "C004",
+    "industry": "Fashion / Beauty",
+    "order_date": "2022-10-26",
+    "occasion": "Event Goods",
+    "product_name": "Silicone Phone Grip",
+    "category": "Character Goods",
+    "qty": 150,
+    "unit_price_krw": 4800,
+    "trend_tags": [
+      "playful",
+      "trendy"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00371",
+    "client_id": "C009",
+    "industry": "Gaming / Entertainment",
+    "order_date": "2022-11-15",
+    "occasion": "Event Goods",
+    "product_name": "Engraved Leather Pouch",
+    "category": "Premium Gift",
+    "qty": 200,
+    "unit_price_krw": 28000,
+    "trend_tags": [
+      "premium",
+      "classic"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00376",
+    "client_id": "C010",
+    "industry": "University / Education",
+    "order_date": "2022-12-01",
+    "occasion": "New Hire Kit",
+    "product_name": "Engraved Leather Pouch",
+    "category": "Premium Gift",
+    "qty": 40,
+    "unit_price_krw": 28000,
+    "trend_tags": [
+      "premium",
+      "classic"
+    ],
+    "outcome": "accepted_after_revision"
+  },
+  {
+    "order_id": "O00378",
+    "client_id": "C007",
+    "industry": "F&B / Retail",
+    "order_date": "2023-01-01",
+    "occasion": "New Hire Kit",
+    "product_name": "Spiral Notebook",
+    "category": "Office Goods",
+    "qty": 150,
+    "unit_price_krw": 3500,
+    "trend_tags": [
+      "classic",
+      "practical"
+    ],
+    "outcome": "accepted_after_revision"
+  },
+  {
+    "order_id": "O00380",
+    "client_id": "C009",
+    "industry": "Gaming / Entertainment",
+    "order_date": "2023-01-08",
+    "occasion": "Event Goods",
+    "product_name": "ID Badge Lanyard Set",
+    "category": "Welcome Kit Item",
+    "qty": 20,
+    "unit_price_krw": 4000,
+    "trend_tags": [
+      "practical"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00383",
+    "client_id": "C005",
+    "industry": "Consumer Electronics",
+    "order_date": "2023-01-13",
+    "occasion": "Conference Swag",
+    "product_name": "Desk Organizer Set",
+    "category": "Office Goods",
+    "qty": 60,
+    "unit_price_krw": 9800,
+    "trend_tags": [
+      "minimalist",
+      "practical"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00387",
+    "client_id": "C007",
+    "industry": "F&B / Retail",
+    "order_date": "2023-01-16",
+    "occasion": "Event Goods",
+    "product_name": "Desk Organizer Set",
+    "category": "Office Goods",
+    "qty": 120,
+    "unit_price_krw": 9800,
+    "trend_tags": [
+      "minimalist",
+      "practical"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00389",
+    "client_id": "C004",
+    "industry": "Fashion / Beauty",
+    "order_date": "2023-01-18",
+    "occasion": "Event Goods",
+    "product_name": "Desk Organizer Set",
+    "category": "Office Goods",
+    "qty": 25,
+    "unit_price_krw": 9800,
+    "trend_tags": [
+      "minimalist",
+      "practical"
+    ],
+    "outcome": "rejected_first_round"
+  },
+  {
+    "order_id": "O00392",
+    "client_id": "C004",
+    "industry": "Fashion / Beauty",
+    "order_date": "2023-01-22",
+    "occasion": "Event Goods",
+    "product_name": "Daily Calendar Set",
+    "category": "Office Goods",
+    "qty": 60,
+    "unit_price_krw": 6950,
+    "trend_tags": [
+      "classic",
+      "practical"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00397",
+    "client_id": "C005",
+    "industry": "Consumer Electronics",
+    "order_date": "2023-01-24",
+    "occasion": "Product Launch Kit",
+    "product_name": "Wool Scarf",
+    "category": "Premium Gift",
+    "qty": 20,
+    "unit_price_krw": 18000,
+    "trend_tags": [
+      "premium",
+      "seasonal"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00399",
+    "client_id": "C006",
+    "industry": "Public / Government Agency",
+    "order_date": "2023-01-25",
+    "occasion": "Year-End Gift",
+    "product_name": "Wool Scarf",
+    "category": "Premium Gift",
+    "qty": 40,
+    "unit_price_krw": 18000,
+    "trend_tags": [
+      "premium",
+      "seasonal"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00403",
+    "client_id": "C010",
+    "industry": "University / Education",
+    "order_date": "2023-02-09",
+    "occasion": "Event Goods",
+    "product_name": "Travel Amenity Kit",
+    "category": "Welcome Kit Item",
+    "qty": 40,
+    "unit_price_krw": 10500,
+    "trend_tags": [
+      "premium",
+      "practical"
+    ],
+    "outcome": "rejected_first_round"
+  },
+  {
+    "order_id": "O00404",
+    "client_id": "C006",
+    "industry": "Public / Government Agency",
+    "order_date": "2023-02-25",
+    "occasion": "Year-End Gift",
+    "product_name": "Eco Bamboo Notebook",
+    "category": "Sustainable Goods",
+    "qty": 50,
+    "unit_price_krw": 4200,
+    "trend_tags": [
+      "sustainable",
+      "minimalist"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00409",
+    "client_id": "C005",
+    "industry": "Consumer Electronics",
+    "order_date": "2023-03-17",
+    "occasion": "Product Launch Kit",
+    "product_name": "ID Badge Lanyard Set",
+    "category": "Welcome Kit Item",
+    "qty": 50,
+    "unit_price_krw": 4000,
+    "trend_tags": [
+      "practical"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00410",
+    "client_id": "C010",
+    "industry": "University / Education",
+    "order_date": "2023-03-26",
+    "occasion": "New Hire Kit",
+    "product_name": "Travel Amenity Kit",
+    "category": "Welcome Kit Item",
+    "qty": 50,
+    "unit_price_krw": 10500,
+    "trend_tags": [
+      "premium",
+      "practical"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00414",
+    "client_id": "C004",
+    "industry": "Fashion / Beauty",
+    "order_date": "2023-03-28",
+    "occasion": "Anniversary Gift",
+    "product_name": "Silicone Phone Grip",
+    "category": "Character Goods",
+    "qty": 40,
+    "unit_price_krw": 4800,
+    "trend_tags": [
+      "playful",
+      "trendy"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00417",
+    "client_id": "C002",
+    "industry": "IT / Startup",
+    "order_date": "2023-04-23",
+    "occasion": "Anniversary Gift",
+    "product_name": "Camping Mat Set",
+    "category": "Premium Gift",
+    "qty": 200,
+    "unit_price_krw": 45000,
+    "trend_tags": [
+      "experiential",
+      "trendy"
+    ],
+    "outcome": "rejected_first_round"
+  },
+  {
+    "order_id": "O00420",
+    "client_id": "C008",
+    "industry": "Consulting",
+    "order_date": "2023-06-04",
+    "occasion": "New Hire Kit",
+    "product_name": "Folding Hand Fan",
+    "category": "Event Merch",
+    "qty": 60,
+    "unit_price_krw": 1200,
+    "trend_tags": [
+      "practical"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00424",
+    "client_id": "C003",
+    "industry": "Pharmaceutical",
+    "order_date": "2023-06-17",
+    "occasion": "New Hire Kit",
+    "product_name": "Silicone Phone Grip",
+    "category": "Character Goods",
+    "qty": 30,
+    "unit_price_krw": 4800,
+    "trend_tags": [
+      "playful",
+      "trendy"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00427",
+    "client_id": "C009",
+    "industry": "Gaming / Entertainment",
+    "order_date": "2023-06-18",
+    "occasion": "Event Goods",
+    "product_name": "Folding Hand Fan",
+    "category": "Event Merch",
+    "qty": 50,
+    "unit_price_krw": 1200,
+    "trend_tags": [
+      "practical"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00428",
+    "client_id": "C007",
+    "industry": "F&B / Retail",
+    "order_date": "2023-06-22",
+    "occasion": "New Hire Kit",
+    "product_name": "Cooling Neck Towel",
+    "category": "Event Merch",
+    "qty": 20,
+    "unit_price_krw": 4600,
+    "trend_tags": [
+      "practical",
+      "seasonal"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00432",
+    "client_id": "C004",
+    "industry": "Fashion / Beauty",
+    "order_date": "2023-07-02",
+    "occasion": "Event Goods",
+    "product_name": "Folding Hand Fan",
+    "category": "Event Merch",
+    "qty": 80,
+    "unit_price_krw": 1200,
+    "trend_tags": [
+      "practical"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00436",
+    "client_id": "C006",
+    "industry": "Public / Government Agency",
+    "order_date": "2023-07-28",
+    "occasion": "Event Goods",
+    "product_name": "Power Bank",
+    "category": "Tech Goods",
+    "qty": 150,
+    "unit_price_krw": 18000,
+    "trend_tags": [
+      "tech-forward",
+      "practical"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00437",
+    "client_id": "C007",
+    "industry": "F&B / Retail",
+    "order_date": "2023-08-02",
+    "occasion": "New Hire Kit",
+    "product_name": "Portable Mini Fan",
+    "category": "Tech Goods",
+    "qty": 50,
+    "unit_price_krw": 11200,
+    "trend_tags": [
+      "tech-forward",
+      "practical"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00442",
+    "client_id": "C005",
+    "industry": "Consumer Electronics",
+    "order_date": "2023-08-03",
+    "occasion": "Conference Swag",
+    "product_name": "Leather Diary",
+    "category": "Office Goods",
+    "qty": 200,
+    "unit_price_krw": 15000,
+    "trend_tags": [
+      "classic"
+    ],
+    "outcome": "accepted_after_revision"
+  },
+  {
+    "order_id": "O00443",
+    "client_id": "C002",
+    "industry": "IT / Startup",
+    "order_date": "2023-10-06",
+    "occasion": "Anniversary Gift",
+    "product_name": "Acrylic Figure",
+    "category": "Character Goods",
+    "qty": 100,
+    "unit_price_krw": 6000,
+    "trend_tags": [
+      "trendy",
+      "playful"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00448",
+    "client_id": "C008",
+    "industry": "Consulting",
+    "order_date": "2023-10-10",
+    "occasion": "VIP Gift",
+    "product_name": "Acrylic Keyring",
+    "category": "Character Goods",
+    "qty": 40,
+    "unit_price_krw": 2400,
+    "trend_tags": [
+      "trendy",
+      "playful"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00451",
+    "client_id": "C007",
+    "industry": "F&B / Retail",
+    "order_date": "2023-10-23",
+    "occasion": "New Hire Kit",
+    "product_name": "Silicone Phone Grip",
+    "category": "Character Goods",
+    "qty": 30,
+    "unit_price_krw": 4800,
+    "trend_tags": [
+      "playful",
+      "trendy"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00454",
+    "client_id": "C010",
+    "industry": "University / Education",
+    "order_date": "2023-11-13",
+    "occasion": "New Hire Kit",
+    "product_name": "Knit Blanket",
+    "category": "Welcome Kit Item",
+    "qty": 120,
+    "unit_price_krw": 22000,
+    "trend_tags": [
+      "premium",
+      "seasonal"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00456",
+    "client_id": "C009",
+    "industry": "Gaming / Entertainment",
+    "order_date": "2023-11-24",
+    "occasion": "Event Goods",
+    "product_name": "Portable Mini Fan",
+    "category": "Tech Goods",
+    "qty": 200,
+    "unit_price_krw": 11200,
+    "trend_tags": [
+      "tech-forward",
+      "practical"
+    ],
+    "outcome": "rejected_first_round"
+  },
+  {
+    "order_id": "O00459",
+    "client_id": "C002",
+    "industry": "IT / Startup",
+    "order_date": "2024-01-11",
+    "occasion": "New Hire Kit",
+    "product_name": "Custom Picnic Mat",
+    "category": "Premium Gift",
+    "qty": 50,
+    "unit_price_krw": 16900,
+    "trend_tags": [
+      "experiential",
+      "trendy"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00463",
+    "client_id": "C010",
+    "industry": "University / Education",
+    "order_date": "2024-01-20",
+    "occasion": "New Hire Kit",
+    "product_name": "Knit Blanket",
+    "category": "Welcome Kit Item",
+    "qty": 120,
+    "unit_price_krw": 22000,
+    "trend_tags": [
+      "premium",
+      "seasonal"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00464",
+    "client_id": "C005",
+    "industry": "Consumer Electronics",
+    "order_date": "2024-01-26",
+    "occasion": "Product Launch Kit",
+    "product_name": "Knit Blanket",
+    "category": "Welcome Kit Item",
+    "qty": 30,
+    "unit_price_krw": 22000,
+    "trend_tags": [
+      "premium",
+      "seasonal"
+    ],
+    "outcome": "rejected_first_round"
+  },
+  {
+    "order_id": "O00467",
+    "client_id": "C010",
+    "industry": "University / Education",
+    "order_date": "2024-02-17",
+    "occasion": "Event Goods",
+    "product_name": "Leather Diary",
+    "category": "Office Goods",
+    "qty": 20,
+    "unit_price_krw": 15000,
+    "trend_tags": [
+      "classic"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00471",
+    "client_id": "C004",
+    "industry": "Fashion / Beauty",
+    "order_date": "2024-03-09",
+    "occasion": "Event Goods",
+    "product_name": "Canvas Tote Bag",
+    "category": "Event Merch",
+    "qty": 20,
+    "unit_price_krw": 5500,
+    "trend_tags": [
+      "minimalist",
+      "sustainable"
+    ],
+    "outcome": "rejected_first_round"
+  },
+  {
+    "order_id": "O00474",
+    "client_id": "C008",
+    "industry": "Consulting",
+    "order_date": "2024-04-01",
+    "occasion": "VIP Gift",
+    "product_name": "Silicone Phone Grip",
+    "category": "Character Goods",
+    "qty": 80,
+    "unit_price_krw": 4800,
+    "trend_tags": [
+      "playful",
+      "trendy"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00477",
+    "client_id": "C006",
+    "industry": "Public / Government Agency",
+    "order_date": "2024-04-11",
+    "occasion": "Event Goods",
+    "product_name": "Canvas Tote Bag",
+    "category": "Event Merch",
+    "qty": 100,
+    "unit_price_krw": 5500,
+    "trend_tags": [
+      "minimalist",
+      "sustainable"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00481",
+    "client_id": "C007",
+    "industry": "F&B / Retail",
+    "order_date": "2024-04-14",
+    "occasion": "New Hire Kit",
+    "product_name": "Custom Picnic Mat",
+    "category": "Premium Gift",
+    "qty": 200,
+    "unit_price_krw": 16900,
+    "trend_tags": [
+      "experiential",
+      "trendy"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00482",
+    "client_id": "C005",
+    "industry": "Consumer Electronics",
+    "order_date": "2024-04-22",
+    "occasion": "Product Launch Kit",
+    "product_name": "Acrylic Keyring",
+    "category": "Character Goods",
+    "qty": 40,
+    "unit_price_krw": 2400,
+    "trend_tags": [
+      "trendy",
+      "playful"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00486",
+    "client_id": "C005",
+    "industry": "Consumer Electronics",
+    "order_date": "2024-05-18",
+    "occasion": "Conference Swag",
+    "product_name": "Travel Amenity Kit",
+    "category": "Welcome Kit Item",
+    "qty": 120,
+    "unit_price_krw": 10500,
+    "trend_tags": [
+      "premium",
+      "practical"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00490",
+    "client_id": "C002",
+    "industry": "IT / Startup",
+    "order_date": "2024-05-21",
+    "occasion": "Conference Swag",
+    "product_name": "Reusable Cup Sleeve",
+    "category": "Sustainable Goods",
+    "qty": 20,
+    "unit_price_krw": 3000,
+    "trend_tags": [
+      "sustainable",
+      "minimalist"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00492",
+    "client_id": "C008",
+    "industry": "Consulting",
+    "order_date": "2024-05-28",
+    "occasion": "New Hire Kit",
+    "product_name": "Canvas Tote Bag",
+    "category": "Event Merch",
+    "qty": 25,
+    "unit_price_krw": 5500,
+    "trend_tags": [
+      "minimalist",
+      "sustainable"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00494",
+    "client_id": "C006",
+    "industry": "Public / Government Agency",
+    "order_date": "2024-06-03",
+    "occasion": "Event Goods",
+    "product_name": "Folding Hand Fan",
+    "category": "Event Merch",
+    "qty": 20,
+    "unit_price_krw": 1200,
+    "trend_tags": [
+      "practical"
+    ],
+    "outcome": "accepted_after_revision"
+  },
+  {
+    "order_id": "O00497",
+    "client_id": "C005",
+    "industry": "Consumer Electronics",
+    "order_date": "2024-06-04",
+    "occasion": "Conference Swag",
+    "product_name": "Power Bank",
+    "category": "Tech Goods",
+    "qty": 40,
+    "unit_price_krw": 18000,
+    "trend_tags": [
+      "tech-forward",
+      "practical"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00501",
+    "client_id": "C007",
+    "industry": "F&B / Retail",
+    "order_date": "2024-06-05",
+    "occasion": "New Hire Kit",
+    "product_name": "Portable Mini Fan",
+    "category": "Tech Goods",
+    "qty": 25,
+    "unit_price_krw": 11200,
+    "trend_tags": [
+      "tech-forward",
+      "practical"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00505",
+    "client_id": "C007",
+    "industry": "F&B / Retail",
+    "order_date": "2024-06-10",
+    "occasion": "New Hire Kit",
+    "product_name": "Portable Mini Fan",
+    "category": "Tech Goods",
+    "qty": 100,
+    "unit_price_krw": 11200,
+    "trend_tags": [
+      "tech-forward",
+      "practical"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00506",
+    "client_id": "C010",
+    "industry": "University / Education",
+    "order_date": "2024-06-17",
+    "occasion": "New Hire Kit",
+    "product_name": "Cooling Neck Towel",
+    "category": "Event Merch",
+    "qty": 30,
+    "unit_price_krw": 4600,
+    "trend_tags": [
+      "practical",
+      "seasonal"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00509",
+    "client_id": "C005",
+    "industry": "Consumer Electronics",
+    "order_date": "2024-06-20",
+    "occasion": "Conference Swag",
+    "product_name": "Custom Picnic Mat",
+    "category": "Premium Gift",
+    "qty": 30,
+    "unit_price_krw": 16900,
+    "trend_tags": [
+      "experiential",
+      "trendy"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00512",
+    "client_id": "C008",
+    "industry": "Consulting",
+    "order_date": "2024-06-27",
+    "occasion": "New Hire Kit",
+    "product_name": "Wireless Charging Pad",
+    "category": "Tech Goods",
+    "qty": 25,
+    "unit_price_krw": 16000,
+    "trend_tags": [
+      "tech-forward"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00516",
+    "client_id": "C002",
+    "industry": "IT / Startup",
+    "order_date": "2024-07-05",
+    "occasion": "Conference Swag",
+    "product_name": "Power Bank",
+    "category": "Tech Goods",
+    "qty": 150,
+    "unit_price_krw": 18000,
+    "trend_tags": [
+      "tech-forward",
+      "practical"
+    ],
+    "outcome": "accepted_after_revision"
+  },
+  {
+    "order_id": "O00520",
+    "client_id": "C006",
+    "industry": "Public / Government Agency",
+    "order_date": "2024-07-18",
+    "occasion": "Year-End Gift",
+    "product_name": "Stainless Tumbler",
+    "category": "Tumbler",
+    "qty": 100,
+    "unit_price_krw": 8500,
+    "trend_tags": [
+      "practical",
+      "minimalist"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00523",
+    "client_id": "C006",
+    "industry": "Public / Government Agency",
+    "order_date": "2024-07-26",
+    "occasion": "Year-End Gift",
+    "product_name": "Power Bank",
+    "category": "Tech Goods",
+    "qty": 30,
+    "unit_price_krw": 18000,
+    "trend_tags": [
+      "tech-forward",
+      "practical"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00526",
+    "client_id": "C005",
+    "industry": "Consumer Electronics",
+    "order_date": "2024-08-10",
+    "occasion": "Conference Swag",
+    "product_name": "Spiral Notebook",
+    "category": "Office Goods",
+    "qty": 25,
+    "unit_price_krw": 3500,
+    "trend_tags": [
+      "classic",
+      "practical"
+    ],
+    "outcome": "rejected_first_round"
+  },
+  {
+    "order_id": "O00529",
+    "client_id": "C003",
+    "industry": "Pharmaceutical",
+    "order_date": "2024-08-17",
+    "occasion": "Conference Swag",
+    "product_name": "Portable Mini Fan",
+    "category": "Tech Goods",
+    "qty": 200,
+    "unit_price_krw": 11200,
+    "trend_tags": [
+      "tech-forward",
+      "practical"
+    ],
+    "outcome": "rejected_first_round"
+  },
+  {
+    "order_id": "O00532",
+    "client_id": "C006",
+    "industry": "Public / Government Agency",
+    "order_date": "2024-08-18",
+    "occasion": "Event Goods",
+    "product_name": "Portable Mini Fan",
+    "category": "Tech Goods",
+    "qty": 60,
+    "unit_price_krw": 11200,
+    "trend_tags": [
+      "tech-forward",
+      "practical"
+    ],
+    "outcome": "rejected_first_round"
+  },
+  {
+    "order_id": "O00534",
+    "client_id": "C008",
+    "industry": "Consulting",
+    "order_date": "2024-08-20",
+    "occasion": "VIP Gift",
+    "product_name": "Portable Mini Fan",
+    "category": "Tech Goods",
+    "qty": 150,
+    "unit_price_krw": 11200,
+    "trend_tags": [
+      "tech-forward",
+      "practical"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00537",
+    "client_id": "C002",
+    "industry": "IT / Startup",
+    "order_date": "2024-08-23",
+    "occasion": "New Hire Kit",
+    "product_name": "Stainless Tumbler",
+    "category": "Tumbler",
+    "qty": 80,
+    "unit_price_krw": 8500,
+    "trend_tags": [
+      "practical",
+      "minimalist"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00541",
+    "client_id": "C010",
+    "industry": "University / Education",
+    "order_date": "2024-09-16",
+    "occasion": "New Hire Kit",
+    "product_name": "Power Bank",
+    "category": "Tech Goods",
+    "qty": 20,
+    "unit_price_krw": 18000,
+    "trend_tags": [
+      "tech-forward",
+      "practical"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00544",
+    "client_id": "C003",
+    "industry": "Pharmaceutical",
+    "order_date": "2024-09-17",
+    "occasion": "Conference Swag",
+    "product_name": "Leather Diary",
+    "category": "Office Goods",
+    "qty": 30,
+    "unit_price_krw": 15000,
+    "trend_tags": [
+      "classic"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00546",
+    "client_id": "C001",
+    "industry": "Asset Management",
+    "order_date": "2024-11-03",
+    "occasion": "Year-End Gift",
+    "product_name": "Engraved Leather Pouch",
+    "category": "Premium Gift",
+    "qty": 60,
+    "unit_price_krw": 28000,
+    "trend_tags": [
+      "premium",
+      "classic"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00549",
+    "client_id": "C007",
+    "industry": "F&B / Retail",
+    "order_date": "2024-11-04",
+    "occasion": "Event Goods",
+    "product_name": "Wireless Charging Pad",
+    "category": "Tech Goods",
+    "qty": 80,
+    "unit_price_krw": 16000,
+    "trend_tags": [
+      "tech-forward"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00553",
+    "client_id": "C007",
+    "industry": "F&B / Retail",
+    "order_date": "2024-11-10",
+    "occasion": "New Hire Kit",
+    "product_name": "Daily Calendar Set",
+    "category": "Office Goods",
+    "qty": 150,
+    "unit_price_krw": 6950,
+    "trend_tags": [
+      "classic",
+      "practical"
+    ],
+    "outcome": "accepted_after_revision"
+  },
+  {
+    "order_id": "O00556",
+    "client_id": "C010",
+    "industry": "University / Education",
+    "order_date": "2024-11-17",
+    "occasion": "New Hire Kit",
+    "product_name": "Wireless Charging Pad",
+    "category": "Tech Goods",
+    "qty": 80,
+    "unit_price_krw": 16000,
+    "trend_tags": [
+      "tech-forward"
+    ],
+    "outcome": "accepted_after_revision"
+  },
+  {
+    "order_id": "O00558",
+    "client_id": "C009",
+    "industry": "Gaming / Entertainment",
+    "order_date": "2024-11-25",
+    "occasion": "Event Goods",
+    "product_name": "Engraved Leather Pouch",
+    "category": "Premium Gift",
+    "qty": 80,
+    "unit_price_krw": 28000,
+    "trend_tags": [
+      "premium",
+      "classic"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00560",
+    "client_id": "C005",
+    "industry": "Consumer Electronics",
+    "order_date": "2024-12-09",
+    "occasion": "Product Launch Kit",
+    "product_name": "Engraved Leather Pouch",
+    "category": "Premium Gift",
+    "qty": 100,
+    "unit_price_krw": 28000,
+    "trend_tags": [
+      "premium",
+      "classic"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00565",
+    "client_id": "C001",
+    "industry": "Asset Management",
+    "order_date": "2025-01-19",
+    "occasion": "VIP Gift",
+    "product_name": "Power Bank",
+    "category": "Tech Goods",
+    "qty": 100,
+    "unit_price_krw": 18000,
+    "trend_tags": [
+      "tech-forward",
+      "practical"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00566",
+    "client_id": "C003",
+    "industry": "Pharmaceutical",
+    "order_date": "2025-01-20",
+    "occasion": "New Hire Kit",
+    "product_name": "Wireless Charging Pad",
+    "category": "Tech Goods",
+    "qty": 100,
+    "unit_price_krw": 16000,
+    "trend_tags": [
+      "tech-forward"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00571",
+    "client_id": "C003",
+    "industry": "Pharmaceutical",
+    "order_date": "2025-03-04",
+    "occasion": "Conference Swag",
+    "product_name": "Acrylic Keyring",
+    "category": "Character Goods",
+    "qty": 30,
+    "unit_price_krw": 2400,
+    "trend_tags": [
+      "trendy",
+      "playful"
+    ],
+    "outcome": "rejected_first_round"
+  },
+  {
+    "order_id": "O00574",
+    "client_id": "C005",
+    "industry": "Consumer Electronics",
+    "order_date": "2025-03-10",
+    "occasion": "Product Launch Kit",
+    "product_name": "Acrylic Figure",
+    "category": "Character Goods",
+    "qty": 25,
+    "unit_price_krw": 6000,
+    "trend_tags": [
+      "trendy",
+      "playful"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00577",
+    "client_id": "C004",
+    "industry": "Fashion / Beauty",
+    "order_date": "2025-04-06",
+    "occasion": "Event Goods",
+    "product_name": "Canvas Tote Bag",
+    "category": "Event Merch",
+    "qty": 30,
+    "unit_price_krw": 5500,
+    "trend_tags": [
+      "minimalist",
+      "sustainable"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00580",
+    "client_id": "C004",
+    "industry": "Fashion / Beauty",
+    "order_date": "2025-04-21",
+    "occasion": "Event Goods",
+    "product_name": "Camping Mat Set",
+    "category": "Premium Gift",
+    "qty": 25,
+    "unit_price_krw": 45000,
+    "trend_tags": [
+      "experiential",
+      "trendy"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00581",
+    "client_id": "C010",
+    "industry": "University / Education",
+    "order_date": "2025-05-06",
+    "occasion": "Event Goods",
+    "product_name": "Camping Mat Set",
+    "category": "Premium Gift",
+    "qty": 40,
+    "unit_price_krw": 45000,
+    "trend_tags": [
+      "experiential",
+      "trendy"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00585",
+    "client_id": "C010",
+    "industry": "University / Education",
+    "order_date": "2025-05-10",
+    "occasion": "New Hire Kit",
+    "product_name": "Camping Mat Set",
+    "category": "Premium Gift",
+    "qty": 80,
+    "unit_price_krw": 45000,
+    "trend_tags": [
+      "experiential",
+      "trendy"
+    ],
+    "outcome": "accepted_after_revision"
+  },
+  {
+    "order_id": "O00588",
+    "client_id": "C007",
+    "industry": "F&B / Retail",
+    "order_date": "2025-05-11",
+    "occasion": "New Hire Kit",
+    "product_name": "Custom Picnic Mat",
+    "category": "Premium Gift",
+    "qty": 80,
+    "unit_price_krw": 16900,
+    "trend_tags": [
+      "experiential",
+      "trendy"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00590",
+    "client_id": "C005",
+    "industry": "Consumer Electronics",
+    "order_date": "2025-05-15",
+    "occasion": "Conference Swag",
+    "product_name": "Stainless Tumbler",
+    "category": "Tumbler",
+    "qty": 50,
+    "unit_price_krw": 8500,
+    "trend_tags": [
+      "practical",
+      "minimalist"
+    ],
+    "outcome": "rejected_first_round"
+  },
+  {
+    "order_id": "O00594",
+    "client_id": "C002",
+    "industry": "IT / Startup",
+    "order_date": "2025-05-19",
+    "occasion": "New Hire Kit",
+    "product_name": "Camping Mat Set",
+    "category": "Premium Gift",
+    "qty": 40,
+    "unit_price_krw": 45000,
+    "trend_tags": [
+      "experiential",
+      "trendy"
+    ],
+    "outcome": "rejected_first_round"
+  },
+  {
+    "order_id": "O00597",
+    "client_id": "C005",
+    "industry": "Consumer Electronics",
+    "order_date": "2025-06-06",
+    "occasion": "Conference Swag",
+    "product_name": "Custom Picnic Mat",
+    "category": "Premium Gift",
+    "qty": 30,
+    "unit_price_krw": 16900,
+    "trend_tags": [
+      "experiential",
+      "trendy"
+    ],
+    "outcome": "rejected_first_round"
+  },
+  {
+    "order_id": "O00600",
+    "client_id": "C006",
+    "industry": "Public / Government Agency",
+    "order_date": "2025-06-07",
+    "occasion": "Event Goods",
+    "product_name": "Portable Mini Fan",
+    "category": "Tech Goods",
+    "qty": 120,
+    "unit_price_krw": 11200,
+    "trend_tags": [
+      "tech-forward",
+      "practical"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00603",
+    "client_id": "C010",
+    "industry": "University / Education",
+    "order_date": "2025-06-17",
+    "occasion": "Event Goods",
+    "product_name": "Portable Mini Fan",
+    "category": "Tech Goods",
+    "qty": 30,
+    "unit_price_krw": 11200,
+    "trend_tags": [
+      "tech-forward",
+      "practical"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00606",
+    "client_id": "C010",
+    "industry": "University / Education",
+    "order_date": "2025-06-22",
+    "occasion": "New Hire Kit",
+    "product_name": "Power Bank",
+    "category": "Tech Goods",
+    "qty": 200,
+    "unit_price_krw": 18000,
+    "trend_tags": [
+      "tech-forward",
+      "practical"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00610",
+    "client_id": "C001",
+    "industry": "Asset Management",
+    "order_date": "2025-06-23",
+    "occasion": "Year-End Gift",
+    "product_name": "Camping Mat Set",
+    "category": "Premium Gift",
+    "qty": 40,
+    "unit_price_krw": 45000,
+    "trend_tags": [
+      "experiential",
+      "trendy"
+    ],
+    "outcome": "rejected_first_round"
+  },
+  {
+    "order_id": "O00611",
+    "client_id": "C002",
+    "industry": "IT / Startup",
+    "order_date": "2025-07-03",
+    "occasion": "New Hire Kit",
+    "product_name": "Power Bank",
+    "category": "Tech Goods",
+    "qty": 30,
+    "unit_price_krw": 18000,
+    "trend_tags": [
+      "tech-forward",
+      "practical"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00615",
+    "client_id": "C005",
+    "industry": "Consumer Electronics",
+    "order_date": "2025-08-04",
+    "occasion": "Conference Swag",
+    "product_name": "Acrylic Figure",
+    "category": "Character Goods",
+    "qty": 150,
+    "unit_price_krw": 6000,
+    "trend_tags": [
+      "trendy",
+      "playful"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00618",
+    "client_id": "C007",
+    "industry": "F&B / Retail",
+    "order_date": "2025-09-02",
+    "occasion": "New Hire Kit",
+    "product_name": "Silicone Phone Grip",
+    "category": "Character Goods",
+    "qty": 40,
+    "unit_price_krw": 4800,
+    "trend_tags": [
+      "playful",
+      "trendy"
+    ],
+    "outcome": "rejected_first_round"
+  },
+  {
+    "order_id": "O00621",
+    "client_id": "C007",
+    "industry": "F&B / Retail",
+    "order_date": "2025-09-07",
+    "occasion": "New Hire Kit",
+    "product_name": "Acrylic Keyring",
+    "category": "Character Goods",
+    "qty": 40,
+    "unit_price_krw": 2400,
+    "trend_tags": [
+      "trendy",
+      "playful"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00625",
+    "client_id": "C008",
+    "industry": "Consulting",
+    "order_date": "2025-09-08",
+    "occasion": "New Hire Kit",
+    "product_name": "Leather Diary",
+    "category": "Office Goods",
+    "qty": 200,
+    "unit_price_krw": 15000,
+    "trend_tags": [
+      "classic"
+    ],
+    "outcome": "accepted_after_revision"
+  },
+  {
+    "order_id": "O00627",
+    "client_id": "C007",
+    "industry": "F&B / Retail",
+    "order_date": "2025-09-09",
+    "occasion": "New Hire Kit",
+    "product_name": "Acrylic Keyring",
+    "category": "Character Goods",
+    "qty": 25,
+    "unit_price_krw": 2400,
+    "trend_tags": [
+      "trendy",
+      "playful"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00630",
+    "client_id": "C006",
+    "industry": "Public / Government Agency",
+    "order_date": "2025-09-11",
+    "occasion": "Year-End Gift",
+    "product_name": "Spiral Notebook",
+    "category": "Office Goods",
+    "qty": 80,
+    "unit_price_krw": 3500,
+    "trend_tags": [
+      "classic",
+      "practical"
+    ],
+    "outcome": "rejected_first_round"
+  },
+  {
+    "order_id": "O00632",
+    "client_id": "C009",
+    "industry": "Gaming / Entertainment",
+    "order_date": "2025-09-21",
+    "occasion": "Product Launch Kit",
+    "product_name": "Travel Amenity Kit",
+    "category": "Welcome Kit Item",
+    "qty": 25,
+    "unit_price_krw": 10500,
+    "trend_tags": [
+      "premium",
+      "practical"
+    ],
+    "outcome": "rejected_first_round"
+  },
+  {
+    "order_id": "O00637",
+    "client_id": "C008",
+    "industry": "Consulting",
+    "order_date": "2025-09-24",
+    "occasion": "VIP Gift",
+    "product_name": "Camping Mat Set",
+    "category": "Premium Gift",
+    "qty": 25,
+    "unit_price_krw": 45000,
+    "trend_tags": [
+      "experiential",
+      "trendy"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00639",
+    "client_id": "C002",
+    "industry": "IT / Startup",
+    "order_date": "2025-09-25",
+    "occasion": "New Hire Kit",
+    "product_name": "Silicone Phone Grip",
+    "category": "Character Goods",
+    "qty": 200,
+    "unit_price_krw": 4800,
+    "trend_tags": [
+      "playful",
+      "trendy"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00641",
+    "client_id": "C003",
+    "industry": "Pharmaceutical",
+    "order_date": "2025-10-11",
+    "occasion": "New Hire Kit",
+    "product_name": "Custom Picnic Mat",
+    "category": "Premium Gift",
+    "qty": 150,
+    "unit_price_krw": 16900,
+    "trend_tags": [
+      "experiential",
+      "trendy"
+    ],
+    "outcome": "rejected_first_round"
+  },
+  {
+    "order_id": "O00644",
+    "client_id": "C003",
+    "industry": "Pharmaceutical",
+    "order_date": "2025-11-13",
+    "occasion": "New Hire Kit",
+    "product_name": "Daily Calendar Set",
+    "category": "Office Goods",
+    "qty": 150,
+    "unit_price_krw": 6950,
+    "trend_tags": [
+      "classic",
+      "practical"
+    ],
+    "outcome": "rejected_first_round"
+  },
+  {
+    "order_id": "O00647",
+    "client_id": "C002",
+    "industry": "IT / Startup",
+    "order_date": "2025-11-25",
+    "occasion": "Conference Swag",
+    "product_name": "Engraved Leather Pouch",
+    "category": "Premium Gift",
+    "qty": 80,
+    "unit_price_krw": 28000,
+    "trend_tags": [
+      "premium",
+      "classic"
+    ],
+    "outcome": "rejected_first_round"
+  },
+  {
+    "order_id": "O00650",
+    "client_id": "C007",
+    "industry": "F&B / Retail",
+    "order_date": "2026-01-08",
+    "occasion": "New Hire Kit",
+    "product_name": "Eco Bamboo Notebook",
+    "category": "Sustainable Goods",
+    "qty": 150,
+    "unit_price_krw": 4200,
+    "trend_tags": [
+      "sustainable",
+      "minimalist"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00654",
+    "client_id": "C004",
+    "industry": "Fashion / Beauty",
+    "order_date": "2026-01-14",
+    "occasion": "Event Goods",
+    "product_name": "Daily Calendar Set",
+    "category": "Office Goods",
+    "qty": 120,
+    "unit_price_krw": 6950,
+    "trend_tags": [
+      "classic",
+      "practical"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00656",
+    "client_id": "C008",
+    "industry": "Consulting",
+    "order_date": "2026-01-15",
+    "occasion": "VIP Gift",
+    "product_name": "Stainless Tumbler",
+    "category": "Tumbler",
+    "qty": 30,
+    "unit_price_krw": 8500,
+    "trend_tags": [
+      "practical",
+      "minimalist"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00661",
+    "client_id": "C007",
+    "industry": "F&B / Retail",
+    "order_date": "2026-01-16",
+    "occasion": "Event Goods",
+    "product_name": "Daily Calendar Set",
+    "category": "Office Goods",
+    "qty": 30,
+    "unit_price_krw": 6950,
+    "trend_tags": [
+      "classic",
+      "practical"
+    ],
+    "outcome": "rejected_first_round"
+  },
+  {
+    "order_id": "O00664",
+    "client_id": "C007",
+    "industry": "F&B / Retail",
+    "order_date": "2026-02-11",
+    "occasion": "New Hire Kit",
+    "product_name": "Desk Organizer Set",
+    "category": "Office Goods",
+    "qty": 200,
+    "unit_price_krw": 9800,
+    "trend_tags": [
+      "minimalist",
+      "practical"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00666",
+    "client_id": "C006",
+    "industry": "Public / Government Agency",
+    "order_date": "2026-02-19",
+    "occasion": "Event Goods",
+    "product_name": "Acrylic Figure",
+    "category": "Character Goods",
+    "qty": 20,
+    "unit_price_krw": 6000,
+    "trend_tags": [
+      "trendy",
+      "playful"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00668",
+    "client_id": "C010",
+    "industry": "University / Education",
+    "order_date": "2026-02-19",
+    "occasion": "New Hire Kit",
+    "product_name": "Desk Organizer Set",
+    "category": "Office Goods",
+    "qty": 30,
+    "unit_price_krw": 9800,
+    "trend_tags": [
+      "minimalist",
+      "practical"
+    ],
+    "outcome": "rejected_first_round"
+  },
+  {
+    "order_id": "O00673",
+    "client_id": "C005",
+    "industry": "Consumer Electronics",
+    "order_date": "2026-03-04",
+    "occasion": "Conference Swag",
+    "product_name": "Acrylic Figure",
+    "category": "Character Goods",
+    "qty": 120,
+    "unit_price_krw": 6000,
+    "trend_tags": [
+      "trendy",
+      "playful"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00674",
+    "client_id": "C004",
+    "industry": "Fashion / Beauty",
+    "order_date": "2026-03-06",
+    "occasion": "Anniversary Gift",
+    "product_name": "Engraved Leather Pouch",
+    "category": "Premium Gift",
+    "qty": 60,
+    "unit_price_krw": 28000,
+    "trend_tags": [
+      "premium",
+      "classic"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00679",
+    "client_id": "C002",
+    "industry": "IT / Startup",
+    "order_date": "2026-03-08",
+    "occasion": "New Hire Kit",
+    "product_name": "Reusable Cup Sleeve",
+    "category": "Sustainable Goods",
+    "qty": 40,
+    "unit_price_krw": 3000,
+    "trend_tags": [
+      "sustainable",
+      "minimalist"
+    ],
+    "outcome": "accepted_after_revision"
+  },
+  {
+    "order_id": "O00682",
+    "client_id": "C005",
+    "industry": "Consumer Electronics",
+    "order_date": "2026-03-17",
+    "occasion": "Product Launch Kit",
+    "product_name": "Desk Organizer Set",
+    "category": "Office Goods",
+    "qty": 200,
+    "unit_price_krw": 9800,
+    "trend_tags": [
+      "minimalist",
+      "practical"
+    ],
+    "outcome": "rejected_first_round"
+  },
+  {
+    "order_id": "O00685",
+    "client_id": "C004",
+    "industry": "Fashion / Beauty",
+    "order_date": "2026-03-24",
+    "occasion": "Anniversary Gift",
+    "product_name": "ID Badge Lanyard Set",
+    "category": "Welcome Kit Item",
+    "qty": 150,
+    "unit_price_krw": 4000,
+    "trend_tags": [
+      "practical"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00687",
+    "client_id": "C002",
+    "industry": "IT / Startup",
+    "order_date": "2026-03-24",
+    "occasion": "Anniversary Gift",
+    "product_name": "Travel Amenity Kit",
+    "category": "Welcome Kit Item",
+    "qty": 120,
+    "unit_price_krw": 10500,
+    "trend_tags": [
+      "premium",
+      "practical"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00691",
+    "client_id": "C003",
+    "industry": "Pharmaceutical",
+    "order_date": "2026-03-26",
+    "occasion": "New Hire Kit",
+    "product_name": "Silicone Phone Grip",
+    "category": "Character Goods",
+    "qty": 150,
+    "unit_price_krw": 4800,
+    "trend_tags": [
+      "playful",
+      "trendy"
+    ],
+    "outcome": "accepted_after_revision"
+  },
+  {
+    "order_id": "O00692",
+    "client_id": "C004",
+    "industry": "Fashion / Beauty",
+    "order_date": "2026-04-01",
+    "occasion": "Event Goods",
+    "product_name": "Desk Organizer Set",
+    "category": "Office Goods",
+    "qty": 60,
+    "unit_price_krw": 9800,
+    "trend_tags": [
+      "minimalist",
+      "practical"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00696",
+    "client_id": "C007",
+    "industry": "F&B / Retail",
+    "order_date": "2026-04-01",
+    "occasion": "New Hire Kit",
+    "product_name": "Silicone Phone Grip",
+    "category": "Character Goods",
+    "qty": 120,
+    "unit_price_krw": 4800,
+    "trend_tags": [
+      "playful",
+      "trendy"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00699",
+    "client_id": "C001",
+    "industry": "Asset Management",
+    "order_date": "2026-04-02",
+    "occasion": "Year-End Gift",
+    "product_name": "Recycled Fabric Pouch",
+    "category": "Sustainable Goods",
+    "qty": 60,
+    "unit_price_krw": 9000,
+    "trend_tags": [
+      "sustainable",
+      "minimalist"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00703",
+    "client_id": "C010",
+    "industry": "University / Education",
+    "order_date": "2026-04-02",
+    "occasion": "New Hire Kit",
+    "product_name": "Camping Mat Set",
+    "category": "Premium Gift",
+    "qty": 50,
+    "unit_price_krw": 45000,
+    "trend_tags": [
+      "experiential",
+      "trendy"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00705",
+    "client_id": "C009",
+    "industry": "Gaming / Entertainment",
+    "order_date": "2026-04-14",
+    "occasion": "Event Goods",
+    "product_name": "Knit Blanket",
+    "category": "Welcome Kit Item",
+    "qty": 40,
+    "unit_price_krw": 22000,
+    "trend_tags": [
+      "premium",
+      "seasonal"
+    ],
+    "outcome": "rejected_first_round"
+  },
+  {
+    "order_id": "O00709",
+    "client_id": "C007",
+    "industry": "F&B / Retail",
+    "order_date": "2026-04-19",
+    "occasion": "New Hire Kit",
+    "product_name": "Acrylic Figure",
+    "category": "Character Goods",
+    "qty": 50,
+    "unit_price_krw": 6000,
+    "trend_tags": [
+      "trendy",
+      "playful"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00710",
+    "client_id": "C004",
+    "industry": "Fashion / Beauty",
+    "order_date": "2026-04-21",
+    "occasion": "Event Goods",
+    "product_name": "Canvas Tote Bag",
+    "category": "Event Merch",
+    "qty": 50,
+    "unit_price_krw": 5500,
+    "trend_tags": [
+      "minimalist",
+      "sustainable"
+    ],
+    "outcome": "rejected_first_round"
+  },
+  {
+    "order_id": "O00714",
+    "client_id": "C008",
+    "industry": "Consulting",
+    "order_date": "2026-04-27",
+    "occasion": "New Hire Kit",
+    "product_name": "Stainless Tumbler",
+    "category": "Tumbler",
+    "qty": 100,
+    "unit_price_krw": 8500,
+    "trend_tags": [
+      "practical",
+      "minimalist"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00718",
+    "client_id": "C004",
+    "industry": "Fashion / Beauty",
+    "order_date": "2026-05-02",
+    "occasion": "Anniversary Gift",
+    "product_name": "Canvas Tote Bag",
+    "category": "Event Merch",
+    "qty": 100,
+    "unit_price_krw": 5500,
+    "trend_tags": [
+      "minimalist",
+      "sustainable"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00720",
+    "client_id": "C003",
+    "industry": "Pharmaceutical",
+    "order_date": "2026-05-19",
+    "occasion": "Conference Swag",
+    "product_name": "Recycled Fabric Pouch",
+    "category": "Sustainable Goods",
+    "qty": 25,
+    "unit_price_krw": 9000,
+    "trend_tags": [
+      "sustainable",
+      "minimalist"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00723",
+    "client_id": "C009",
+    "industry": "Gaming / Entertainment",
+    "order_date": "2026-05-25",
+    "occasion": "Product Launch Kit",
+    "product_name": "Canvas Tote Bag",
+    "category": "Event Merch",
+    "qty": 100,
+    "unit_price_krw": 5500,
+    "trend_tags": [
+      "minimalist",
+      "sustainable"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00725",
+    "client_id": "C004",
+    "industry": "Fashion / Beauty",
+    "order_date": "2026-06-01",
+    "occasion": "Anniversary Gift",
+    "product_name": "Engraved Leather Pouch",
+    "category": "Premium Gift",
+    "qty": 100,
+    "unit_price_krw": 28000,
+    "trend_tags": [
+      "premium",
+      "classic"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00730",
+    "client_id": "C003",
+    "industry": "Pharmaceutical",
+    "order_date": "2026-06-07",
+    "occasion": "New Hire Kit",
+    "product_name": "Power Bank",
+    "category": "Tech Goods",
+    "qty": 60,
+    "unit_price_krw": 18000,
+    "trend_tags": [
+      "tech-forward",
+      "practical"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00733",
+    "client_id": "C006",
+    "industry": "Public / Government Agency",
+    "order_date": "2026-06-09",
+    "occasion": "Event Goods",
+    "product_name": "Stainless Tumbler",
+    "category": "Tumbler",
+    "qty": 50,
+    "unit_price_krw": 8500,
+    "trend_tags": [
+      "practical",
+      "minimalist"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00734",
+    "client_id": "C008",
+    "industry": "Consulting",
+    "order_date": "2026-06-18",
+    "occasion": "New Hire Kit",
+    "product_name": "Reusable Cup Sleeve",
+    "category": "Sustainable Goods",
+    "qty": 20,
+    "unit_price_krw": 3000,
+    "trend_tags": [
+      "sustainable",
+      "minimalist"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00737",
+    "client_id": "C008",
+    "industry": "Consulting",
+    "order_date": "2026-06-18",
+    "occasion": "New Hire Kit",
+    "product_name": "Portable Mini Fan",
+    "category": "Tech Goods",
+    "qty": 100,
+    "unit_price_krw": 11200,
+    "trend_tags": [
+      "tech-forward",
+      "practical"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00742",
+    "client_id": "C006",
+    "industry": "Public / Government Agency",
+    "order_date": "2026-06-21",
+    "occasion": "Event Goods",
+    "product_name": "Reusable Cup Sleeve",
+    "category": "Sustainable Goods",
+    "qty": 120,
+    "unit_price_krw": 3000,
+    "trend_tags": [
+      "sustainable",
+      "minimalist"
+    ],
+    "outcome": "accepted"
+  },
+  {
+    "order_id": "O00744",
+    "client_id": "C007",
+    "industry": "F&B / Retail",
+    "order_date": "2026-06-28",
+    "occasion": "New Hire Kit",
+    "product_name": "Recycled Fabric Pouch",
+    "category": "Sustainable Goods",
+    "qty": 100,
+    "unit_price_krw": 9000,
+    "trend_tags": [
+      "sustainable",
+      "minimalist"
+    ],
+    "outcome": "accepted"
+  }
+]
