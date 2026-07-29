@@ -70,6 +70,10 @@ export const translations = {
     'agent.loading1': 'Searching for current trends...',
     'agent.loading2': 'Matching against catalog...',
     'agent.somethingWentWrong': 'Something went wrong reaching the agent.',
+    'agent.radarTitle': 'Trend Radar',
+    'agent.liveBadge': 'LIVE',
+    'agent.cachedBadge': 'CACHED',
+    'agent.searchedLive': 'Searched live',
 
     // Options — industries
     'option.Finance/Asset Management': 'Finance/Asset Management',
@@ -112,6 +116,16 @@ export const translations = {
     'option.Feels fun/energetic': 'Feels fun/energetic',
     'option.Feels sustainable/thoughtful': 'Feels sustainable/thoughtful',
     'option.Feels professional/polished': 'Feels professional/polished',
+
+    // Product categories (used in matcher.ts fallback reasonWhy)
+    'category.Apparel': 'Apparel',
+    'category.Drinkware': 'Drinkware',
+    'category.Event Swag': 'Event Swag',
+    'category.Premium Gift Set': 'Premium Gift Set',
+    'category.Sustainable': 'Sustainable',
+    'category.Tech Accessories': 'Tech Accessories',
+    'category.Welcome Kit': 'Welcome Kit',
+    'category.Wellness': 'Wellness',
   },
   ko: {
     // Home
@@ -182,6 +196,10 @@ export const translations = {
     'agent.loading1': '최신 트렌드 검색 중...',
     'agent.loading2': '카탈로그와 매칭 중...',
     'agent.somethingWentWrong': '에이전트에 연결하는 중 문제가 발생했습니다.',
+    'agent.radarTitle': '트렌드 레이더',
+    'agent.liveBadge': '실시간',
+    'agent.cachedBadge': '캐시됨',
+    'agent.searchedLive': '실시간 검색됨',
 
     // Options — industries
     'option.Finance/Asset Management': '금융/자산 운용',
@@ -224,7 +242,28 @@ export const translations = {
     'option.Feels fun/energetic': '재미있고 활기찬 느낌',
     'option.Feels sustainable/thoughtful': '지속가능하고 세심한 느낌',
     'option.Feels professional/polished': '전문적이고 세련된 느낌',
+
+    // Product categories (used in matcher.ts fallback reasonWhy)
+    'category.Apparel': '의류',
+    'category.Drinkware': '드링크웨어',
+    'category.Event Swag': '이벤트 굿즈',
+    'category.Premium Gift Set': '프리미엄 선물 세트',
+    'category.Sustainable': '친환경 제품',
+    'category.Tech Accessories': '테크 액세서리',
+    'category.Welcome Kit': '웰컴 키트',
+    'category.Wellness': '웰니스',
   },
 } as const satisfies Record<Language, Record<string, string>>
 
 export type TranslationKey = keyof (typeof translations)['en']
+
+// Plain (non-hook) lookup for use outside React components, e.g. matcher.ts.
+export function translateOption(value: string, language: Language): string {
+  const key = `option.${value}` as TranslationKey
+  return translations[language][key] ?? value
+}
+
+export function translateCategory(value: string, language: Language): string {
+  const key = `category.${value}` as TranslationKey
+  return translations[language][key] ?? value
+}

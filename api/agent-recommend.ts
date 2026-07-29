@@ -4,6 +4,13 @@ import type { ClientBrief, Product, Recommendation } from '../src/pages/client-f
 import { products } from '../src/pages/client-form/data/products.js'
 import { getRecommendations } from '../src/pages/client-form/lib/matcher.js'
 
+type Language = 'en' | 'ko'
+
+interface AgentRecommendRequestBody {
+  brief: ClientBrief
+  language?: Language
+}
+
 interface AgentRecommendResponse {
   recommendations: Recommendation[]
   trendSummary: string
@@ -34,8 +41,8 @@ function getClient(): GoogleGenAI {
   return client
 }
 
-function buildPrompt(brief: ClientBrief): string {
-  return `I'm sourcing corporate merch for a ${brief.industry} client. Occasion: ${brief.occasion}. Recipient: ${brief.recipient}. Desired feeling: ${brief.emotionalOutcomes.join(', ')}. Budget per unit: ${brief.budgetTier}. Quantity: ${brief.quantity}.${brief.notes ? ` Additional notes: ${brief.notes}` : ''}
+function buildPrompt(brief: ClientBrief, language: Language): string {
+  const base = `I'm sourcing corporate merch for a ${brief.industry} client. Occasion: ${brief.occasion}. Recipient: ${brief.recipient}. Desired feeling: ${brief.emotionalOutcomes.join(', ')}. Budget per unit: ${brief.budgetTier}. Quantity: ${brief.quantity}.${brief.notes ? ` Additional notes: ${brief.notes}` : ''}
 
 Search for current (last 1-3 months) corporate gifting and merch trends relevant to this brief.
 
@@ -43,9 +50,20 @@ Here is our product catalog:
 ${JSON.stringify(products, null, 2)}
 
 Recommend the top 3-5 products from this catalog that best match both the client's stated needs AND the trends you found. For each, give a matchScore (0-100), a one-line reasonWhy that references the trend you found, and the specific web page URL(s) from your search results that support that product's trend claim.`
+
+  if (language === 'ko') {
+    return `${base}\n\nRespond in Korean (한국어): write "reasonWhy" and "trendSummary" entirely in natural, fluent Korean. Keep JSON keys and product IDs in English exactly as given. Prefer Korean-language sources when relevant, but include any useful source regardless of language.`
+  }
+  return base
 }
 
-const SYSTEM_PROMPT = `You are a corporate merch trend-matching agent. Use Google Search to research current gifting/merch trends, then recommend products from the given catalog.
+function systemPrompt(language: Language): string {
+  const languageInstruction =
+    language === 'ko'
+      ? '\n\nRespond in Korean: "reasonWhy" and "trendSummary" must be written in natural Korean. JSON keys and productId values stay in English.'
+      : ''
+
+  return `You are a corporate merch trend-matching agent. Use Google Search to research current gifting/merch trends, then recommend products from the given catalog.${languageInstruction}
 
 Respond with ONLY a single JSON object matching this exact shape, no markdown fences, no commentary before or after:
 {
@@ -54,20 +72,46 @@ Respond with ONLY a single JSON object matching this exact shape, no markdown fe
   ],
   "trendSummary": "2-3 sentence summary of what's currently trending for this brief"
 }`
+}
 
 function extractJson(text: string): unknown {
   const cleaned = text.trim().replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/i, '')
   return JSON.parse(cleaned)
 }
 
-async function callAgent(brief: ClientBrief): Promise<AgentRecommendResponse> {
+// Vertex AI's grounding chunks point at a vertexaisearch.cloud.google.com redirector,
+// not the actual source page. Resolve each to its real destination so users see (and can
+// click) the genuine URL rather than an opaque Google redirect link.
+async function resolveRedirect(url: string): Promise<string> {
+  try {
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), 4000)
+    const res = await fetch(url, { method: 'HEAD', redirect: 'follow', signal: controller.signal })
+    clearTimeout(timeout)
+    return res.url || url
+  } catch {
+    return url
+  }
+}
+
+async function resolveAll(urls: string[]): Promise<Map<string, string>> {
+  const resolved = new Map<string, string>()
+  await Promise.all(
+    urls.map(async (url) => {
+      resolved.set(url, await resolveRedirect(url))
+    }),
+  )
+  return resolved
+}
+
+async function callAgent(brief: ClientBrief, language: Language): Promise<AgentRecommendResponse> {
   const ai = getClient()
 
   const response = await ai.models.generateContent({
     model: MODEL,
-    contents: buildPrompt(brief),
+    contents: buildPrompt(brief, language),
     config: {
-      systemInstruction: SYSTEM_PROMPT,
+      systemInstruction: systemPrompt(language),
       tools: [{ googleSearch: {} }],
     },
   })
@@ -82,22 +126,26 @@ async function callAgent(brief: ClientBrief): Promise<AgentRecommendResponse> {
 
   const groundingMetadata = response.candidates?.[0]?.groundingMetadata
   const groundingChunks = groundingMetadata?.groundingChunks ?? []
-  const sourcesUsed = [
+  // Raw redirect URIs, exactly as Google Search returned them — this is also what the
+  // model sees and echoes back in sourceUrls, so matching/validation must use these.
+  const rawSourceUrls = [
     ...new Set(groundingChunks.map((chunk) => chunk.web?.uri).filter((uri): uri is string => Boolean(uri))),
   ]
   const searchQueriesUsed = groundingMetadata?.webSearchQueries ?? []
+  const groundedUrls = new Set(rawSourceUrls)
 
-  // The model self-reports which URL(s) back each product's claim. Only keep ones that
-  // match a URL Google Search actually returned — anything else gets silently dropped
-  // rather than shown as unverified "proof".
-  const groundedUrls = new Set(sourcesUsed)
+  const resolvedUrls = await resolveAll(rawSourceUrls)
+  const displayUrl = (url: string) => resolvedUrls.get(url) ?? url
 
   const productsById = new Map(products.map((p) => [p.id, p]))
   const recommendations: Recommendation[] = parsed.recommendations
     .map((r) => {
       const product = productsById.get(r.productId)
       if (!product) return null
-      const sourceUrls = (r.sourceUrls ?? []).filter((url) => groundedUrls.has(url))
+      // Validate against the raw grounded URIs (what the model actually saw), then map to
+      // the resolved real URL for display — anything the model claims that Google Search
+      // never returned gets silently dropped rather than shown as unverified "proof".
+      const sourceUrls = (r.sourceUrls ?? []).filter((url) => groundedUrls.has(url)).map(displayUrl)
       return {
         product,
         matchScore: r.matchScore,
@@ -111,15 +159,18 @@ async function callAgent(brief: ClientBrief): Promise<AgentRecommendResponse> {
     recommendations,
     trendSummary: parsed.trendSummary,
     searchQueriesUsed,
-    sourcesUsed,
+    sourcesUsed: rawSourceUrls.map(displayUrl),
     usedFallback: false,
   }
 }
 
-function fallbackResponse(brief: ClientBrief): AgentRecommendResponse {
+function fallbackResponse(brief: ClientBrief, language: Language): AgentRecommendResponse {
   return {
-    recommendations: getRecommendations(brief, products),
-    trendSummary: 'Live trend search is unavailable right now — showing locally matched picks instead.',
+    recommendations: getRecommendations(brief, products, { language }),
+    trendSummary:
+      language === 'ko'
+        ? '실시간 트렌드 검색을 사용할 수 없어 로컬 매칭 결과를 대신 보여드립니다.'
+        : 'Live trend search is unavailable right now — showing locally matched picks instead.',
     searchQueriesUsed: [],
     sourcesUsed: [],
     usedFallback: true,
@@ -132,14 +183,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return
   }
 
-  const brief = req.body as ClientBrief
+  const body = req.body as AgentRecommendRequestBody
+  const brief = body.brief
+  const language: Language = body.language === 'ko' ? 'ko' : 'en'
 
   try {
-    const result = await callAgent(brief)
+    const result = await callAgent(brief, language)
     res.status(200).json(result)
   } catch (err) {
     console.error('agent-recommend failed, falling back to local matcher:', err)
-    res.status(200).json(fallbackResponse(brief))
+    res.status(200).json(fallbackResponse(brief, language))
   }
 }
 

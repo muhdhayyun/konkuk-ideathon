@@ -1,4 +1,5 @@
 import type { ClientBrief, Product, Recommendation } from '../types/index.js'
+import { translateOption, translateCategory, type Language } from '../../../i18n/translations.js'
 
 // Weighted scoring rubric — tune these to change recommendation behavior.
 export const WEIGHTS = {
@@ -72,8 +73,40 @@ function scoreProduct(brief: ClientBrief, product: Product): { score: number; fa
   return { score, factors }
 }
 
-function generateReasonWhy(brief: ClientBrief, product: Product, factors: MatchedFactors): string {
+function generateReasonWhy(
+  brief: ClientBrief,
+  product: Product,
+  factors: MatchedFactors,
+  language: Language,
+): string {
   const clauses: string[] = []
+
+  if (language === 'ko') {
+    const industry = translateOption(brief.industry, 'ko')
+    const tone = translateOption(brief.brandTone, 'ko')
+    const category = translateCategory(product.category, 'ko')
+
+    if (factors.trending) {
+      clauses.push(factors.industryMatch ? `${industry}에서 현재 인기 상승 중` : '최근 주문 데이터에서 인기 상승 중')
+    } else if (factors.industryMatch) {
+      clauses.push(`${industry} 고객에게 적합한 제품`)
+    }
+
+    if (factors.matchedOutcomes.length > 0) {
+      const outcomeText = factors.matchedOutcomes.map((o) => translateOption(o, 'ko')).join(', ')
+      clauses.push(outcomeText)
+    }
+
+    if (factors.toneMatch) {
+      clauses.push(`${tone} 브랜드 톤에 부합`)
+    }
+
+    if (clauses.length === 0) {
+      clauses.push(`${category} 카테고리의 무난한 선택`)
+    }
+
+    return clauses.join(', ') + '.'
+  }
 
   if (factors.trending) {
     clauses.push(
@@ -120,9 +153,10 @@ export function getClosestTagNeighbors(product: Product, catalog: Product[], cou
 export function getRecommendations(
   brief: ClientBrief,
   catalog: Product[],
-  options: { excludeIds?: string[] } = {},
+  options: { excludeIds?: string[]; language?: Language } = {},
 ): Recommendation[] {
   const excludeIds = new Set(options.excludeIds ?? [])
+  const language = options.language ?? 'en'
 
   const eligible = catalog.filter(
     (product) =>
@@ -136,7 +170,7 @@ export function getRecommendations(
     return {
       product,
       matchScore: Math.round(score),
-      reasonWhy: generateReasonWhy(brief, product, factors),
+      reasonWhy: generateReasonWhy(brief, product, factors, language),
     }
   })
 
@@ -149,6 +183,7 @@ export function getNotQuiteRecommendations(
   catalog: Product[],
   rejectedProduct: Product,
   previouslyExcludedIds: string[] = [],
+  language: Language = 'en',
 ): Recommendation[] {
   const neighbors = getClosestTagNeighbors(rejectedProduct, catalog, 2)
   const excludeIds = [
@@ -156,5 +191,5 @@ export function getNotQuiteRecommendations(
     rejectedProduct.id,
     ...neighbors.map((n) => n.id),
   ]
-  return getRecommendations(brief, catalog, { excludeIds })
+  return getRecommendations(brief, catalog, { excludeIds, language })
 }

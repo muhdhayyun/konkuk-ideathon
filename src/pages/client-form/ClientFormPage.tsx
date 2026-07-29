@@ -26,7 +26,7 @@ const EMPTY_BRIEF: ClientBrief = {
 type View = 'wizard' | 'summary' | 'results'
 
 export default function ClientFormPage() {
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
   const [view, setView] = useState<View>('wizard')
   const [step, setStep] = useState(1)
   const [brief, setBrief] = useState<ClientBrief>(EMPTY_BRIEF)
@@ -56,7 +56,7 @@ export default function ClientFormPage() {
   const handleFindProducts = () => {
     setExcludedIds([])
     setRequestedIds([])
-    setRecommendations(getRecommendations(brief, products))
+    setRecommendations(getRecommendations(brief, products, { language }))
     setView('results')
   }
 
@@ -73,7 +73,7 @@ export default function ClientFormPage() {
   const handleNotQuite = (rec: Recommendation) => {
     logFeedback(rec.product.id, 'not_quite')
     const nextExcluded = [...excludedIds, rec.product.id]
-    const next = getNotQuiteRecommendations(brief, products, rec.product, excludedIds)
+    const next = getNotQuiteRecommendations(brief, products, rec.product, excludedIds, language)
     setExcludedIds(nextExcluded)
     setRecommendations(next)
   }

@@ -34,7 +34,7 @@ interface AgentRecommendResponse {
 type View = 'wizard' | 'summary' | 'loading' | 'results' | 'error'
 
 export default function AgentFormPage() {
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
   const loadingStages = [t('agent.loading1'), t('agent.loading2')]
   const [view, setView] = useState<View>('wizard')
   const [step, setStep] = useState(1)
@@ -74,7 +74,7 @@ export default function AgentFormPage() {
       const res = await fetch('/api/agent-recommend', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(brief),
+        body: JSON.stringify({ brief, language }),
       })
       const data = (await res.json()) as AgentRecommendResponse
       setAgentResult(data)
@@ -103,7 +103,7 @@ export default function AgentFormPage() {
 
   const handleNotQuite = (rec: Recommendation) => {
     const nextExcluded = [...excludedIds, rec.product.id]
-    const next = getNotQuiteRecommendations(brief, products, rec.product, excludedIds)
+    const next = getNotQuiteRecommendations(brief, products, rec.product, excludedIds, language)
     setExcludedIds(nextExcluded)
     setRecommendations(next)
   }
