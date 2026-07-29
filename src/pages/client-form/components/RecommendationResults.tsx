@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import type { Recommendation } from '../types'
 import { useLanguage } from '../../../i18n/LanguageContext'
 
@@ -16,6 +17,46 @@ interface RecommendationResultsProps {
   onNotQuite: (rec: Recommendation) => void
   onReject: (rec: Recommendation) => void
   onStartOver: () => void
+  // Only the live /ai-agent passes this — the local matcher never has trend evidence
+  // to disclose, so the local /client-form wizard renders neither section below.
+  showTrendEvidence?: boolean
+}
+
+function TrendEvidence({ rec }: { rec: Recommendation }) {
+  const { t } = useLanguage()
+  const [open, setOpen] = useState(false)
+  const trends = rec.contributingTrends ?? []
+
+  if (trends.length === 0) {
+    return <p className="text-xs text-slate-400 -mt-1">{t('results.noTrendSignal')}</p>
+  }
+
+  return (
+    <div className="-mt-1">
+      <button type="button" onClick={() => setOpen((v) => !v)} className="text-xs text-slate-500 hover:text-blue-600">
+        {open ? t('results.hideTrending') : t('results.whyTrending')}
+      </button>
+      {open && (
+        <div className="mt-1.5 space-y-1">
+          {trends.map((trend) => (
+            <div key={trend.canonicalTopic} className="flex items-center gap-1.5 text-xs">
+              <span className="text-slate-500">{trend.canonicalTopic}</span>
+              <span className="text-slate-300">·</span>
+              <span className="text-slate-400">{t('trendPanel.sourceCount', { count: trend.sourceCount })}</span>
+              <a
+                href={trend.matchedFrom[0]?.sourceUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="text-blue-600 underline truncate"
+              >
+                {hostnameOf(trend.matchedFrom[0]?.sourceUrl ?? '')}
+              </a>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  )
 }
 
 export default function RecommendationResults({
@@ -25,6 +66,7 @@ export default function RecommendationResults({
   onNotQuite,
   onReject,
   onStartOver,
+  showTrendEvidence = false,
 }: RecommendationResultsProps) {
   const { t } = useLanguage()
 
@@ -63,23 +105,7 @@ export default function RecommendationResults({
               {t('results.matchScore')}: {rec.matchScore}
             </p>
 
-            {rec.sourceUrls && rec.sourceUrls.length > 0 && (
-              <div className="flex flex-wrap items-center gap-1.5 -mt-1">
-                <span className="text-xs text-slate-400">{t('results.sourcedFrom')}</span>
-                {rec.sourceUrls.map((url) => (
-                  <a
-                    key={url}
-                    href={url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-xs text-blue-600 underline"
-                    title={url}
-                  >
-                    {hostnameOf(url)}
-                  </a>
-                ))}
-              </div>
-            )}
+            {showTrendEvidence && <TrendEvidence rec={rec} />}
 
             <div className="flex flex-wrap gap-2 mt-auto pt-2">
               <button
