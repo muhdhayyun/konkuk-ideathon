@@ -58,9 +58,17 @@ export default function RecommendationResults({
                 {t('agreement.badge')}
               </span>
             )}
-            <div className="w-full h-28 rounded-md bg-slate-100 flex items-center justify-center text-slate-300 text-xs">
-              image placeholder
-            </div>
+            {rec.product.imageUrl ? (
+              <img
+                src={rec.product.imageUrl}
+                alt={rec.product.name}
+                className="w-full h-28 rounded-md object-cover bg-slate-100"
+              />
+            ) : (
+              <div className="w-full h-28 rounded-md bg-slate-100 flex items-center justify-center text-slate-300 text-xs">
+                image placeholder
+              </div>
+            )}
 
             <div className="flex items-start justify-between">
               <div>

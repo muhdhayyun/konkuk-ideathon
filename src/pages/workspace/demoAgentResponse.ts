@@ -1,4 +1,10 @@
 import type { Recommendation } from '../client-form/types'
+import {
+  STAINLESS_TUMBLER_IMAGE,
+  RECYCLED_FABRIC_POUCH_IMAGE,
+  SILICONE_PHONE_GRIP_IMAGE,
+  DAILY_CALENDAR_SET_IMAGE,
+} from './demoProductArt'
 
 export interface DemoAgentResponse {
   recommendations: Recommendation[]
@@ -27,6 +33,7 @@ export const DEMO_AGENT_RESPONSE: Record<'en' | 'ko', DemoAgentResponse> = {
           industryFit: [],
           toneFit: [],
           minQuantity: 1,
+          imageUrl: STAINLESS_TUMBLER_IMAGE,
         },
         matchScore: 95,
         reasonWhy:
@@ -47,6 +54,7 @@ export const DEMO_AGENT_RESPONSE: Record<'en' | 'ko', DemoAgentResponse> = {
           industryFit: [],
           toneFit: [],
           minQuantity: 1,
+          imageUrl: RECYCLED_FABRIC_POUCH_IMAGE,
         },
         matchScore: 90,
         reasonWhy:
@@ -68,6 +76,7 @@ export const DEMO_AGENT_RESPONSE: Record<'en' | 'ko', DemoAgentResponse> = {
           industryFit: [],
           toneFit: [],
           minQuantity: 1,
+          imageUrl: SILICONE_PHONE_GRIP_IMAGE,
         },
         matchScore: 88,
         reasonWhy:
@@ -116,6 +125,7 @@ export const DEMO_AGENT_RESPONSE: Record<'en' | 'ko', DemoAgentResponse> = {
           industryFit: [],
           toneFit: [],
           minQuantity: 1,
+          imageUrl: STAINLESS_TUMBLER_IMAGE,
         },
         matchScore: 95,
         reasonWhy:
@@ -136,6 +146,7 @@ export const DEMO_AGENT_RESPONSE: Record<'en' | 'ko', DemoAgentResponse> = {
           industryFit: [],
           toneFit: [],
           minQuantity: 1,
+          imageUrl: RECYCLED_FABRIC_POUCH_IMAGE,
         },
         matchScore: 90,
         reasonWhy:
@@ -157,6 +168,7 @@ export const DEMO_AGENT_RESPONSE: Record<'en' | 'ko', DemoAgentResponse> = {
           industryFit: [],
           toneFit: [],
           minQuantity: 1,
+          imageUrl: DAILY_CALENDAR_SET_IMAGE,
         },
         matchScore: 80,
         reasonWhy:

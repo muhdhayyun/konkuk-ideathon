@@ -20,6 +20,7 @@ export interface Product {
   industryFit: string[]
   toneFit: string[]
   minQuantity: number
+  imageUrl?: string // optional; falls back to a placeholder box when unset
 }
 
 export interface Recommendation {
