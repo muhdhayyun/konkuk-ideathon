@@ -1,15 +1,13 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import type { ClientBrief, Recommendation } from '../client-form/types'
-import { SAMPLE_BRIEF } from '../client-form/constants'
 import { products } from '../client-form/data/products'
 import { getNotQuiteRecommendations } from '../client-form/lib/matcher'
-import IntakeWizard from '../client-form/components/IntakeWizard'
-import SummaryReview from '../client-form/components/SummaryReview'
 import RecommendationResults from '../client-form/components/RecommendationResults'
 import InternalMatchesPanel from '../client-form/components/InternalMatchesPanel'
 import AgentInsights from './components/AgentInsights'
 import ClarifySuggestions from './components/ClarifySuggestions'
+import CombinedIntakeForm from '../../components/CombinedIntakeForm'
 import LanguageToggle from '../../components/LanguageToggle'
 import { useLanguage } from '../../i18n/LanguageContext'
 import { getInternalMatches, type InternalMatch } from '../../lib/internal-matcher'
@@ -23,7 +21,7 @@ const EMPTY_BRIEF: ClientBrief = {
   occasion: '',
   recipient: '',
   budgetTier: '',
-  quantity: 25,
+  quantity: 0,
   emotionalOutcomes: [],
   notes: '',
 }
@@ -41,13 +39,12 @@ interface ClarifyResponse {
   suggestions: { field: string; examples: string[] }[]
 }
 
-type View = 'wizard' | 'summary' | 'clarify' | 'results'
+type View = 'form' | 'clarify' | 'results'
 
 export default function AgentFormPage() {
   const { t, language } = useLanguage()
   const loadingStages = [t('agent.loading1'), t('agent.loading2'), t('agent.loading3')]
-  const [view, setView] = useState<View>('wizard')
-  const [step, setStep] = useState(1)
+  const [view, setView] = useState<View>('form')
   const [brief, setBrief] = useState<ClientBrief>(EMPTY_BRIEF)
 
   // Panel A — internal historical matcher. Local, synchronous, zero network. Computed
@@ -76,20 +73,6 @@ export default function AgentFormPage() {
   }, [view, externalLoading])
 
   const loadingStage = loadingSeconds < 2 ? 0 : loadingSeconds < 8 ? 1 : 2
-
-  const handleNext = () => {
-    if (step < 5) setStep(step + 1)
-    else setView('summary')
-  }
-
-  const handleBack = () => {
-    if (step > 1) setStep(step - 1)
-  }
-
-  const handleEditStep = (targetStep: number) => {
-    setStep(targetStep)
-    setView('wizard')
-  }
 
   // Fires Panel A instantly (no await — local JSON read) and Panel B in parallel.
   // Panel A is never affected by whatever happens to the Panel B fetch below.
@@ -125,12 +108,13 @@ export default function AgentFormPage() {
     }
   }
 
-  const handleFindProducts = async () => {
-    if (!isBriefVague(brief)) {
-      await submitForRecommendations(brief)
+  const handleFindProducts = async (currentBrief: ClientBrief) => {
+    if (!isBriefVague(currentBrief)) {
+      await submitForRecommendations(currentBrief)
       return
     }
 
+    setBrief(currentBrief)
     setView('clarify')
     setClarifyLoading(true)
     setClarifySuggestions([])
@@ -141,7 +125,7 @@ export default function AgentFormPage() {
       const res = await fetch('/api/clarify-brief', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ brief, language }),
+        body: JSON.stringify({ brief: currentBrief, language }),
         signal: controller.signal,
       })
       clearTimeout(timeout)
@@ -174,21 +158,15 @@ export default function AgentFormPage() {
     setRecommendations(next)
   }
 
-  const handleInstantFill = () => {
-    setBrief(SAMPLE_BRIEF)
-    setView('summary')
-  }
-
   const handleStartOver = () => {
     setBrief(EMPTY_BRIEF)
-    setStep(1)
     setExcludedIds([])
     setRequestedIds([])
     setAgentResult(null)
     setRecommendations([])
     setInternalMatches([])
     setClarifySuggestions([])
-    setView('wizard')
+    setView('form')
   }
 
   const agreement =
@@ -206,20 +184,7 @@ export default function AgentFormPage() {
         </div>
       </header>
 
-      {view === 'wizard' && (
-        <IntakeWizard
-          step={step}
-          brief={brief}
-          setBrief={setBrief}
-          onNext={handleNext}
-          onBack={handleBack}
-          onInstantFill={handleInstantFill}
-        />
-      )}
-
-      {view === 'summary' && (
-        <SummaryReview brief={brief} onEditStep={handleEditStep} onFindProducts={handleFindProducts} />
-      )}
+      {view === 'form' && <CombinedIntakeForm onSubmit={handleFindProducts} />}
 
       {view === 'clarify' && (
         <ClarifySuggestions
